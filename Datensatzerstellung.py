@@ -6,12 +6,32 @@ from random import randint, choice
 # connection = sql.connect("Kundendaten.db")
 # cursor = connection.cursor()
 
-age_list = [[18,29,"j"], [30,55, "je"], [56,65, "ae"], [65, 100, "a"]]
+age_list = [[18,29,"j"], [30,55, "je"], [56,65, "ae"], [65, 85, "a"]]
 age_per = [0, 30, 70, 90, 101]
 
 gender_list = ["M", "W", "D"]
 gender_per = [50, 99, 101]
 
+#region Definition Kinder-Verteilung
+child_list = ["ja", "nein"]
+
+m_child_j = [15, 101]
+w_child_j =  [25, 101]
+
+m_child_je = [40, 101]
+w_child_je =  [45, 101]
+
+m_child_ae = [26, 101]
+w_child_ae = [32, 101]
+
+m_child_a = [0, 101]
+w_child_a = [0, 101]
+
+child_dic = {"m_child_j" : m_child_j, "m_child_je": m_child_je, "m_child_ae": m_child_ae, "m_child_a": m_child_a,
+     "w_child_j" : w_child_j, "w_child_je": w_child_je, "w_child_ae": w_child_ae, "w_child_a": w_child_a }
+#endregion
+
+#region Definition Job-Verteilung
 job_list = ["Administrativ", "Handwerk", "Management", "Öffentlicher Dienst", "Handel", "Ingenieurswesen", "Informatik", "Studium", "Arbeitslos", "Rente"]
 
 m_job_j = [10, 25, 0, 30, 55, 60, 75, 99, 101, 0]
@@ -28,6 +48,26 @@ w_job_a = [3, 0, 4, 7, 12, 0, 0, 14, 0, 101]
 
 job_dic = {"m_job_j" : m_job_j, "m_job_je": m_job_je, "m_job_ae": m_job_ae, "m_job_a": m_job_a,
      "w_job_j" : w_job_j, "w_job_je": w_job_je, "w_job_ae": w_job_ae, "w_job_a": w_job_a }
+#endregion
+
+#region Definition Heiratsstatus-Verteilung
+marital_list = ["ledig", "verheiratet", "aufgelöste Beziehung"]
+m_marital_j = [90, 99, 101]
+w_marital_j =  [88, 99, 101]
+
+m_marital_je = [40, 99, 101]
+w_marital_je =  [45, 99, 101]
+
+m_marital_ae = [10, 85, 101]
+w_marital_ae = [10, 83, 101]
+
+m_marital_a = [5, 68, 101]
+w_marital_a = [5, 69, 101]
+
+marital_dic = {"m_marital_j" : m_marital_j, "m_marital_je": m_marital_je, "m_marital_ae": m_marital_ae, "m_marital_a": m_marital_a,
+     "w_marital_j" : w_marital_j, "w_marital_je": w_marital_je, "w_marital_ae": w_marital_ae, "w_marital_a": w_marital_a }
+
+#endregion
 
 ges = list()
 
@@ -35,7 +75,7 @@ for i in range(10000):
     eintrag = []
     distro = randint(1,100)
 
-    #Alter bestimmen
+#Generation Alter
     for i in range(len(age_per)):
         if distro < age_per[i]:
             age = randint(age_list[i-1][0], age_list[i-1][1])
@@ -43,7 +83,7 @@ for i in range(10000):
             break
     eintrag.append(age)
 
-    #Geschlecht bestimmen
+#Generation Geschlecht
     distro = randint(1,100)
     for i in range(len(gender_per)):
         if distro <= gender_per[i]:
@@ -52,7 +92,7 @@ for i in range(10000):
             break
     eintrag.append(gender)
 
-    #Job finden
+#Generation Job
     if geschlecht_ident != "d":
         job_query = geschlecht_ident + "_job_" + alter_ident
         job_prozente = job_dic.get(job_query)
@@ -66,16 +106,40 @@ for i in range(10000):
 
     else:
         eintrag.append(choice(job_list))
+    
+#Generation Heiratsstatus
+    if geschlecht_ident != "d":
+        marital_query = geschlecht_ident + "_marital_" + alter_ident
+        marital_prozente = marital_dic.get(marital_query)
+        
+        distro = randint(1,100)
+        for i in range(len(marital_prozente)):
+            if distro <= marital_prozente[i]:
+                marital = marital_list[i]
+                eintrag.append(marital)
+                break
 
+    else:
+        eintrag.append(choice(marital_list))
+
+#Generation Kind-Merkmal
+    if geschlecht_ident != "d":
+        child_query = geschlecht_ident + "_child_" + alter_ident
+        child_prozente = child_dic.get(child_query)
+        
+        if marital == "ledig":
+            child_prozente[0] -= 15
+
+        distro = randint(1,100)
+        for i in range(len(child_prozente)):
+            if distro <= child_prozente[i]:
+                child = child_list[i]
+                eintrag.append(child)
+                break
+            
+    else:
+        eintrag.append(choice(child_list))
+    
     ges.append(eintrag)
 
 print(ges)
-
-
-
-marital = ["ledig", "verheiratet", "aufgelöste Beziehung"]
-
-
-child = ["ja", "nein"]
-
-

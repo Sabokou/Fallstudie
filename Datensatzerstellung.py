@@ -1,7 +1,7 @@
 # import sqlite3 as sql
 import pandas as pd
 import numpy as np
-from random import randint, choice
+from random import randint, choice, uniform
 
 # connection = sql.connect("Kundendaten.db")
 # cursor = connection.cursor()
@@ -61,17 +61,23 @@ w_marital_je =  [45, 99, 101]
 m_marital_ae = [10, 85, 101]
 w_marital_ae = [10, 83, 101]
 
-m_marital_a = [5, 68, 101]
-w_marital_a = [5, 69, 101]
+m_marital_a = [5, 66, 101]
+w_marital_a = [5, 57, 101]
 
 marital_dic = {"m_marital_j" : m_marital_j, "m_marital_je": m_marital_je, "m_marital_ae": m_marital_ae, "m_marital_a": m_marital_a,
      "w_marital_j" : w_marital_j, "w_marital_je": w_marital_je, "w_marital_ae": w_marital_ae, "w_marital_a": w_marital_a }
 
 #endregion
 
+income_list = [[0, 15000], [15001, 30000], [30001, 50000],[50001, 80000],[80001, 100000], [100001, 180000]]
+income_job_base = {"Verwaltung":25000, "Handwerk":20000, "Management":38000, "Öffentlicher Dienst":20000, "Handel/Logistik":25000, "Ingenieurswesen":35000, "Informatik":35000, "Studium":2000, "Arbeitslos":400, "Rente":300}
+income_age_factors = {"j":1, "je":2, "ae":2.5, "a":2}
+
+
 ges = list()
 
-for i in range(10000):
+#region Generation der Einträge
+for i in range(100000):
     eintrag = []
     distro = randint(1,100)
 
@@ -99,11 +105,15 @@ for i in range(10000):
         
         distro = randint(1,100)
         for i in range(len(job_prozente)):
+            if age >= 70:
+                job = "Rente"
+                eintrag.append(job)
+                break
             if distro <= job_prozente[i]:
                 job = job_list[i]
                 eintrag.append(job)
                 break
-
+    
     else:
         eintrag.append(choice(job_list))
     
@@ -135,11 +145,27 @@ for i in range(10000):
             if distro <= child_prozente[i]:
                 child = child_list[i]
                 eintrag.append(child)
+                kinderbonus = 5000
                 break
             
     else:
         eintrag.append(choice(child_list))
     
-    ges.append(eintrag)
+    #Generation Gehalt
+    Zufallsfaktor = uniform(0.7, 1.3)
+    income_base = income_job_base.get(job, 20000)
+    age_factor = income_age_factors.get(alter_ident, 1)
+    gehalt = round(Zufallsfaktor * (income_base * age_factor) + kinderbonus,0)
 
-print(ges)
+    for i in income_list:
+        if int(gehalt) in range(i[0], i[1]):
+            gehalt = round(randint(i[0], i[1]), -3)
+            break
+    
+    eintrag.append(gehalt)
+
+    ges.append(eintrag)
+#endregion
+
+df = pd.DataFrame(ges, columns=["Alter", "Geschlecht", "Job", "Familienstand", "Kinder", "Gehalt"])
+print(df)

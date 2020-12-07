@@ -113,7 +113,7 @@ product_chance_child = {"ja":   [25,    10, -5, -30,     -5, 15,  15], \
 ges = list()
 
 #region Generation der Einträge
-for i in range(250000):
+for i in range(150000):
     eintrag = []
     distro = randint(1,100)
 

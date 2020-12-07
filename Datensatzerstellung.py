@@ -105,8 +105,8 @@ product_chance_income = {"very low": [0, 20, -20, -40, -5, -5, -20], \
                         "high": [0, -10, 10, 40, 10, 25, 10], \
                         "very high": [-10, -30, 10, 20, 5, 15, 0]}
 
-product_chance_child = {"ja": [-5, 10, 0, 20, -5, -15, 15], \
-                        "nein": [5, 0, -5, -20, 20, 30, 10]}
+product_chance_child = {"ja": [25, 10, -5, -30, -5, 15, 15], \
+                        "nein": [5, 0, 5, 20, 20, 0, 10]}
 
 #endregion
 

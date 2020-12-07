@@ -69,10 +69,37 @@ marital_dic = {"m_marital_j" : m_marital_j, "m_marital_je": m_marital_je, "m_mar
 
 #endregion
 
-income_list = [[0, 15000], [15001, 30000], [30001, 50000],[50001, 80000],[80001, 100000], [100001, 180000]]
+#region Definition Gehalts-Merkmale
+income_list = [[0, 15000, "very low"], [15001, 30000, "low"], [30001, 50000, "low mid"],[50001, 80000, "high mid"],[80001, 100000, "high"], [100001, 180000, "very high"]]
 income_job_base = {"Verwaltung":25000, "Handwerk":20000, "Management":38000, "Öffentlicher Dienst":20000, "Handel/Logistik":25000, "Ingenieurswesen":35000, "Informatik":35000, "Studium":2000, "Arbeitslos":400, "Rente":300}
 income_age_factors = {"j":1, "je":2, "ae":2.5, "a":2}
+#endregion
 
+#region Definition Produktwahrscheinlichkeiten
+product_list = ["Girokonto", "Kredit", "Tagesgeldkonto", "Depotkonto", "Altersvorsorge", "Versicherung", "Bausparvertrag"]
+
+product_chance_age = {"j": [70, 10, 5, 60, 20, 5, 5], \
+                        "je": [60, 50, 5, 40, 70, 65, 85], \
+                        "ae": [30, 50, 30, 10, 70, 60, 40], \
+                        "a": [10, 35, 20, 5, 5, 80, 5]}
+
+product_chance_gender = {"m": [-5, 10, 0, 20, -5, -15, 15], \
+                            "w": [5, 0, -5, -20, 20, 30, 10], \
+                            "d": [-10, 0, 15, -15, 5, 15, 0]}
+                        
+product_chance_marital = {"ledig": [0, 0, 0, 10, 0, 0, -10], \
+                            "verheiratet": [10, 30, 0, -20, 5, 15, 15], \
+                            "aufgelöste Beziehung": [-5, 0, 5, 0 , 0, 0, -15]}
+
+product_chance_age = {"very low": [0, 20, -20, -40, -5, -5, -20], \
+                        "low": [-5, 10, -10, -30, 70, 65, 85], \
+                        "low mid": [30, 50, 30, 10, 70, 60, 40], \
+                        "high mid": [10, 35, 20, 5, 5, 80, 5], \
+                        "high": [60, 50, 5, 40, 70, 65, 85], \
+                        "very high": [60, 50, 5, 40, 70, 65, 85]}
+
+product_chance_child = {True: [-5, 10, 0, 20, -5, -15, 15], \
+                        False: [5, 0, -5, -20, 20, 30, 10]}
 
 ges = list()
 
@@ -155,17 +182,25 @@ for i in range(100000):
     Zufallsfaktor = uniform(0.7, 1.3)
     income_base = income_job_base.get(job, 20000)
     age_factor = income_age_factors.get(alter_ident, 1)
-    gehalt = round(Zufallsfaktor * (income_base * age_factor) + kinderbonus,0)
+    income = round(Zufallsfaktor * (income_base * age_factor) + kinderbonus,0)
 
     for i in income_list:
-        if int(gehalt) in range(i[0], i[1]):
-            gehalt = round(randint(i[0], i[1]), -3)
+        if int(income) in range(i[0], i[1]):
+            income = round(randint(i[0], i[1]), -3)
+            gehalt = i[2]
             break
     
-    eintrag.append(gehalt)
+    eintrag.append(income)
+
+    produkt = choice(product_list)
+    eintrag.append(produkt)
+
+    gekauft = True
+    eintrag.append(gekauft)
+
 
     ges.append(eintrag)
 #endregion
 
-df = pd.DataFrame(ges, columns=["Alter", "Geschlecht", "Job", "Familienstand", "Kinder", "Gehalt"])
+df = pd.DataFrame(ges, columns=["Alter", "Geschlecht", "Job", "Familienstand", "Kinder", "Gehalt", "Angebotenes Produkt", "Gekauft"]) #, "Angebotenes Produkt", "Gekauft"
 print(df)

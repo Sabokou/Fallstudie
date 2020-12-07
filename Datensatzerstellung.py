@@ -1,16 +1,23 @@
-# import sqlite3 as sql
 import pandas as pd
 import numpy as np
 from random import randint, choice, uniform
 
-# connection = sql.connect("Kundendaten.db")
-# cursor = connection.cursor()
+#region Datenbank aufrufen
+from sqlalchemy import create_engine
+e = create_engine('sqlite:///Kundendaten.db')
 
+#endregion
+
+#region Definition Alter-Verteilung
 age_list = [[18,29,"j"], [30,55, "je"], [56,65, "ae"], [65, 85, "a"]]
 age_per = [0, 30, 70, 90, 101]
+#endregion
 
+#region Definition Geschlechter-Verteilung
 gender_list = ["M", "W", "D"]
 gender_per = [50, 99, 101]
+
+#endregion
 
 #region Definition Kinder-Verteilung
 child_list = ["ja", "nein"]
@@ -101,10 +108,12 @@ product_chance_income = {"very low": [0, 20, -20, -40, -5, -5, -20], \
 product_chance_child = {"ja": [-5, 10, 0, 20, -5, -15, 15], \
                         "nein": [5, 0, -5, -20, 20, 30, 10]}
 
+#endregion
+
 ges = list()
 
 #region Generation der Einträge
-for i in range(100000):
+for i in range(250000):
     eintrag = []
     distro = randint(1,100)
 
@@ -134,16 +143,15 @@ for i in range(100000):
         for i in range(len(job_prozente)):
             if age >= 70:
                 job = "Rente"
-                eintrag.append(job)
                 break
             if distro <= job_prozente[i]:
                 job = job_list[i]
-                eintrag.append(job)
                 break
     
     else:
-        eintrag.append(choice(job_list))
-    
+        job = choice(job_list)
+
+    eintrag.append(job)
 #Generation Heiratsstatus
     if geschlecht_ident != "d":
         marital_query = geschlecht_ident + "_marital_" + alter_ident
@@ -172,12 +180,15 @@ for i in range(100000):
         for i in range(len(child_prozente)):
             if distro <= child_prozente[i]:
                 child_ident = child_list[i]
-                
-                kinderbonus = 5000
                 break
             
     else:
         child_ident = choice(child_list)
+    
+    if child_ident == "ja":
+        kinderbonus = 5000
+    else:
+        kinderbonus = 0
             
     eintrag.append(child_ident)
     
@@ -205,7 +216,9 @@ for i in range(100000):
             product_chance_marital.get(marital_ident)[produkt_index] 
 
     if chance >= 100:
-        chance -= 3
+        chance = 97
+    elif chance <= 0:
+        chance = 3
     
     distro = randint(0,100)
     if distro <= chance:
@@ -219,3 +232,5 @@ for i in range(100000):
 
 df = pd.DataFrame(ges, columns=["Alter", "Geschlecht", "Job", "Familienstand", "Kinder", "Gehalt", "Angebotenes Produkt", "Gekauft"]) #, "Angebotenes Produkt", "Gekauft"
 print(df)
+df.to_sql(name="Kundendaten", con=e)
+print("Transfer complete")

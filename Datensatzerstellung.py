@@ -85,28 +85,28 @@ income_age_factors = {"j":1, "je":2, "ae":2.5, "a":2}
 #region Definition Produktwahrscheinlichkeiten
 product_list = ["Girokonto", "Kredit", "Tagesgeldkonto", "Depotkonto", "Altersvorsorge", "Versicherung", "Bausparvertrag"]
 
-product_chance_age = {"j": [70, 10, 5, 60, 20, 5, 5], \
-                        "je": [60, 50, 5, 40, 70, 65, 85], \
-                        "ae": [30, 50, 30, 10, 70, 60, 40], \
-                        "a": [10, 35, 20, 5, 5, 80, 5]}
+product_chance_age = {"j":  [70, 10, 5,  60, 20,  5,  5], \
+                      "je": [60, 50, 5,  40, 70, 65, 85], \
+                      "ae": [30, 50, 30, 10, 70, 60, 40], \
+                      "a":  [10, 35, 20, 5,   5, 80,  5]}
 
-product_chance_gender = {"m": [-5, 10, 0, 20, -5, -15, 15], \
-                            "w": [5, 0, -5, -20, 20, 30, 10], \
-                            "d": [-10, 0, 15, -15, 5, 15, 0]}
+product_chance_gender = {"m": [-5,   10,   0,     20,   -5,   -15,  15], \
+                         "w": [5,     0,   -5,   -20,   20,    30,  10], \
+                         "d": [-10,   0,   15,   -15,    5,    15,   0]}
                         
-product_chance_marital = {"ledig": [0, 0, 0, 10, 0, 0, -10], \
-                            "verheiratet": [10, 30, 0, -20, 5, 15, 15], \
-                            "aufgelöste Beziehung": [-5, 0, 5, 0 , 0, 0, -15]}
+product_chance_marital = {"ledig":                  [0,     0,  0,   10,     0,       0,      -10], \
+                          "verheiratet":            [10,    30, 0,  -20,     5,      15,       15], \
+                          "aufgelöste Beziehung":   [-5,    0,  5,    0,     0,       0,      -15]}
 
-product_chance_income = {"very low": [0, 20, -20, -40, -5, -5, -20], \
-                        "low": [-5, 10, -10, -30, -10, -10, -5], \
-                        "low mid": [0, 10, 0, -15, 0, 0, 5], \
-                        "high mid": [10, 35, 20, 5, 5, 15, 15], \
-                        "high": [0, -10, 10, 40, 10, 25, 10], \
-                        "very high": [-10, -30, 10, 20, 5, 15, 0]}
+product_chance_income = {"very low":    [0,     30,     -20,    -40,    -5,     -5,     -20], \
+                        "low":          [0,     10,     -10,    -30,    -10,    -10,    -5], \
+                        "low mid":      [0,     15,     0,      -15,    0,      0,      5], \
+                        "high mid":     [0,     35,     20,     5,      5,      15,     15], \
+                        "high":         [0,     -10,    10,     40,     10,     25,     10], \
+                        "very high":    [0 ,    -30,    10,     30,     15,     25,     0]}
 
-product_chance_child = {"ja": [25, 10, -5, -30, -5, 15, 15], \
-                        "nein": [5, 0, 5, 20, 20, 0, 10]}
+product_chance_child = {"ja":   [25,    10, -5, -30,     -5, 15,  15], \
+                        "nein": [5,     0,   5,  20,     20,  0,  10]}
 
 #endregion
 

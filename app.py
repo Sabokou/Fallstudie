@@ -9,6 +9,9 @@ import dash_html_components as html
 import plotly.express as px
 import pandas as pd
 
+from sqlalchemy import create_engine
+engine = create_engine('sqlite:///Kundendaten.db', execution_options={"sqlite_raw_colnames": True})
+
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
@@ -20,19 +23,17 @@ colors = {
 
 # assume you have a "long-form" data frame
 # see https://plotly.com/python/px-arguments/ for more options
-df = pd.DataFrame({
-    "Fruit": ["Apples", "Oranges", "Bananas", "Apples", "Oranges", "Bananas"],
-    "Amount": [4, 1, 2, 2, 4, 5],
-    "City": ["SF", "SF", "SF", "Montreal", "Montreal", "Montreal"]
-})
-
-fig = px.bar(df, x="Fruit", y="Amount", color="City", barmode="group")
+df = pd.read_sql("Kundendaten", con = engine)
+df1 = df.groupby(by="Job").mean().reset_index()
+fig = px.bar(df1, x="Job", y="Alter")
 
 fig.update_layout(
     plot_bgcolor=colors['background'],
     paper_bgcolor=colors['background'],
     font_color=colors['text']
 )
+
+fig2 = px.bar(df, x="Job", y="Alter")
 
 app.layout = html.Div(style={'backgroundColor': colors['background']}, children=[
     html.H1(

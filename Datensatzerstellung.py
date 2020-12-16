@@ -113,124 +113,130 @@ product_chance_child = {"ja":   [25,    10, -5, -30,     -5, 15,  15], \
 ges = list()
 
 #region Generation der Einträge
-for i in range(150000):
-    eintrag = []
-    distro = randint(1,100)
+for jahr in range(2015,2021):
+    for monat in range(1,13):
+        for i in range(int(250000 + (jahr%2014) * uniform(0.7,1.0) * 30000)):
+            eintrag = []
+            distro = randint(1,100)
 
-#Generation Alter
-    for i in range(len(age_per)):
-        if distro < age_per[i]:
-            age = randint(age_list[i-1][0], age_list[i-1][1])
-            alter_ident = age_list[i-1][2]
-            break
-    eintrag.append(age)
+        #Generation Alter
+            for i in range(len(age_per)):
+                if distro < age_per[i]:
+                    age = randint(age_list[i-1][0], age_list[i-1][1])
+                    alter_ident = age_list[i-1][2]
+                    break
+            eintrag.append(age)
 
-#Generation Geschlecht
-    distro = randint(1,100)
-    for i in range(len(gender_per)):
-        if distro <= gender_per[i]:
-            gender = gender_list[i]
-            geschlecht_ident = gender_list[i].lower()
-            break
-    eintrag.append(gender)
+        #Generation Geschlecht
+            distro = randint(1,100)
+            for i in range(len(gender_per)):
+                if distro <= gender_per[i]:
+                    gender = gender_list[i]
+                    geschlecht_ident = gender_list[i].lower()
+                    break
+            eintrag.append(gender)
 
-#Generation Job
-    if geschlecht_ident != "d":
-        job_query = geschlecht_ident + "_job_" + alter_ident
-        job_prozente = job_dic.get(job_query)
-        
-        distro = randint(1,100)
-        for i in range(len(job_prozente)):
-            if age >= 70:
-                job = "Rente"
-                break
-            if distro <= job_prozente[i]:
-                job = job_list[i]
-                break
-    
-    else:
-        job = choice(job_list)
-
-    eintrag.append(job)
-#Generation Heiratsstatus
-    if geschlecht_ident != "d":
-        marital_query = geschlecht_ident + "_marital_" + alter_ident
-        marital_prozente = marital_dic.get(marital_query)
-        
-        distro = randint(1,100)
-        for i in range(len(marital_prozente)):
-            if distro <= marital_prozente[i]:
-                marital_ident = marital_list[i]
-                break
-
-    else:
-        marital_ident = choice(marital_list)
-
-    eintrag.append(marital_ident)
-
-#Generation Kind-Merkmal
-    if geschlecht_ident != "d":
-        child_query = geschlecht_ident + "_child_" + alter_ident
-        child_prozente = child_dic.get(child_query)
-        
-        if marital_ident == "ledig":
-            child_prozente[0] -= 15
-
-        distro = randint(1,100)
-        for i in range(len(child_prozente)):
-            if distro <= child_prozente[i]:
-                child_ident = child_list[i]
-                break
+        #Generation Job
+            if geschlecht_ident != "d":
+                job_query = geschlecht_ident + "_job_" + alter_ident
+                job_prozente = job_dic.get(job_query)
+                
+                distro = randint(1,100)
+                for i in range(len(job_prozente)):
+                    if age >= 70:
+                        job = "Rente"
+                        break
+                    if distro <= job_prozente[i]:
+                        job = job_list[i]
+                        break
             
-    else:
-        child_ident = choice(child_list)
-    
-    if child_ident == "ja":
-        kinderbonus = 5000
-    else:
-        kinderbonus = 0
+            else:
+                job = choice(job_list)
+
+            eintrag.append(job)
+        #Generation Heiratsstatus
+            if geschlecht_ident != "d":
+                marital_query = geschlecht_ident + "_marital_" + alter_ident
+                marital_prozente = marital_dic.get(marital_query)
+                
+                distro = randint(1,100)
+                for i in range(len(marital_prozente)):
+                    if distro <= marital_prozente[i]:
+                        marital_ident = marital_list[i]
+                        break
+
+            else:
+                marital_ident = choice(marital_list)
+
+            eintrag.append(marital_ident)
+
+        #Generation Kind-Merkmal
+            if geschlecht_ident != "d":
+                child_query = geschlecht_ident + "_child_" + alter_ident
+                child_prozente = child_dic.get(child_query)
+                
+                if marital_ident == "ledig":
+                    child_prozente[0] -= 15
+
+                distro = randint(1,100)
+                for i in range(len(child_prozente)):
+                    if distro <= child_prozente[i]:
+                        child_ident = child_list[i]
+                        break
+                    
+            else:
+                child_ident = choice(child_list)
             
-    eintrag.append(child_ident)
+            if child_ident == "ja":
+                kinderbonus = 5000
+            else:
+                kinderbonus = 0
+                    
+            eintrag.append(child_ident)
+            
+            #Generation Gehalt
+            Zufallsfaktor = uniform(0.7, 1.3)
+            income_base = income_job_base.get(job, 20000)
+            age_factor = income_age_factors.get(alter_ident, 1)
+            income = round(Zufallsfaktor * (income_base * age_factor) + kinderbonus,0)
+
+            for i in income_list:
+                if int(income) in range(i[0], i[1]):
+                    income = round(randint(i[0], i[1]), -3)
+                    gehalt_ident = i[2]
+                    break
+            
+            eintrag.append(income)
+
+            produkt = choice(product_list)
+            eintrag.append(produkt)
+
+            produkt_index = product_list.index(produkt)
+
+            chance = product_chance_age.get(alter_ident)[produkt_index] + product_chance_child.get(child_ident)[produkt_index] + \
+                    product_chance_gender.get(geschlecht_ident)[produkt_index] + product_chance_income.get(gehalt_ident)[produkt_index] + \
+                    product_chance_marital.get(marital_ident)[produkt_index] 
+
+            if chance >= 100:
+                chance = 97
+            elif chance <= 0:
+                chance = 3
+            
+            distro = randint(0,100)
+            if distro <= chance:
+                gekauft = "ja"
+            else:
+                gekauft = "nein"
+            eintrag.append(gekauft)
+            eintrag.append(jahr)
+            eintrag.append(monat)
+            eintrag.append(randint(1,28))
+            ges.append(eintrag)
+        #endregion
     
-    #Generation Gehalt
-    Zufallsfaktor = uniform(0.7, 1.3)
-    income_base = income_job_base.get(job, 20000)
-    age_factor = income_age_factors.get(alter_ident, 1)
-    income = round(Zufallsfaktor * (income_base * age_factor) + kinderbonus,0)
+    print(f"Monat {monat} | Jahr {jahr}")
 
-    for i in income_list:
-        if int(income) in range(i[0], i[1]):
-            income = round(randint(i[0], i[1]), -3)
-            gehalt_ident = i[2]
-            break
-    
-    eintrag.append(income)
-
-    produkt = choice(product_list)
-    eintrag.append(produkt)
-
-    produkt_index = product_list.index(produkt)
-
-    chance = product_chance_age.get(alter_ident)[produkt_index] + product_chance_child.get(child_ident)[produkt_index] + \
-            product_chance_gender.get(geschlecht_ident)[produkt_index] + product_chance_income.get(gehalt_ident)[produkt_index] + \
-            product_chance_marital.get(marital_ident)[produkt_index] 
-
-    if chance >= 100:
-        chance = 97
-    elif chance <= 0:
-        chance = 3
-    
-    distro = randint(0,100)
-    if distro <= chance:
-        gekauft = "ja"
-    else:
-        gekauft = "nein"
-    eintrag.append(gekauft)
-
-    ges.append(eintrag)
-#endregion
-
-df = pd.DataFrame(ges, columns=["Alter", "Geschlecht", "Job", "Familienstand", "Kinder", "Gehalt", "Angebotenes Produkt", "Gekauft"]) #, "Angebotenes Produkt", "Gekauft"
+df = pd.DataFrame(ges, columns=["Alter", "Geschlecht", "Job", "Familienstand", "Kinder", "Gehalt", "Angebotenes Produkt", "Gekauft", "Jahr", "Monat", "Tag"]) #, "Angebotenes Produkt", "Gekauft"
 print(df)
-df.to_sql(name="Kundendaten", con=e)
+df.to_sql(name="allgemeine_daten", con=e)
 print("Transfer complete")

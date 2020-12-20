@@ -4,7 +4,7 @@ from random import randint, choice, uniform
 
 #region Datenbank aufrufen
 from sqlalchemy import create_engine
-e = create_engine('81.169.165.81')
+e = create_engine('sqlite:///Kundendaten.db')
 
 #endregion
 
@@ -84,6 +84,7 @@ income_age_factors = {"j":1, "je":2, "ae":2.5, "a":2}
 
 #region Definition Produktwahrscheinlichkeiten
 product_list = ["Girokonto", "Kredit", "Tagesgeldkonto", "Depotkonto", "Altersvorsorge", "Versicherung", "Bausparvertrag"]
+product_prozente = [15, 71, 76, 82, 84, 87, 100]
 
 product_chance_age = {"j":  [70, 10, 5,  60, 20,  5,  5], \
                       "je": [60, 50, 5,  40, 70, 65, 85], \
@@ -115,7 +116,7 @@ ges = list()
 #region Generation der Einträge
 for jahr in range(2015,2021):
     for monat in range(1,13):
-        for i in range(int(250000 + (jahr%2014) * uniform(0.7,1.2) * 30000)):
+        for i in range(int(60000 + (jahr%2014) * uniform(0.7,1.2) * 10000)):
             eintrag = []
             distro = randint(1,100)
 
@@ -208,11 +209,21 @@ for jahr in range(2015,2021):
             
             eintrag.append(income)
 
-            produkt = choice(product_list)
+                       
+
+            #Verteilung Produkte berücksichtigen
+            distro = randint(1,100)
+            for i in range(len(product_prozente)):
+                if distro <= product_prozente[i]:
+                    produkt = product_list[i]
+                    break
+            
+            #Produkt hinzufügen
+            produkt_index = product_list.index(produkt)
             eintrag.append(produkt)
 
-            produkt_index = product_list.index(produkt)
 
+            #Bestimmen, ob Produkt angenommen oder abgelehnt wurde
             chance = product_chance_age.get(alter_ident)[produkt_index] + product_chance_child.get(child_ident)[produkt_index] + \
                     product_chance_gender.get(geschlecht_ident)[produkt_index] + product_chance_income.get(gehalt_ident)[produkt_index] + \
                     product_chance_marital.get(marital_ident)[produkt_index] 
@@ -238,5 +249,5 @@ for jahr in range(2015,2021):
 
 df = pd.DataFrame(ges, columns=["Alter", "Geschlecht", "Job", "Familienstand", "Kinder", "Gehalt", "Angebotenes Produkt", "Gekauft", "Jahr", "Monat", "Tag"]) #, "Angebotenes Produkt", "Gekauft"
 print(df)
-df.to_sql(name="allgemeine_daten", con=e)
+df.to_sql(name="allgemeine_daten", con=e, if_exists="replace")
 print("Transfer complete")

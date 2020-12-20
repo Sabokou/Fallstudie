@@ -4,7 +4,7 @@ from random import randint, choice, uniform
 
 #region Datenbank aufrufen
 from sqlalchemy import create_engine
-e = create_engine('sqlite:///Kundendaten.db')
+e = create_engine('81.169.165.81')
 
 #endregion
 
@@ -115,7 +115,7 @@ ges = list()
 #region Generation der Einträge
 for jahr in range(2015,2021):
     for monat in range(1,13):
-        for i in range(int(250000 + (jahr%2014) * uniform(0.7,1.0) * 30000)):
+        for i in range(int(250000 + (jahr%2014) * uniform(0.7,1.2) * 30000)):
             eintrag = []
             distro = randint(1,100)
 
@@ -234,7 +234,7 @@ for jahr in range(2015,2021):
             ges.append(eintrag)
         #endregion
     
-    print(f"Monat {monat} | Jahr {jahr}")
+        print(f"Monat {monat} | Jahr {jahr}")
 
 df = pd.DataFrame(ges, columns=["Alter", "Geschlecht", "Job", "Familienstand", "Kinder", "Gehalt", "Angebotenes Produkt", "Gekauft", "Jahr", "Monat", "Tag"]) #, "Angebotenes Produkt", "Gekauft"
 print(df)

@@ -82,6 +82,7 @@ income_job_base = {"Verwaltung":25000, "Handwerk":20000, "Management":38000, "Ö
 income_age_factors = {"j":1, "je":2, "ae":2.5, "a":2}
 #endregion
 
+#TODO:Anpassung Berechnung mit Multiplizieren
 #region Definition Produktwahrscheinlichkeiten
 product_list = ["Girokonto", "Kredit", "Tagesgeldkonto", "Depotkonto", "Altersvorsorge", "Versicherung", "Bausparvertrag"]
 product_prozente = [15, 71, 76, 82, 84, 87, 100]

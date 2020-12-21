@@ -3,6 +3,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 from app import app
+import datetime as dt
 
 #Import Plotting Libarary
 import plotly.express as px
@@ -14,8 +15,8 @@ engine = create_engine('sqlite:///Kundendaten.db', execution_options={"sqlite_ra
 df = pd.read_sql("Kundendaten", con = engine)
 
 #Programmlogik
-currentYear = dt.datetime.now().year
-df_jahr = df.where("Jahr" == str(currentYear))
+# currentYear = dt.datetime.now().year
+# df_jahr = df.where("Jahr" == str(currentYear))
 
 #Websiten-Aufbau
 layout = html.Div([

@@ -5,6 +5,7 @@ from app import app
 import plotly.express as px
 import pandas as pd
 import numpy as np
+from datetime import datetime
 
 from sqlalchemy import create_engine
 
@@ -17,6 +18,7 @@ df['Monat'] = df['Monat'].apply(lambda x: str(x).zfill(2))
 df["Datum"]=df["Jahr"].map(str)+"-"+df["Monat"].map(str)+"-"+df["Tag"].map(str)
 pd.to_datetime(df["Datum"], format="%Y-%m-%d")
 df["Monats-Datum"] = df['Datum'].astype(str).str[:7]
+pd.to_datetime(df["Monats-Datum"], format="%Y-%m")
 df=pd.merge(df, df_Gewinne, left_on='Angebotenes Produkt', right_on='Bankprodukt')
 df.drop(columns=["Bankprodukt"])
 df["Anzahl"]=np.where(df["Gekauft"]=="ja", 1,0)
@@ -68,7 +70,6 @@ df_Anzahl_pro_Monat_kinder=df.groupby(["Monats-Datum", "Kinder"])["Anzahl"].sum(
 df_Gewinn_pro_Monat_Gehalt=df.groupby(["Monats-Datum", "Gehaltsklassen"])["Gewinn"].sum().reset_index()
 df_Anzahl_pro_Monat_Gehalt=df.groupby(["Monats-Datum", "Gehaltsklassen"])["Anzahl"].sum().reset_index()
 
-
 fig1_Gewinn=px.line(df_Gewinn_pro_Monat, x="Monats-Datum", y="Gewinn", color="Angebotenes Produkt", title="Bankprodukte ~ Gewinn")
 fig1_Anzahl=px.line(df_Anzahl_pro_Monat, x="Monats-Datum", y="Anzahl", color="Angebotenes Produkt", title="Bankprodukte ~ Anzahl")
 
@@ -96,6 +97,14 @@ layout = html.Div([
         dcc.Tab(label='Anzahl', value='tabs1_Anzahl'),
     ]),
     html.Div(id="Zeitplot_1"),
+    # dcc.RangeSlider(
+    #     id="Slider1",
+    #     min=2018,
+    #     max=2020,
+    #     value=[2018, 2020]
+    # ),
+
+
 
     html.H2("Features im Zeitverlauf"),
     dcc.Tabs(id="tabs2", value='tabs2_Gewinn', children=[
@@ -120,6 +129,7 @@ layout = html.Div([
 
 @app.callback(Output("Zeitplot_1", 'children'),
               Input('tabs1', 'value'))
+
 def render_content(tab):
     if tab == 'tabs1_Gewinn':
         return html.Div([
@@ -133,6 +143,7 @@ def render_content(tab):
 @app.callback(Output("Zeitplot_2", 'children'),
               Input('tabs2', 'value'),
               Input("Radio2", "value"))
+
 def render_content(tab, radio):
     if tab == 'tabs2_Gewinn' and radio == "Geschlecht":
         return html.Div([

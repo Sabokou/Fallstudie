@@ -87,30 +87,32 @@ fig2_Anzahl_Kinder=px.line(df_Anzahl_pro_Monat_kinder, x="Monats-Datum", y="Anza
 fig2_Gewinn_Gehalt=px.line(df_Gewinn_pro_Monat_Gehalt, x="Monats-Datum", y="Gewinn", color="Gehaltsklassen", title="Gehalt ~ Gewinn")
 fig2_Anzahl_Gehalt=px.line(df_Anzahl_pro_Monat_Gehalt, x="Monats-Datum", y="Anzahl", color="Gehaltsklassen", title="Gehalt ~ Anzahl")
 
+Gewinn_Vorjahr=round(df[df["Jahr"]== (df["Jahr"].max()-1)].Gewinn.sum(),2)
+Gewinn_aktuell=round(df[df["Jahr"]== (df["Jahr"].max())].Gewinn.sum(),2)
+Gewinn_Veränderung=round(Gewinn_aktuell-Gewinn_Vorjahr,2)
+Anzahl_Vorjahr=round(df[df["Jahr"]== (df["Jahr"].max()-1)].Anzahl.sum(),2)
+Anzahl_aktuell=round(df[df["Jahr"]== (df["Jahr"].max())].Anzahl.sum(),2)
+Anzahl_Veränderung=round(Anzahl_aktuell-Anzahl_Vorjahr,2)
 
 layout = html.Div([
     html.H1(children="KPI´s im Zeitverlauf"),
+    dcc.Tabs(id="tabs", value='tabs_Gewinn', children=[
+        dcc.Tab(label='Gewinn', value='tabs_Gewinn'),
+        dcc.Tab(label='Anzahl', value='tabs_Anzahl'),
+    ]),
 
     html.H2("Bankprodukte im Zeitverlauf"),
-    dcc.Tabs(id="tabs1", value='tabs1_Gewinn', children=[
-        dcc.Tab(label='Gewinn', value='tabs1_Gewinn'),
-        dcc.Tab(label='Anzahl', value='tabs1_Anzahl'),
-    ]),
     html.Div(id="Zeitplot_1"),
-    # dcc.RangeSlider(
-    #     id="Slider1",
-    #     min=2018,
-    #     max=2020,
-    #     value=[2018, 2020]
-    # ),
 
+    html.H2("KPI´s im Zeitverlauf"),
+    html.Div(id="Zeit_Karte",children =[
+        html.H3("            Vorjahr        aktuelles Jahr         Veränderung"),
+        dcc.Markdown(f'''Gewinn     {Gewinn_Vorjahr}     {Gewinn_aktuell}   {Gewinn_Veränderung }'''),
+        dcc.Markdown(f'''Anzahl      {Anzahl_Vorjahr}     {Anzahl_aktuell}   {Anzahl_Veränderung }''')
+        ]),
 
 
     html.H2("Features im Zeitverlauf"),
-    dcc.Tabs(id="tabs2", value='tabs2_Gewinn', children=[
-        dcc.Tab(label='Gewinn', value='tabs2_Gewinn'),
-        dcc.Tab(label='Anzahl', value='tabs2_Anzahl'),
-    ]),
     dcc.RadioItems(
     id="Radio2",
     options=[
@@ -128,68 +130,68 @@ layout = html.Div([
 ])
 
 @app.callback(Output("Zeitplot_1", 'children'),
-              Input('tabs1', 'value'))
+              Input('tabs', 'value'))
 
 def render_content(tab):
-    if tab == 'tabs1_Gewinn':
+    if tab == 'tabs_Gewinn':
         return html.Div([
             dcc.Graph(figure=fig1_Gewinn)
         ])
-    elif tab == 'tabs1_Anzahl':
+    elif tab == 'tabs_Anzahl':
         return html.Div([
             dcc.Graph(figure=fig1_Anzahl)
         ])
 
 @app.callback(Output("Zeitplot_2", 'children'),
-              Input('tabs2', 'value'),
+              Input('tabs', 'value'),
               Input("Radio2", "value"))
 
 def render_content(tab, radio):
-    if tab == 'tabs2_Gewinn' and radio == "Geschlecht":
+    if tab == 'tabs_Gewinn' and radio == "Geschlecht":
         return html.Div([
             dcc.Graph(figure=fig2_Gewinn_Geschlecht)
         ])
-    elif tab == 'tabs2_Anzahl' and radio == "Geschlecht":
+    elif tab == 'tabs_Anzahl' and radio == "Geschlecht":
         return html.Div([
             dcc.Graph(figure=fig2_Anzahl_Geschlecht)
         ])
-    elif tab == 'tabs2_Gewinn' and radio == "Alter":
+    elif tab == 'tabs_Gewinn' and radio == "Alter":
         return html.Div([
             dcc.Graph(figure=fig2_Gewinn_Alter)
         ])
-    elif tab == 'tabs2_Anzahl' and radio == "Alter":
+    elif tab == 'tabs_Anzahl' and radio == "Alter":
         return html.Div([
             dcc.Graph(figure=fig2_Anzahl_Alter)
         ])
-    elif tab == 'tabs2_Gewinn' and radio == "Job":
+    elif tab == 'tabs_Gewinn' and radio == "Job":
         return html.Div([
             dcc.Graph(figure=fig2_Gewinn_Job)
         ])
-    elif tab == 'tabs2_Anzahl' and radio == "Job":
+    elif tab == 'tabs_Anzahl' and radio == "Job":
         return html.Div([
             dcc.Graph(figure=fig2_Anzahl_Job)
         ])
-    elif tab == 'tabs2_Gewinn' and radio == "Familie":
+    elif tab == 'tabs_Gewinn' and radio == "Familie":
         return html.Div([
             dcc.Graph(figure=fig2_Gewinn_Familie)
         ])
-    elif tab == 'tabs2_Anzahl' and radio == "Familie":
+    elif tab == 'tabs_Anzahl' and radio == "Familie":
         return html.Div([
             dcc.Graph(figure=fig2_Anzahl_Familie)
         ])
-    elif tab == 'tabs2_Gewinn' and radio == "Kinder":
+    elif tab == 'tabs_Gewinn' and radio == "Kinder":
         return html.Div([
             dcc.Graph(figure=fig2_Gewinn_Kinder)
         ])
-    elif tab == 'tabs2_Anzahl' and radio == "Kinder":
+    elif tab == 'tabs_Anzahl' and radio == "Kinder":
         return html.Div([
             dcc.Graph(figure=fig2_Anzahl_Kinder)
         ])
-    elif tab == 'tabs2_Gewinn' and radio == "Gehalt":
+    elif tab == 'tabs_Gewinn' and radio == "Gehalt":
         return html.Div([
             dcc.Graph(figure=fig2_Gewinn_Gehalt)
         ])
-    elif tab == 'tabs2_Anzahl' and radio == "Gehalt":
+    elif tab == 'tabs_Anzahl' and radio == "Gehalt":
         return html.Div([
             dcc.Graph(figure=fig2_Anzahl_Gehalt)
         ])

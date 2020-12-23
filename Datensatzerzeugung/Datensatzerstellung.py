@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from random import randint, choice, uniform
+from datetime import date
 
 #region Datenbank aufrufen
 from sqlalchemy import create_engine
@@ -25,14 +26,14 @@ child_list = ["ja", "nein"]
 m_child_j = [15, 101]
 w_child_j =  [25, 101]
 
-m_child_je = [40, 101]
-w_child_je =  [45, 101]
+m_child_je = [55, 101]
+w_child_je =  [59, 101]
 
-m_child_ae = [26, 101]
-w_child_ae = [32, 101]
+m_child_ae = [56, 101]
+w_child_ae = [62, 101]
 
-m_child_a = [0, 101]
-w_child_a = [0, 101]
+m_child_a = [40, 101]
+w_child_a = [50, 101]
 
 child_dic = {"m_child_j" : m_child_j, "m_child_je": m_child_je, "m_child_ae": m_child_ae, "m_child_a": m_child_a,
      "w_child_j" : w_child_j, "w_child_je": w_child_je, "w_child_ae": w_child_ae, "w_child_a": w_child_a }
@@ -85,30 +86,34 @@ income_age_factors = {"j":1, "je":2, "ae":2.5, "a":2}
 #TODO:Anpassung Berechnung mit Multiplizieren
 #region Definition Produktwahrscheinlichkeiten
 product_list = ["Girokonto", "Kredit", "Tagesgeldkonto", "Depotkonto", "Altersvorsorge", "Versicherung", "Bausparvertrag"]
+
+product_winnings = {"Girokonto" : 0.4, "Kredit": 0.35, "Tagesgeldkonto": 2.31, "Depotkonto": 2.33, \
+                    "Altersvorsorge": 9.37, "Versicherung": 8.51, "Bausparvertrag":1.39}
+
 product_prozente = [15, 71, 76, 82, 84, 87, 100]
 
-product_chance_age = {"j":  [70, 10, 5,  60, 20,  5,  5], \
-                      "je": [60, 50, 5,  40, 70, 65, 85], \
+product_chance_age = {"j":  [70, 10, 5,  60, 10,  5,  5], \
+                      "je": [60, 50, 5,  50, 45, 65, 85], \
                       "ae": [30, 50, 30, 10, 70, 60, 40], \
                       "a":  [10, 35, 20, 5,   5, 80,  5]}
 
-product_chance_gender = {"m": [-5,   10,   0,     20,   -5,   -15,  15], \
-                         "w": [5,     0,   -5,   -20,   20,    30,  10], \
-                         "d": [-10,   0,   15,   -15,    5,    15,   0]}
+product_chance_gender = {"m": [0.90,   1.2,   1,     1.2,   0.90,   0.70,  1], \
+                         "w": [1.05,     1,   0.85,   0.7,   1.2,    1.3,  1.1], \
+                         "d": [0.8,   1,   1.2,   0.5,    1.1,    1.15,   1]}
                         
-product_chance_marital = {"ledig":                  [0,     0,  0,   10,     0,       0,      -10], \
-                          "verheiratet":            [10,    30, 0,  -20,     5,      15,       15], \
-                          "aufgelöste Beziehung":   [-5,    0,  5,    0,     0,       0,      -15]}
+product_chance_marital = {"ledig":                  [1,     1,  1,   1.1,     0,       0,      0.7], \
+                          "verheiratet":            [1.2,    1.3, 0.8,  0.67,     1.1,      1.25,       1.5], \
+                          "aufgelöste Beziehung":   [0.8,    1,  1.05,    1.0,     1.0,       1.0,      0.8]}
 
-product_chance_income = {"very low":    [0,     30,     -20,    -40,    -5,     -5,     -20], \
-                        "low":          [0,     10,     -10,    -30,    -10,    -10,    -5], \
-                        "low mid":      [0,     15,     0,      -15,    0,      0,      5], \
-                        "high mid":     [0,     35,     20,     5,      5,      15,     15], \
-                        "high":         [0,     -10,    10,     40,     10,     25,     10], \
-                        "very high":    [0 ,    -30,    10,     30,     15,     25,     0]}
+product_chance_income = {"very low":    [1,     1.3,     0.8,    0.6,    0.7,     0.95,     0.7], \
+                        "low":          [1,     1.1,     0.9,    0.7,    0.95,    0.9,      0.95], \
+                        "low mid":      [1,     1.15,    1,      0.8,    1,       1,        1.05], \
+                        "high mid":     [1,     1.35,    1.20,   1.1,    1.05,    1.1,      1.15], \
+                        "high":         [1,     0.9,     1,      1.4,    1.1,     1.3,      1.1], \
+                        "very high":    [1 ,    0.7,     1.10,   1.3,    1.15,    1.25,     1]}
 
-product_chance_child = {"ja":   [25,    10, -5, -30,     -5, 15,  15], \
-                        "nein": [5,     0,   5,  20,     20,  0,  10]}
+product_chance_child = {"ja":   [1.25,    1.1, 0.9, 0.7,     0.9,  1.15,  1.25], \
+                        "nein": [1,       1,   1.1, 1.2,     1.2,  1,     1.1]}
 
 #endregion
 
@@ -117,7 +122,7 @@ ges = list()
 #region Generation der Einträge
 for jahr in range(2015,2021):
     for monat in range(1,13):
-        for i in range(int(60000 + (jahr%2014) * uniform(0.7,1.2) * 10000)):
+        for i in range(int(60000 + (jahr%2014) * uniform(0.7,1.2) * 10000)): #add back one 0
             eintrag = []
             distro = randint(1,100)
 
@@ -177,12 +182,13 @@ for jahr in range(2015,2021):
                 child_query = geschlecht_ident + "_child_" + alter_ident
                 child_prozente = child_dic.get(child_query)
                 
+                local_child_prozente = child_prozente.copy()
                 if marital_ident == "ledig":
-                    child_prozente[0] -= 15
+                    local_child_prozente[0] -= 15
 
-                distro = randint(1,100)
-                for i in range(len(child_prozente)):
-                    if distro <= child_prozente[i]:
+                distro = randint(1,100) 
+                for i in range(len(local_child_prozente)):
+                    if distro <= local_child_prozente[i]:
                         child_ident = child_list[i]
                         break
                     
@@ -225,14 +231,14 @@ for jahr in range(2015,2021):
 
 
             #Bestimmen, ob Produkt angenommen oder abgelehnt wurde
-            chance = product_chance_age.get(alter_ident)[produkt_index] + product_chance_child.get(child_ident)[produkt_index] + \
-                    product_chance_gender.get(geschlecht_ident)[produkt_index] + product_chance_income.get(gehalt_ident)[produkt_index] + \
+            chance = product_chance_age.get(alter_ident)[produkt_index] * product_chance_child.get(child_ident)[produkt_index] * \
+                    product_chance_gender.get(geschlecht_ident)[produkt_index] * product_chance_income.get(gehalt_ident)[produkt_index] * \
                     product_chance_marital.get(marital_ident)[produkt_index] 
 
             if chance >= 100:
-                chance = 97
+                chance = 90
             elif chance <= 0:
-                chance = 3
+                chance = 10
             
             distro = randint(0,100)
             if distro <= chance:
@@ -240,15 +246,31 @@ for jahr in range(2015,2021):
             else:
                 gekauft = "nein"
             eintrag.append(gekauft)
+
+            if gekauft == "ja":
+                gewinn = product_winnings.get(produkt)
+            else:
+                gewinn = 0
+
+            eintrag.append(gewinn)
+
+            #Datum erzeugen
             eintrag.append(jahr)
             eintrag.append(monat)
-            eintrag.append(randint(1,28))
+            tag = randint(1,28)
+            eintrag.append(tag)
+            
+            combined = date(jahr, monat, tag)
+            eintrag.append(combined)
+
             ges.append(eintrag)
         #endregion
     
         print(f"Monat {monat} | Jahr {jahr}")
 
-df = pd.DataFrame(ges, columns=["Alter", "Geschlecht", "Job", "Familienstand", "Kinder", "Gehalt", "Angebotenes Produkt", "Gekauft", "Jahr", "Monat", "Tag"]) #, "Angebotenes Produkt", "Gekauft"
+df = pd.DataFrame(ges, columns=["Alter", "Geschlecht", "Job", "Familienstand", "Kinder", "Gehalt",\
+                                 "Angebotenes Produkt", "Gekauft", "Gewinn",\
+                                 "Jahr", "Monat", "Tag", "Datum"]) 
 print(df)
 df.to_sql(name="allgemeine_daten", con=e, if_exists="replace")
 print("Transfer complete")

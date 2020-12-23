@@ -11,7 +11,7 @@ from sqlalchemy import create_engine
 
 
 engine = create_engine('sqlite:///Kundendaten.db', execution_options={"sqlite_raw_colnames": True})
-df = pd.read_sql("Kundendaten", con = engine)
+df = pd.read_sql("allgemeine_daten", con = engine)
 df_Gewinne=pd.read_excel("Gewinne_pro_Produkt.xlsx", engine='openpyxl')
 
 df['Monat'] = df['Monat'].apply(lambda x: str(x).zfill(2))

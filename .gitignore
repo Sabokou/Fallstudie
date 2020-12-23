@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#eigene Ausschlüsse
+Kundendaten.db
+
 # C extensions
 *.so
 

@@ -8,7 +8,7 @@ import numpy as np
 from datetime import datetime
 import dask.dataframe as dd
 
-df = dd.read_sql_table("allgemeine_daten", 'Kundendaten.db', "index")
+df = dd.read_sql_table("allgemeine_daten", 'sqlite:///Kundendaten.db', "index")
 
 df['Monat'] = df['Monat'].apply(lambda x: str(x).zfill(2))
 df["Datum"]=df["Jahr"].map(str)+"-"+df["Monat"].map(str)+"-"+df["Tag"].map(str)

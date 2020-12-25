@@ -16,11 +16,14 @@ ytd = datetime.now().year
 #Programmlogik
 # currentYear = dt.datetime.now().year
 # df_jahr = df.where("Jahr" == str(currentYear))
-df = dd.read_sql_table("allgemeine_daten", 'Kundendaten.db', "Jahr")
+df = dd.read_sql_table("allgemeine_daten", 'sqlite:///Kundendaten.db', "Jahr")
 
 df_YTD = df.loc[ytd].compute()
 df_YTD["Anzahl"] = np.where(df_YTD["Gekauft"]=="ja", 1,0)
 df_YTD.head()
+
+Gewinn_YTD = df_YTD["Gewinn"].sum()
+Anzahl_YTD = df_YTD["Anzahl"].sum()
 
 #Websiten-Aufbau
 layout = html.Div([

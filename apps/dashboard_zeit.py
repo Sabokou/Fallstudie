@@ -6,23 +6,19 @@ import plotly.express as px
 import pandas as pd
 import numpy as np
 from datetime import datetime
+import dask.dataframe as dd
 
-from sqlalchemy import create_engine
-
-
-engine = create_engine('sqlite:///Kundendaten.db', execution_options={"sqlite_raw_colnames": True})
-df = pd.read_sql("allgemeine_daten", con = engine)
-df_Gewinne=pd.read_excel("Gewinne_pro_Produkt.xlsx", engine='openpyxl')
+df = dd.read_sql_table("allgemeine_daten", 'Kundendaten.db', "index")
 
 df['Monat'] = df['Monat'].apply(lambda x: str(x).zfill(2))
 df["Datum"]=df["Jahr"].map(str)+"-"+df["Monat"].map(str)+"-"+df["Tag"].map(str)
 pd.to_datetime(df["Datum"], format="%Y-%m-%d")
 df["Monats-Datum"] = df['Datum'].astype(str).str[:7]
 pd.to_datetime(df["Monats-Datum"], format="%Y-%m")
-df=pd.merge(df, df_Gewinne, left_on='Angebotenes Produkt', right_on='Bankprodukt')
-df.drop(columns=["Bankprodukt"])
+#df=pd.merge(df, df_Gewinne, left_on='Angebotenes Produkt', right_on='Bankprodukt')
+#df.drop(columns=["Bankprodukt"])
 df["Anzahl"]=np.where(df["Gekauft"]=="ja", 1,0)
-df["Gewinn pro Verkauf"]=np.where(df["Gekauft"]=="nein", 0, df["Gewinn pro Verkauf"])
+#df["Gewinn pro Verkauf"]=np.where(df["Gekauft"]=="nein", 0, df["Gewinn pro Verkauf"])
 df["Gewinn"]=df["Gewinn pro Verkauf"]
 
 def Altersklassen(A):
@@ -87,11 +83,11 @@ fig2_Anzahl_Kinder=px.line(df_Anzahl_pro_Monat_kinder, x="Monats-Datum", y="Anza
 fig2_Gewinn_Gehalt=px.line(df_Gewinn_pro_Monat_Gehalt, x="Monats-Datum", y="Gewinn", color="Gehaltsklassen", title="Gehalt ~ Gewinn")
 fig2_Anzahl_Gehalt=px.line(df_Anzahl_pro_Monat_Gehalt, x="Monats-Datum", y="Anzahl", color="Gehaltsklassen", title="Gehalt ~ Anzahl")
 
-Gewinn_Vorjahr=round(df[df["Jahr"]== (df["Jahr"].max()-1)].Gewinn.sum(),2)
-Gewinn_aktuell=round(df[df["Jahr"]== (df["Jahr"].max())].Gewinn.sum(),2)
+Gewinn_Vorjahr=round(df[df["Jahr"] == (df["Jahr"].max()-1)].Gewinn.sum(),2)
+Gewinn_aktuell=round(df[df["Jahr"] == (df["Jahr"].max())].Gewinn.sum(),2)
 Gewinn_Veränderung=round(Gewinn_aktuell-Gewinn_Vorjahr,2)
-Anzahl_Vorjahr=round(df[df["Jahr"]== (df["Jahr"].max()-1)].Anzahl.sum(),2)
-Anzahl_aktuell=round(df[df["Jahr"]== (df["Jahr"].max())].Anzahl.sum(),2)
+Anzahl_Vorjahr=round(df[df["Jahr"] == (df["Jahr"].max()-1)].Anzahl.sum(),2)
+Anzahl_aktuell=round(df[df["Jahr"] == (df["Jahr"].max())].Anzahl.sum(),2)
 Anzahl_Veränderung=round(Anzahl_aktuell-Anzahl_Vorjahr,2)
 
 layout = html.Div([

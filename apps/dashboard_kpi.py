@@ -16,7 +16,7 @@ ytd = datetime.now().year
 #Programmlogik
 # currentYear = dt.datetime.now().year
 # df_jahr = df.where("Jahr" == str(currentYear))
-df = dd.read_sql_table("allgemeine_daten", 'sqlite:///D:/Generelle Dokumente/DHBW/Fallstudie/Fallstudie/Kundendaten.db', "Jahr")
+df = dd.read_sql_table("allgemeine_daten", 'Kundendaten.db', "Jahr")
 
 df_YTD = df.loc[ytd].compute()
 df_YTD["Anzahl"] = np.where(df_YTD["Gekauft"]=="ja", 1,0)

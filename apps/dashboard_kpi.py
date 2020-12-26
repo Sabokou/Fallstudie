@@ -59,7 +59,7 @@ layout = html.Div([
     value='Geschlecht',
     labelStyle={'display': 'inline-block'}
     ), 
-    html.Div(id="Zeitplot_2")
+    html.Div(id="Produktplot_2")
 ])
 
 @app.callback(Output(component_id = "Produktplot_1", component_property= 'children'),
@@ -67,17 +67,17 @@ layout = html.Div([
 def render_content(tab):
     if tab == 'tabs_Gewinn':
         return html.Div([
-            dcc.Graph(figure=fetch_figure_bar(fetch_dataframe_sum(df_YTD, "Gewinn", ["Monat", "Angebotenes Produkt"]),\
-            "Monat", "Gewinn", "Angebotenes Produkt", "Gewinn pro Produkt [YTD]" ))
+            dcc.Graph(figure=fetch_figure_bar(fetch_dataframe_sum(df_YTD, "Gewinn", ["Angebotenes Produkt"]),\
+            "Angebotenes Produkt", "Gewinn",  title = "Gewinn pro Produkt [YTD]" ))
         ])
     elif tab == 'tabs_Anzahl':
         return html.Div([
-            dcc.Graph(figure=fetch_figure_line(fetch_dataframe_sum(df_YTD, "Gewinn", ["Monat", "Angebotenes Produkt"]),\
-            "Monat", "Anzahl", "Angebotenes Produkt", "Anzahl verkaufter Produkte [YTD]" ))
+            dcc.Graph(figure=fetch_figure_bar(fetch_dataframe_sum(df_YTD, "Anzahl", ["Angebotenes Produkt"]),\
+            "Angebotenes Produkt", "Anzahl", title = "Anzahl verkaufter Produkte [YTD]" ))
         ])
 
     
-@app.callback(Output("Zeitplot_2", 'children'),
+@app.callback(Output("Produktplot_2", 'children'),
               Input('tabs', 'value'),
               Input("Radio2", "value"))
 def render_content(tab, radio):
@@ -130,12 +130,32 @@ def render_content(tab, radio):
             dcc.Graph(figure=fig2_Anzahl_Gehalt)
         ])
     
-def fetch_figure_line(dataframe, x, y, color, title):
+def fetch_figure_line(dataframe, x, y, title, color = None, text = None):
     #frame = fetch_dataframe(dataframe, groupDirection, args)
-    return px.line(dataframe, x=x, y=y, color=color, title=title)
-
-def fetch_figure_bar(dataframe, x, y, color, title):
-    return px.bar(dataframe, x=x, y=y, color=color, title=title)
+    if color != None and text == None:
+        return px.line(dataframe, x=x, y=y, color=color, title=title)
+    elif color == None and text == None:
+        return px.line(dataframe, x=x, y=y, title=title)
+    elif color == None and text != None:
+         return px.line(dataframe, x=x, y=y, title=title, text=text)
+    else:
+        return px.line(dataframe, x=x, y=y, title=title, color=color, text=text)
+    
+def fetch_figure_bar(dataframe, x, y, title, color = None, text = None):
+    if color != None and text == None:
+        return px.bar(dataframe, x=x, y=y, color=color, title=title)
+    elif color == None and text == None:
+        return px.bar(dataframe, x=x, y=y, title=title)
+    elif color == None and text != None:
+        fig_temp = px.bar(dataframe, x=x, y=y, title=title, text=text)
+        fig_temp.update_traces(texttemplate='%{text:.2s}', textposition='outside')
+        fig_temp.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
+        return fig_temp
+    else:
+        fig_temp = px.bar(dataframe, x=x, y=y, title=title, color=color, text=text)
+        fig_temp.update_traces(texttemplate='%{text:.2s}', textposition='outside')
+        fig_temp.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
+        return fig_temp
 
 def fetch_dataframe_sum(dataframe, groupDirection, args):
     return dataframe.groupby(args).sum().reset_index()

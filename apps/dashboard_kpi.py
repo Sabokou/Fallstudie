@@ -10,6 +10,7 @@ import dask.dataframe as dd
 import numpy as np
 
 import plotly.express as px
+import dask.array as da
 
 from datetime import datetime
 ytd = datetime.now().year
@@ -17,10 +18,9 @@ ytd = datetime.now().year
 #Programmlogik
 # currentYear = dt.datetime.now().year
 # df_jahr = df.where("Jahr" == str(currentYear))
-df = dd.read_sql_table("allgemeine_daten", 'sqlite:///Kundendaten.db', "Jahr")
+df = dd.read_sql_table("testdaten", 'sqlite:///Kundendaten.db', "Jahr")
 
 df_YTD = df.loc[ytd].compute()
-df_YTD["Anzahl"] = np.where(df_YTD["Gekauft"]=="ja", 1,0)
 df_YTD.head()
 
 Gewinn_YTD = df_YTD["Gewinn"].sum()
@@ -77,58 +77,58 @@ def render_content(tab):
         ])
 
     
-@app.callback(Output("Produktplot_2", 'children'),
-              Input('tabs', 'value'),
-              Input("Radio2", "value"))
-def render_content(tab, radio):
-    if tab == 'tabs_Gewinn' and radio == "Geschlecht":
-        return html.Div([
-            dcc.Graph(figure=fig2_Gewinn_Geschlecht)
-        ])
-    elif tab == 'tabs_Anzahl' and radio == "Geschlecht":
-        return html.Div([
-            dcc.Graph(figure=fig2_Anzahl_Geschlecht)
-        ])
-    elif tab == 'tabs_Gewinn' and radio == "Alter":
-        return html.Div([
-            dcc.Graph(figure=fig2_Gewinn_Alter)
-        ])
-    elif tab == 'tabs_Anzahl' and radio == "Alter":
-        return html.Div([
-            dcc.Graph(figure=fig2_Anzahl_Alter)
-        ])
-    elif tab == 'tabs_Gewinn' and radio == "Job":
-        return html.Div([
-            dcc.Graph(figure=fig2_Gewinn_Job)
-        ])
-    elif tab == 'tabs_Anzahl' and radio == "Job":
-        return html.Div([
-            dcc.Graph(figure=fig2_Anzahl_Job)
-        ])
-    elif tab == 'tabs_Gewinn' and radio == "Familie":
-        return html.Div([
-            dcc.Graph(figure=fig2_Gewinn_Familie)
-        ])
-    elif tab == 'tabs_Anzahl' and radio == "Familie":
-        return html.Div([
-            dcc.Graph(figure=fig2_Anzahl_Familie)
-        ])
-    elif tab == 'tabs_Gewinn' and radio == "Kinder":
-        return html.Div([
-            dcc.Graph(figure=fig2_Gewinn_Kinder)
-        ])
-    elif tab == 'tabs_Anzahl' and radio == "Kinder":
-        return html.Div([
-            dcc.Graph(figure=fig2_Anzahl_Kinder)
-        ])
-    elif tab == 'tabs_Gewinn' and radio == "Gehalt":
-        return html.Div([
-            dcc.Graph(figure=fig2_Gewinn_Gehalt)
-        ])
-    elif tab == 'tabs_Anzahl' and radio == "Gehalt":
-        return html.Div([
-            dcc.Graph(figure=fig2_Anzahl_Gehalt)
-        ])
+# @app.callback(Output("Produktplot_2", 'children'),
+#               Input('tabs', 'value'),
+#               Input("Radio2", "value"))
+# def render_content(tab, radio):
+#     if tab == 'tabs_Gewinn' and radio == "Geschlecht":
+#         return html.Div([
+#             dcc.Graph(figure=fig2_Gewinn_Geschlecht)
+#         ])
+#     elif tab == 'tabs_Anzahl' and radio == "Geschlecht":
+#         return html.Div([
+#             dcc.Graph(figure=fig2_Anzahl_Geschlecht)
+#         ])
+#     elif tab == 'tabs_Gewinn' and radio == "Alter":
+#         return html.Div([
+#             dcc.Graph(figure=fig2_Gewinn_Alter)
+#         ])
+#     elif tab == 'tabs_Anzahl' and radio == "Alter":
+#         return html.Div([
+#             dcc.Graph(figure=fig2_Anzahl_Alter)
+#         ])
+#     elif tab == 'tabs_Gewinn' and radio == "Job":
+#         return html.Div([
+#             dcc.Graph(figure=fig2_Gewinn_Job)
+#         ])
+#     elif tab == 'tabs_Anzahl' and radio == "Job":
+#         return html.Div([
+#             dcc.Graph(figure=fig2_Anzahl_Job)
+#         ])
+#     elif tab == 'tabs_Gewinn' and radio == "Familie":
+#         return html.Div([
+#             dcc.Graph(figure=fig2_Gewinn_Familie)
+#         ])
+#     elif tab == 'tabs_Anzahl' and radio == "Familie":
+#         return html.Div([
+#             dcc.Graph(figure=fig2_Anzahl_Familie)
+#         ])
+#     elif tab == 'tabs_Gewinn' and radio == "Kinder":
+#         return html.Div([
+#             dcc.Graph(figure=fig2_Gewinn_Kinder)
+#         ])
+#     elif tab == 'tabs_Anzahl' and radio == "Kinder":
+#         return html.Div([
+#             dcc.Graph(figure=fig2_Anzahl_Kinder)
+#         ])
+#     elif tab == 'tabs_Gewinn' and radio == "Gehalt":
+#         return html.Div([
+#             dcc.Graph(figure=fig2_Gewinn_Gehalt)
+#         ])
+#     elif tab == 'tabs_Anzahl' and radio == "Gehalt":
+#         return html.Div([
+#             dcc.Graph(figure=fig2_Anzahl_Gehalt)
+#         ])
     
 def fetch_figure_line(dataframe, x, y, title, color = None, text = None):
     #frame = fetch_dataframe(dataframe, groupDirection, args)
@@ -158,7 +158,7 @@ def fetch_figure_bar(dataframe, x, y, title, color = None, text = None):
         return fig_temp
 
 def fetch_dataframe_sum(dataframe, groupDirection, args):
-    return dataframe.groupby(args).sum().reset_index()
+    return dataframe.groupby(args).sum().reset_index().compute()
 
-def fetch_dataframe_count(dataframe, groupDirection, args):
-    return dataframe.groupby(args).count().reset_index()
+# def fetch_dataframe_count(dataframe, groupDirection, args):
+#     return dataframe.groupby(args).count().reset_index()

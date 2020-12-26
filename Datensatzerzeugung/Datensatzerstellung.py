@@ -243,8 +243,10 @@ for jahr in range(2015,2021):
             distro = randint(0,100)
             if distro <= chance:
                 gekauft = "ja"
+                anzahl = 1
             else:
                 gekauft = "nein"
+                anzahl = 0
             eintrag.append(gekauft)
 
             if gekauft == "ja":
@@ -263,6 +265,7 @@ for jahr in range(2015,2021):
             combined = date(jahr, monat, tag)
             eintrag.append(combined)
 
+            eintrag.append(anzahl)
             ges.append(eintrag)
         #endregion
     
@@ -270,7 +273,7 @@ for jahr in range(2015,2021):
 
 df = pd.DataFrame(ges, columns=["Alter", "Geschlecht", "Job", "Familienstand", "Kinder", "Gehalt",\
                                  "Angebotenes Produkt", "Gekauft", "Gewinn",\
-                                 "Jahr", "Monat", "Tag", "Datum"]) 
+                                 "Jahr", "Monat", "Tag", "Datum", "Anzahl"]) 
 print(df)
 df.to_sql(name="allgemeine_daten", con=e, if_exists="replace")
 print("Transfer complete")

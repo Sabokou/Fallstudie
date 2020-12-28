@@ -9,6 +9,15 @@ from datetime import datetime
 import dask.dataframe as dd
 import dask.array as da
 
+"""
+# Hallo Alina, ich hab die alle notwendigen Funktionen vollständig implementiert
+# Es gibt 2 große TODO: 
+# 1. Performance fixen für die Berechnung der "Karten"-Werte
+# 2. Evtl. mal schauen, ob man die Performance der Graphen-Generation verbessern kann durch
+# eine Neu-Indizierung nach "Monats-Datum", weil Operationen auf Index sind schneller :)
+# VG Phillip
+"""
+
 df = dd.read_sql_table("testdaten", 'sqlite:///Kundendaten.db', "index")
 df["Monats-Datum"] = df['Datum'].astype(str).str[:7]
 
@@ -41,39 +50,7 @@ def Gehaltsklassen(A):
 
 df['Gehaltsklassen'] = df['Gehalt'].map(Gehaltsklassen)
 
-
-df_Gewinn_pro_Monat=df.groupby(["Monats-Datum", "Angebotenes Produkt"])["Gewinn"].sum().reset_index().compute()
-df_Anzahl_pro_Monat=df.groupby(["Monats-Datum", "Angebotenes Produkt"])["Anzahl"].sum().reset_index().compute()
-
-# df_Gewinn_pro_Monat_Geschlecht=df.groupby(["Monats-Datum", "Geschlecht"])["Gewinn"].sum().reset_index()
-# df_Anzahl_pro_Monat_Geschlecht=df.groupby(["Monats-Datum", "Geschlecht"])["Anzahl"].sum().reset_index()
-# df_Gewinn_pro_Monat_Alter=df.groupby(["Monats-Datum", "Altersklassen"])["Gewinn"].sum().reset_index()
-# df_Anzahl_pro_Monat_Alter=df.groupby(["Monats-Datum", "Altersklassen"])["Anzahl"].sum().reset_index()
-# df_Gewinn_pro_Monat_Job=df.groupby(["Monats-Datum", "Job"])["Gewinn"].sum().reset_index()
-# df_Anzahl_pro_Monat_Job=df.groupby(["Monats-Datum", "Job"])["Anzahl"].sum().reset_index()
-# df_Gewinn_pro_Monat_Familie=df.groupby(["Monats-Datum", "Familienstand"])["Gewinn"].sum().reset_index()
-# df_Anzahl_pro_Monat_Familie=df.groupby(["Monats-Datum", "Familienstand"])["Anzahl"].sum().reset_index()
-# df_Gewinn_pro_Monat_Kinder=df.groupby(["Monats-Datum", "Kinder"])["Gewinn"].sum().reset_index()
-# df_Anzahl_pro_Monat_kinder=df.groupby(["Monats-Datum", "Kinder"])["Anzahl"].sum().reset_index()
-# df_Gewinn_pro_Monat_Gehalt=df.groupby(["Monats-Datum", "Gehaltsklassen"])["Gewinn"].sum().reset_index()
-# df_Anzahl_pro_Monat_Gehalt=df.groupby(["Monats-Datum", "Gehaltsklassen"])["Anzahl"].sum().reset_index()
-
-fig1_Gewinn=px.line(df_Gewinn_pro_Monat, x="Monats-Datum", y="Gewinn", color="Angebotenes Produkt", title="Bankprodukte ~ Gewinn")
-fig1_Anzahl=px.line(df_Anzahl_pro_Monat, x="Monats-Datum", y="Anzahl", color="Angebotenes Produkt", title="Bankprodukte ~ Anzahl")
-
-
-# fig2_Gewinn_Geschlecht=px.line(df_Gewinn_pro_Monat_Geschlecht, x="Monats-Datum", y="Gewinn", color="Geschlecht", title="Geschlecht ~ Gewinn")
-# fig2_Anzahl_Geschlecht=px.line(df_Anzahl_pro_Monat_Geschlecht, x="Monats-Datum", y="Anzahl", color="Geschlecht", title="Geschlecht ~ Anzahl")
-# fig2_Gewinn_Alter=px.line(df_Gewinn_pro_Monat_Alter, x="Monats-Datum", y="Gewinn", color="Altersklassen", title="Alter ~ Gewinn")
-# fig2_Anzahl_Alter=px.line(df_Anzahl_pro_Monat_Alter, x="Monats-Datum", y="Anzahl", color="Altersklassen", title="Alter ~ Anzahl")
-# fig2_Gewinn_Job=px.line(df_Gewinn_pro_Monat_Job, x="Monats-Datum", y="Gewinn", color="Job", title="Job ~ Gewinn")
-# fig2_Anzahl_Job=px.line(df_Anzahl_pro_Monat_Job, x="Monats-Datum", y="Anzahl", color="Job", title="Job ~ Anzahl")
-# fig2_Gewinn_Familie=px.line(df_Gewinn_pro_Monat_Familie, x="Monats-Datum", y="Gewinn", color="Familienstand", title="Familienstand ~ Gewinn")
-# fig2_Anzahl_Familie=px.line(df_Anzahl_pro_Monat_Familie, x="Monats-Datum", y="Anzahl", color="Familienstand", title="Familienstand ~ Anzahl")
-# fig2_Gewinn_Kinder=px.line(df_Gewinn_pro_Monat_Kinder, x="Monats-Datum", y="Gewinn", color="Kinder", title="Kinder ~ Gewinn")
-# fig2_Anzahl_Kinder=px.line(df_Anzahl_pro_Monat_kinder, x="Monats-Datum", y="Anzahl", color="Kinder", title="Kinder ~ Anzahl")
-# fig2_Gewinn_Gehalt=px.line(df_Gewinn_pro_Monat_Gehalt, x="Monats-Datum", y="Gewinn", color="Gehaltsklassen", title="Gehalt ~ Gewinn")
-# fig2_Anzahl_Gehalt=px.line(df_Anzahl_pro_Monat_Gehalt, x="Monats-Datum", y="Anzahl", color="Gehaltsklassen", title="Gehalt ~ Anzahl")
+#TODO: Überlegen ob das nicht performanter geht, weil es lange initiale  Ladezeiten produziert
 df_Vorjahr=df[df["Jahr"] == (df["Jahr"].max()-1)].compute()
 df_aktuell=df[df["Jahr"] == (df["Jahr"].max())].compute()
 Gewinn_Vorjahr=round(df_Vorjahr["Gewinn"].sum(),2)
@@ -85,15 +62,15 @@ Anzahl_Veränderung=round(Anzahl_aktuell-Anzahl_Vorjahr,2)
 
 layout = html.Div([
     html.H1(children="KPI´s im Zeitverlauf"),
-    dcc.Tabs(id="tabs", value='tabs_Gewinn', children=[
-        dcc.Tab(label='Gewinn', value='tabs_Gewinn'),
-        dcc.Tab(label='Anzahl', value='tabs_Anzahl'),
+    dcc.Tabs(id="tabs_zeit", value='Gewinn', children=[
+        dcc.Tab(label='Gewinn', value='Gewinn'),
+        dcc.Tab(label='Anzahl', value='Anzahl'),
     ]),
 
     html.H2("Bankprodukte im Zeitverlauf"),
     html.Div(id="Zeitplot_1"),
 
-    html.H2("KPI´s im Zeitverlauf"),
+    html.H2("KPI's im Zeitverlauf"),
     html.Div(id="Zeit_Karte",children =[
         html.H3("            Vorjahr        aktuelles Jahr         Veränderung"),
         dcc.Markdown(f'''Gewinn     {Gewinn_Vorjahr}     {Gewinn_aktuell}   {Gewinn_Veränderung }'''),
@@ -103,84 +80,72 @@ layout = html.Div([
 
     html.H2("Features im Zeitverlauf"),
     dcc.RadioItems(
-    id="Radio2",
+    id="radio_zeit",
     options=[
         {'label': 'Geschlecht', 'value': 'Geschlecht'},
         {'label': 'Altersklassen', 'value': 'Alter'},
         {'label': 'Beruf', 'value': 'Job'},
-        {'label': 'Familienstand', 'value': 'Familie'},
+        {'label': 'Familienstand', 'value': 'Familienstand'},
         {'label': 'Kinder', 'value': 'Kinder'},
         {'label': 'Gehaltsklasse', 'value': 'Gehalt'}
     ],
     value='Geschlecht',
     labelStyle={'display': 'inline-block'}
-    ) #, 
-#    html.Div(id="Zeitplot_2")
+    ) , 
+    html.Div(id="Zeitplot_2")
 ])
 
 @app.callback(Output("Zeitplot_1", 'children'),
-              Input('tabs', 'value'))
-
+              Input('tabs_zeit', 'value'))
 def render_content(tab):
-    if tab == 'tabs_Gewinn':
+        temp_dataframe = fetch_dataframe_sum(df, ["Monats-Datum", "Angebotenes Produkt"])
+        temp_fig = fetch_figure_line(temp_dataframe,\
+            "Monats-Datum", tab, color="Angebotenes Produkt",  title = "Bankprodukte ~ " + tab)
+        
         return html.Div([
-            dcc.Graph(figure=fig1_Gewinn)
-        ])
-    elif tab == 'tabs_Anzahl':
-        return html.Div([
-            dcc.Graph(figure=fig1_Anzahl)
+            
+            dcc.Graph(figure= temp_fig)
         ])
 
-# @app.callback(Output("Zeitplot_2", 'children'),
-#               Input('tabs', 'value'),
-#               Input("Radio2", "value"))
+@app.callback(Output("Zeitplot_2", 'children'),
+               Input('tabs_zeit', 'value'),
+               Input("radio_zeit", "value"))
+def render_content(tab, radio):
+    temp_df = fetch_dataframe_sum(df, ["Monats-Datum", radio])
+    temp_fig = fetch_figure_line(temp_df, "Monats-Datum", tab,\
+             color = radio,  title = tab + " ~ " + radio)
+    
+    return html.Div([
+            dcc.Graph(figure=temp_fig)
+    ])
 
-# def render_content(tab, radio):
-#     if tab == 'tabs_Gewinn' and radio == "Geschlecht":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Gewinn_Geschlecht)
-#         ])
-#     elif tab == 'tabs_Anzahl' and radio == "Geschlecht":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Anzahl_Geschlecht)
-#         ])
-#     elif tab == 'tabs_Gewinn' and radio == "Alter":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Gewinn_Alter)
-#         ])
-#     elif tab == 'tabs_Anzahl' and radio == "Alter":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Anzahl_Alter)
-#         ])
-#     elif tab == 'tabs_Gewinn' and radio == "Job":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Gewinn_Job)
-#         ])
-#     elif tab == 'tabs_Anzahl' and radio == "Job":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Anzahl_Job)
-#         ])
-#     elif tab == 'tabs_Gewinn' and radio == "Familie":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Gewinn_Familie)
-#         ])
-#     elif tab == 'tabs_Anzahl' and radio == "Familie":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Anzahl_Familie)
-#         ])
-#     elif tab == 'tabs_Gewinn' and radio == "Kinder":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Gewinn_Kinder)
-#         ])
-#     elif tab == 'tabs_Anzahl' and radio == "Kinder":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Anzahl_Kinder)
-#         ])
-#     elif tab == 'tabs_Gewinn' and radio == "Gehalt":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Gewinn_Gehalt)
-#         ])
-#     elif tab == 'tabs_Anzahl' and radio == "Gehalt":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Anzahl_Gehalt)
-#         ])
+def fetch_figure_line(dataframe, x, y, title, color = None, text = None):
+    #frame = fetch_dataframe(dataframe, groupDirection, args)
+    if color != None and text == None:
+        return px.line(dataframe, x=x, y=y, color=color, title=title)
+    elif color == None and text == None:
+        return px.line(dataframe, x=x, y=y, title=title)
+    elif color == None and text != None:
+         return px.line(dataframe, x=x, y=y, title=title, text=text)
+    else:
+        return px.line(dataframe, x=x, y=y, title=title, color=color, text=text)
+    
+def fetch_figure_bar(dataframe, x, y, title, color = None, text = None):
+    if color != None and text == None:
+        return px.bar(dataframe, x=x, y=y, color=color, title=title)
+    elif color == None and text == None:
+        return px.bar(dataframe, x=x, y=y, title=title)
+    elif color == None and text != None:
+        fig_temp = px.bar(dataframe, x=x, y=y, title=title, text=text)
+        fig_temp.update_traces(texttemplate='%{text:.2s}', textposition='outside')
+        fig_temp.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
+        return fig_temp
+    else:
+        fig_temp = px.bar(dataframe, x=x, y=y, title=title, color=color, text=text)
+        fig_temp.update_traces(texttemplate='%{text:.2s}', textposition='outside')
+        fig_temp.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
+        return fig_temp
+
+def fetch_dataframe_sum(dataframe, args):
+    return dataframe.groupby(args).sum().reset_index().compute()
+    #return dataframe.groupby(args).sum().reset_index()

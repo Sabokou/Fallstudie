@@ -1,14 +1,14 @@
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
-from app import app
+from app import app, cache
 import plotly.express as px
 import pandas as pd
 import numpy as np
 from datetime import datetime
 import dask.dataframe as dd
 import dask.array as da
-
+from sqlalchemy import cast, sql, types
 """
 # Hallo Alina, ich hab die alle notwendigen Funktionen vollständig implementiert
 # Es gibt 2 große TODO: 
@@ -17,10 +17,9 @@ import dask.array as da
 # eine Neu-Indizierung nach "Monats-Datum", weil Operationen auf Index sind schneller :)
 # VG Phillip
 """
-
-df = dd.read_sql_table("testdaten", 'sqlite:///Kundendaten.db', "Datum")
+df = dd.read_sql_table("testdaten", 'sqlite:///Kundendaten.db', "index")
 # df["Datum"] = df['Datum'].astype(str).str[:7]
-# df.set_index(df.Datum)
+df.set_index(df.Datum)
 
 
 
@@ -107,8 +106,8 @@ layout = html.Div([
 def render_content(tab):
     if tab=="Kaufbereitschaft":
         return html.Div([
-            dcc.Graph(figure=fetch_figure_line(fetch_dataframe_prob(df, ["Monats-Datum","Angebotenes Produkt"]), \
-                "Monats-Datum", "Anzahl", color="Angebotenes Produkt", title="Kaufwahrscheinlichkeit in Prozent") )
+            dcc.Graph(figure=fetch_figure_line(fetch_dataframe_prob(df, ["Datum","Angebotenes Produkt"]), \
+                "Datum", "Anzahl", color="Angebotenes Produkt", title="Kaufwahrscheinlichkeit in Prozent") )
         ])
     else:    
         temp_dataframe = fetch_dataframe_sum(df, ["Datum", "Angebotenes Produkt"])
@@ -126,8 +125,8 @@ def render_content(tab):
 def render_content(tab, radio):
     if tab=="Kaufbereitschaft":
         return html.Div([
-            dcc.Graph(figure=fetch_figure_line(fetch_dataframe_prob(df, ["Monats-Datum",radio]), \
-                "Monats-Datum", "Anzahl", color=radio, title="Kaufwahrscheinlichkeit in Prozent") )
+            dcc.Graph(figure=fetch_figure_line(fetch_dataframe_prob(df, ["Datum",radio]), \
+                "Datum", "Anzahl", color=radio, title="Kaufwahrscheinlichkeit in Prozent") )
         ])
     else:  
         temp_df = fetch_dataframe_sum(df, ["Datum", radio])
@@ -138,6 +137,7 @@ def render_content(tab, radio):
             dcc.Graph(figure=temp_fig)
         ])
 
+@cache.memoize()
 def fetch_figure_line(dataframe, x, y, title, color = None, text = None):
     #frame = fetch_dataframe(dataframe, groupDirection, args)
     if color != None and text == None:
@@ -165,8 +165,10 @@ def fetch_figure_bar(dataframe, x, y, title, color = None, text = None):
         fig_temp.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
         return fig_temp
 
+@cache.memoize()
 def fetch_dataframe_sum(dataframe, args):
     return dataframe.groupby(args).sum().reset_index().compute()
     #return dataframe.groupby(args).sum().reset_index()
+@cache.memoize()
 def fetch_dataframe_prob(dataframe, args):
     return dataframe.groupby(args)["Anzahl"].apply(lambda x: x.sum()/x.count()).reset_index().compute()

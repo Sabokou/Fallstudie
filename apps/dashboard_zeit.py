@@ -83,11 +83,11 @@ layout = html.Div([
     id="radio_zeit",
     options=[
         {'label': 'Geschlecht', 'value': 'Geschlecht'},
-        {'label': 'Altersklassen', 'value': 'Alter'},
+        {'label': 'Altersklassen', 'value': 'Altersklassen'},
         {'label': 'Beruf', 'value': 'Job'},
         {'label': 'Familienstand', 'value': 'Familienstand'},
         {'label': 'Kinder', 'value': 'Kinder'},
-        {'label': 'Gehaltsklasse', 'value': 'Gehalt'}
+        {'label': 'Gehaltsklasse', 'value': 'Gehaltsklassen'}
     ],
     value='Geschlecht',
     labelStyle={'display': 'inline-block'}

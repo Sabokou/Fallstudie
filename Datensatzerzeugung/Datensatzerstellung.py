@@ -231,7 +231,7 @@ for jahr in range(2015,2021):
 
 
             #Bestimmen, ob Produkt angenommen oder abgelehnt wurde
-            chance = product_chance_age.get(alter_ident)[produkt_index] * product_chance_child.get(child_ident)[produkt_index] * \
+            chance = (product_chance_age.get(alter_ident)[produkt_index] // 2) * product_chance_child.get(child_ident)[produkt_index] * \
                     product_chance_gender.get(geschlecht_ident)[produkt_index] * product_chance_income.get(gehalt_ident)[produkt_index] * \
                     product_chance_marital.get(marital_ident)[produkt_index] 
 

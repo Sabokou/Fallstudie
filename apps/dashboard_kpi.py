@@ -2,8 +2,12 @@
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
+
+from flask_caching import Cache
+
 from app import app
-# from flask_caching import Cache
+from app import cache
+
 
 #Import Data structures
 import pandas as pd
@@ -24,6 +28,35 @@ df = dd.read_sql_table("testdaten", 'sqlite:///Kundendaten.db', "Jahr")
 #Daten reduzieren auf gewünschtes Jahr
 df_YTD = df.loc[ytd].compute()
 df_YTD.head()
+
+#Mapping für Graphen-Gruppierungen
+def Altersklassen(A):
+    if A < 30:
+        return 'Jung (18-29)'
+    elif A <46:
+        return 'Junge Erwachsene (30-45)'
+    elif A<66:
+        return "Alte Erwachsene (46-65)"
+    else:
+        return "Greise (66+)"
+
+df_YTD['Altersklassen'] = df_YTD['Alter'].map(Altersklassen)
+
+def Gehaltsklassen(A):
+    if A < 15000:
+        return 'Sehr niedrig (<15.000)'
+    elif A <30000:
+        return 'niedrig (15.000-30.000)'
+    elif A<50000:
+        return "Untere Mitte (30.000-50.000)"
+    elif A<80000:
+        return "Obere Mitte (50.000-80.000)"
+    elif A<100000:
+        return "Hoch (80.000-100.000)"
+    else:
+        return "Sehr hoch (>100.000)"
+
+df_YTD['Gehaltsklassen'] = df_YTD['Gehalt'].map(Gehaltsklassen)
 
 #Berechnug der Werte in den "Werte-Karten"
 Gewinn_YTD = df_YTD["Gewinn"].sum()
@@ -96,7 +129,8 @@ def fetch_figure_line(dataframe, x, y, title, color = None, text = None):
          return px.line(dataframe, x=x, y=y, title=title, text=text)
     else:
         return px.line(dataframe, x=x, y=y, title=title, color=color, text=text)
-    
+
+@cache.memoize()    
 def fetch_figure_bar(dataframe, x, y, title, color = None, text = None):
     if color != None and text == None:
         return px.bar(dataframe, x=x, y=y, color=color, title=title)
@@ -113,6 +147,7 @@ def fetch_figure_bar(dataframe, x, y, title, color = None, text = None):
         fig_temp.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
         return fig_temp
 
+@cache.memoize()
 def fetch_dataframe_sum(dataframe, groupDirection, args):
     #return dataframe.groupby(args).sum().reset_index().compute()
     return dataframe.groupby(args).sum().reset_index()

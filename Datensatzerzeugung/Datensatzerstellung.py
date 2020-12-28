@@ -275,8 +275,8 @@ for jahr in range(2016,2021):
             tag = randint(1,28)
             eintrag.append(tag)
             
-            date = datetime.date(year=jahr, month=monat, day=tag)
-            eintrag.append(str(date.year) + '-' + str(date.month))
+            date = datetime.date(year=jahr, month=monat, day=1)
+            eintrag.append(date)
 
             eintrag.append(anzahl)
             ges.append(eintrag)
@@ -288,5 +288,5 @@ df = pd.DataFrame(ges, columns=["Alter", "Geschlecht", "Job", "Familienstand", "
                                  "Angebotenes Produkt", "Gekauft", "Gewinn",\
                                  "Jahr", "Monat", "Tag", "Datum", "Anzahl"]) 
 print("Converted to Dataframe")
-df.to_sql(name="allgemeine_daten", con=e, if_exists="replace")
+df.to_sql(name="testdaten", con=e, if_exists="replace")
 print("Transfer complete")

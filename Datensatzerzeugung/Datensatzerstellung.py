@@ -5,6 +5,7 @@ from datetime import date
 
 #region Datenbank aufrufen
 from sqlalchemy import create_engine
+import datetime
 e = create_engine('sqlite:///Kundendaten.db')
 
 #endregion
@@ -120,9 +121,21 @@ product_chance_child = {"ja":   [1.25,    1.1, 0.9, 0.7,     0.9,  1.15,  1.25],
 ges = list()
 
 #region Generation der Einträge
-for jahr in range(2015,2021):
+for jahr in range(2016,2021):
     for monat in range(1,13):
         for i in range(int(60000 + (jahr%2014) * uniform(0.7,1.2) * 10000)): #add back one 0
+            
+            #Simulation Wirtschaftscrash während Corona
+            if jahr == 2020 and monat == 3:
+                if i == int(60000 + (jahr%2014) * 0.7 * 10000):
+                    break 
+            elif jahr == 2020 and monat == 4:
+                if i == int(60000 + (jahr%2014) * 0.8 * 10000):
+                    break
+            elif jahr == 2020 and monat == 5:
+                if i == int(60000 + (jahr%2014) * 0.85 * 10000):
+                    break
+        
             eintrag = []
             distro = randint(1,100)
 
@@ -235,10 +248,10 @@ for jahr in range(2015,2021):
                     product_chance_gender.get(geschlecht_ident)[produkt_index] * product_chance_income.get(gehalt_ident)[produkt_index] * \
                     product_chance_marital.get(marital_ident)[produkt_index] 
 
-            if chance >= 100:
-                chance = 90
-            elif chance <= 0:
-                chance = 10
+            if chance >= 90:
+                chance = uniform(0.8 ,1.1) * 88
+            elif chance <= 10:
+                chance = uniform(0.8, 1.1) * 12
             
             distro = randint(0,100)
             if distro <= chance:
@@ -262,18 +275,18 @@ for jahr in range(2015,2021):
             tag = randint(1,28)
             eintrag.append(tag)
             
-            combined = date(jahr, monat, tag)
-            eintrag.append(combined)
+            date = datetime.date(year=jahr, month=monat, day=tag)
+            eintrag.append(str(date.year) + '-' + str(date.month))
 
             eintrag.append(anzahl)
             ges.append(eintrag)
         #endregion
     
-        print(f"Monat {monat} | Jahr {jahr}")
+        print(f"Monat {monat} | Jahr {jahr} | done")
 
 df = pd.DataFrame(ges, columns=["Alter", "Geschlecht", "Job", "Familienstand", "Kinder", "Gehalt",\
                                  "Angebotenes Produkt", "Gekauft", "Gewinn",\
                                  "Jahr", "Monat", "Tag", "Datum", "Anzahl"]) 
-print(df)
+print("Converted to Dataframe")
 df.to_sql(name="allgemeine_daten", con=e, if_exists="replace")
 print("Transfer complete")

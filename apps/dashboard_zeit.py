@@ -18,8 +18,10 @@ import dask.array as da
 # VG Phillip
 """
 
-df = dd.read_sql_table("testdaten", 'sqlite:///Kundendaten.db', "index")
-df["Monats-Datum"] = df['Datum'].astype(str).str[:7]
+df = dd.read_sql_table("testdaten", 'sqlite:///Kundendaten.db', "Datum")
+# df["Datum"] = df['Datum'].astype(str).str[:7]
+# df.set_index(df.Datum)
+
 
 
 def Altersklassen(A):
@@ -98,9 +100,9 @@ layout = html.Div([
 @app.callback(Output("Zeitplot_1", 'children'),
               Input('tabs_zeit', 'value'))
 def render_content(tab):
-        temp_dataframe = fetch_dataframe_sum(df, ["Monats-Datum", "Angebotenes Produkt"])
+        temp_dataframe = fetch_dataframe_sum(df, ["Datum", "Angebotenes Produkt"])
         temp_fig = fetch_figure_line(temp_dataframe,\
-            "Monats-Datum", tab, color="Angebotenes Produkt",  title = "Bankprodukte ~ " + tab)
+            "Datum", tab, color="Angebotenes Produkt",  title = "Bankprodukte ~ " + tab)
         
         return html.Div([
             
@@ -111,8 +113,8 @@ def render_content(tab):
                Input('tabs_zeit', 'value'),
                Input("radio_zeit", "value"))
 def render_content(tab, radio):
-    temp_df = fetch_dataframe_sum(df, ["Monats-Datum", radio])
-    temp_fig = fetch_figure_line(temp_df, "Monats-Datum", tab,\
+    temp_df = fetch_dataframe_sum(df, ["Datum", radio])
+    temp_fig = fetch_figure_line(temp_df, "Datum", tab,\
              color = radio,  title = tab + " ~ " + radio)
     
     return html.Div([

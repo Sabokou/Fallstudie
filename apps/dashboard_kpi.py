@@ -25,6 +25,35 @@ ytd = datetime.now().year
 #Einlesen der Daten
 df = dd.read_sql_table("testdaten", 'sqlite:///Kundendaten.db', "Jahr")
 
+
+def Altersklassen(A):
+    if A < 30:
+        return 'Jung (18-29)'
+    elif A <46:
+        return 'Junge Erwachsene (30-45)'
+    elif A<66:
+        return "Alte Erwachsene (46-65)"
+    else:
+        return "Greise (66+)"
+
+df['Altersklassen'] = df['Alter'].map(Altersklassen)
+
+def Gehaltsklassen(A):
+    if A < 15000:
+        return 'Sehr niedrig (<15.000)'
+    elif A <30000:
+        return 'niedrig (15.000-30.000)'
+    elif A<50000:
+        return "Untere Mitte (30.000-50.000)"
+    elif A<80000:
+        return "Obere Mitte (50.000-80.000)"
+    elif A<100000:
+        return "Hoch (80.000-100.000)"
+    else:
+        return "Sehr hoch (>100.000)"
+
+df['Gehaltsklassen'] = df['Gehalt'].map(Gehaltsklassen)
+
 #Daten reduzieren auf gewünschtes Jahr
 df_YTD = df.loc[ytd].compute()
 df_YTD.head()
@@ -64,7 +93,7 @@ Anzahl_YTD = df_YTD["Anzahl"].sum()
 
 #Websiten-Aufbau
 layout = html.Div([
-    html.H1(children="KPI´s im Zeitverlauf"),
+    html.H1(children="Aktuelle KPI´s"),
     dcc.Tabs(id="tabs_kpi", value='Gewinn', children=[
         dcc.Tab(label='Gewinn', value='Gewinn'),
         dcc.Tab(label='Anzahl', value='Anzahl'),
@@ -73,7 +102,7 @@ layout = html.Div([
     html.H2("Erfolg der Produkte"),
     html.Div(id="Produktplot_1"),
 
-    html.H2("KPI´s im Zeitverlauf"),
+    html.H2("Aktuelle KPI´s"),
     html.Div(id="Wert_Karte",children =[
         html.H3("Werte im aktuellen Jahr"),
         dcc.Markdown(f'''Gewinn     {Gewinn_YTD}'''),
@@ -86,11 +115,11 @@ layout = html.Div([
     id="radio_kpi",
     options=[
         {'label': 'Geschlecht', 'value': 'Geschlecht'},
-        {'label': 'Altersklassen', 'value': 'Alter'},
+        {'label': 'Altersklassen', 'value': 'Altersklassen'},
         {'label': 'Beruf', 'value': 'Job'},
         {'label': 'Familienstand', 'value': 'Familienstand'},
         {'label': 'Kinder', 'value': 'Kinder'},
-        {'label': 'Gehaltsklasse', 'value': 'Gehalt'}
+        {'label': 'Gehaltsklasse', 'value': 'Gehaltsklassen'}
     ],
     value='Geschlecht',
     labelStyle={'display': 'inline-block'}

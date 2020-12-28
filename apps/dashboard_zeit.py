@@ -59,12 +59,16 @@ Gewinn_Veränderung=round(Gewinn_aktuell-Gewinn_Vorjahr,2)
 Anzahl_Vorjahr=round(df_Vorjahr["Anzahl"].sum(),2)
 Anzahl_aktuell=round(df_aktuell["Anzahl"].sum(),2)
 Anzahl_Veränderung=round(Anzahl_aktuell-Anzahl_Vorjahr,2)
+Prob_Vorjahr=round(df_Vorjahr["Anzahl"].sum()/df_Vorjahr["Anzahl"].count(),4)
+Prob_aktuell=round(df_aktuell["Anzahl"].sum()/df_aktuell["Anzahl"].count(),4)
+Prob_Veränderung=round(Prob_aktuell-Prob_Vorjahr,4)
 
 layout = html.Div([
     html.H1(children="KPI´s im Zeitverlauf"),
     dcc.Tabs(id="tabs_zeit", value='Gewinn', children=[
         dcc.Tab(label='Gewinn', value='Gewinn'),
         dcc.Tab(label='Anzahl', value='Anzahl'),
+        dcc.Tab(label="Kaufbereitschaft", value="Kaufbereitschaft")
     ]),
 
     html.H2("Bankprodukte im Zeitverlauf"),
@@ -74,7 +78,8 @@ layout = html.Div([
     html.Div(id="Zeit_Karte",children =[
         html.H3("            Vorjahr        aktuelles Jahr         Veränderung"),
         dcc.Markdown(f'''Gewinn     {Gewinn_Vorjahr}     {Gewinn_aktuell}   {Gewinn_Veränderung }'''),
-        dcc.Markdown(f'''Anzahl      {Anzahl_Vorjahr}     {Anzahl_aktuell}   {Anzahl_Veränderung }''')
+        dcc.Markdown(f'''Anzahl      {Anzahl_Vorjahr}     {Anzahl_aktuell}   {Anzahl_Veränderung }'''),
+        dcc.Markdown(f'''Wahrscheinlichkeit      {Prob_Vorjahr}     {Prob_aktuell}   {Prob_Veränderung }''')
         ]),
 
 
@@ -98,6 +103,12 @@ layout = html.Div([
 @app.callback(Output("Zeitplot_1", 'children'),
               Input('tabs_zeit', 'value'))
 def render_content(tab):
+    if tab=="Kaufbereitschaft":
+        return html.Div([
+            dcc.Graph(figure=fetch_figure_line(fetch_dataframe_prob(df, ["Monats-Datum","Angebotenes Produkt"]), \
+                "Monats-Datum", "Anzahl", color="Angebotenes Produkt", title="Kaufwahrscheinlichkeit in Prozent") )
+        ])
+    else:    
         temp_dataframe = fetch_dataframe_sum(df, ["Monats-Datum", "Angebotenes Produkt"])
         temp_fig = fetch_figure_line(temp_dataframe,\
             "Monats-Datum", tab, color="Angebotenes Produkt",  title = "Bankprodukte ~ " + tab)
@@ -111,13 +122,19 @@ def render_content(tab):
                Input('tabs_zeit', 'value'),
                Input("radio_zeit", "value"))
 def render_content(tab, radio):
-    temp_df = fetch_dataframe_sum(df, ["Monats-Datum", radio])
-    temp_fig = fetch_figure_line(temp_df, "Monats-Datum", tab,\
+    if tab=="Kaufbereitschaft":
+        return html.Div([
+            dcc.Graph(figure=fetch_figure_line(fetch_dataframe_prob(df, ["Monats-Datum",radio]), \
+                "Monats-Datum", "Anzahl", color=radio, title="Kaufwahrscheinlichkeit in Prozent") )
+        ])
+    else:  
+        temp_df = fetch_dataframe_sum(df, ["Monats-Datum", radio])
+        temp_fig = fetch_figure_line(temp_df, "Monats-Datum", tab,\
              color = radio,  title = tab + " ~ " + radio)
     
-    return html.Div([
+        return html.Div([
             dcc.Graph(figure=temp_fig)
-    ])
+        ])
 
 def fetch_figure_line(dataframe, x, y, title, color = None, text = None):
     #frame = fetch_dataframe(dataframe, groupDirection, args)
@@ -149,3 +166,5 @@ def fetch_figure_bar(dataframe, x, y, title, color = None, text = None):
 def fetch_dataframe_sum(dataframe, args):
     return dataframe.groupby(args).sum().reset_index().compute()
     #return dataframe.groupby(args).sum().reset_index()
+def fetch_dataframe_prob(dataframe, args):
+    return dataframe.groupby(args)["Anzahl"].apply(lambda x: x.sum()/x.count()).reset_index().compute()

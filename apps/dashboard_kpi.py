@@ -3,35 +3,38 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 from app import app
+# from flask_caching import Cache
 
+#Import Data structures
 import pandas as pd
 import dask.dataframe as dd
-
+import dask.array as da
 import numpy as np
 
+#Import plotting library
 import plotly.express as px
-import dask.array as da
 
 from datetime import datetime
 ytd = datetime.now().year
 
 #Programmlogik
-# currentYear = dt.datetime.now().year
-# df_jahr = df.where("Jahr" == str(currentYear))
+#Einlesen der Daten
 df = dd.read_sql_table("testdaten", 'sqlite:///Kundendaten.db', "Jahr")
 
+#Daten reduzieren auf gewünschtes Jahr
 df_YTD = df.loc[ytd].compute()
 df_YTD.head()
 
+#Berechnug der Werte in den "Werte-Karten"
 Gewinn_YTD = df_YTD["Gewinn"].sum()
 Anzahl_YTD = df_YTD["Anzahl"].sum()
 
 #Websiten-Aufbau
 layout = html.Div([
     html.H1(children="KPI´s im Zeitverlauf"),
-    dcc.Tabs(id="tabs", value='tabs_Gewinn', children=[
-        dcc.Tab(label='Gewinn', value='tabs_Gewinn'),
-        dcc.Tab(label='Anzahl', value='tabs_Anzahl'),
+    dcc.Tabs(id="tabs_kpi", value='Gewinn', children=[
+        dcc.Tab(label='Gewinn', value='Gewinn'),
+        dcc.Tab(label='Anzahl', value='Anzahl'),
     ]),
 
     html.H2("Erfolg der Produkte"),
@@ -47,12 +50,12 @@ layout = html.Div([
 
     html.H2("Features im Zeitverlauf"),
     dcc.RadioItems(
-    id="Radio2",
+    id="radio_kpi",
     options=[
         {'label': 'Geschlecht', 'value': 'Geschlecht'},
         {'label': 'Altersklassen', 'value': 'Alter'},
         {'label': 'Beruf', 'value': 'Job'},
-        {'label': 'Familienstand', 'value': 'Familie'},
+        {'label': 'Familienstand', 'value': 'Familienstand'},
         {'label': 'Kinder', 'value': 'Kinder'},
         {'label': 'Gehaltsklasse', 'value': 'Gehalt'}
     ],
@@ -63,73 +66,26 @@ layout = html.Div([
 ])
 
 @app.callback(Output(component_id = "Produktplot_1", component_property= 'children'),
-              Input(component_id = 'tabs', component_property= 'value'))
+              Input(component_id = 'tabs_kpi', component_property= 'value'))
 def render_content(tab):
-    if tab == 'tabs_Gewinn':
-        return html.Div([
-            dcc.Graph(figure=fetch_figure_bar(fetch_dataframe_sum(df_YTD, "Gewinn", ["Angebotenes Produkt"]),\
-            "Angebotenes Produkt", "Gewinn",  title = "Gewinn pro Produkt [YTD]" ))
-        ])
-    elif tab == 'tabs_Anzahl':
-        return html.Div([
-            dcc.Graph(figure=fetch_figure_bar(fetch_dataframe_sum(df_YTD, "Anzahl", ["Angebotenes Produkt"]),\
-            "Angebotenes Produkt", "Anzahl", title = "Anzahl verkaufter Produkte [YTD]" ))
+    return html.Div([
+        dcc.Graph(figure=fetch_figure_bar(fetch_dataframe_sum(df_YTD, tab, ["Angebotenes Produkt"]),\
+        "Angebotenes Produkt", tab,  title = tab + " verkaufter Produkter [YTD]" ))
         ])
 
     
-# @app.callback(Output("Produktplot_2", 'children'),
-#               Input('tabs', 'value'),
-#               Input("Radio2", "value"))
-# def render_content(tab, radio):
-#     if tab == 'tabs_Gewinn' and radio == "Geschlecht":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Gewinn_Geschlecht)
-#         ])
-#     elif tab == 'tabs_Anzahl' and radio == "Geschlecht":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Anzahl_Geschlecht)
-#         ])
-#     elif tab == 'tabs_Gewinn' and radio == "Alter":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Gewinn_Alter)
-#         ])
-#     elif tab == 'tabs_Anzahl' and radio == "Alter":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Anzahl_Alter)
-#         ])
-#     elif tab == 'tabs_Gewinn' and radio == "Job":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Gewinn_Job)
-#         ])
-#     elif tab == 'tabs_Anzahl' and radio == "Job":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Anzahl_Job)
-#         ])
-#     elif tab == 'tabs_Gewinn' and radio == "Familie":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Gewinn_Familie)
-#         ])
-#     elif tab == 'tabs_Anzahl' and radio == "Familie":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Anzahl_Familie)
-#         ])
-#     elif tab == 'tabs_Gewinn' and radio == "Kinder":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Gewinn_Kinder)
-#         ])
-#     elif tab == 'tabs_Anzahl' and radio == "Kinder":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Anzahl_Kinder)
-#         ])
-#     elif tab == 'tabs_Gewinn' and radio == "Gehalt":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Gewinn_Gehalt)
-#         ])
-#     elif tab == 'tabs_Anzahl' and radio == "Gehalt":
-#         return html.Div([
-#             dcc.Graph(figure=fig2_Anzahl_Gehalt)
-#         ])
+@app.callback(Output("Produktplot_2", 'children'),
+              Input('tabs_kpi', 'value'),
+              Input("radio_kpi", 'value'))
+def render_content(tab, radio):
+    temp_df = fetch_dataframe_sum(df_YTD, tab, ["Angebotenes Produkt", radio])
+    temp_fig = fetch_figure_bar(temp_df, radio, tab,\
+             color = "Angebotenes Produkt",  title = tab + " verkaufter Produkte nach " + radio + " [YTD]" )
     
+    return html.Div([
+            dcc.Graph(figure=temp_fig)
+    ])
+
 def fetch_figure_line(dataframe, x, y, title, color = None, text = None):
     #frame = fetch_dataframe(dataframe, groupDirection, args)
     if color != None and text == None:
@@ -158,7 +114,7 @@ def fetch_figure_bar(dataframe, x, y, title, color = None, text = None):
         return fig_temp
 
 def fetch_dataframe_sum(dataframe, groupDirection, args):
-    return dataframe.groupby(args).sum().reset_index().compute()
-
+    #return dataframe.groupby(args).sum().reset_index().compute()
+    return dataframe.groupby(args).sum().reset_index()
 # def fetch_dataframe_count(dataframe, groupDirection, args):
 #     return dataframe.groupby(args).count().reset_index()

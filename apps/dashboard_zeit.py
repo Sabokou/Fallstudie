@@ -17,11 +17,15 @@ from sqlalchemy import cast, sql, types
 # eine Neu-Indizierung nach "Monats-Datum", weil Operationen auf Index sind schneller :)
 # VG Phillip
 """
-df = dd.read_sql_table("testdaten", 'sqlite:///Kundendaten.db', "index")
-# df["Datum"] = df['Datum'].astype(str).str[:7]
-df.set_index(df.Datum)
 
+@cache.memoize()
+def fetch_dataframe()
+    df = dd.read_sql_table("testdaten", 'sqlite:///Kundendaten.db', "index")
+    # df["Datum"] = df['Datum'].astype(str).str[:7]
+    df.set_index(df.Datum)
+    return df
 
+df = fetch_dataframe()
 
 def Altersklassen(A):
     if A < 30:

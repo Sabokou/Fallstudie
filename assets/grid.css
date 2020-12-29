@@ -1,0 +1,24 @@
+.parent {
+    display: grid;
+    grid-template-columns: 0.2fr repeat(5, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    grid-column-gap: 5px;
+    grid-row-gap: 0px;
+    }
+    
+.div_menü_1 { grid-area: 1 / 1 / 3 / 2; }
+.div_menü_2 { grid-area: 3 / 1 / 5 / 2; }
+.div_menü_3 { grid-area: 5 / 1 / 7 / 2; }
+.div_menü_4 { grid-area: 7 / 1 / 9 / 2; }
+    
+.div_seitentitel { grid-area: 1 / 2 / 2 / 5; }
+.div_logo { grid-area: 1 / 5 / 2 / 7; }
+
+.div_tab_leiste { grid-area: 2 / 2 / 3 / 7; }
+
+.div_graph_oben_links { grid-area: 3 / 2 / 6 / 5; }
+.div_graph_unten_rechts { grid-area: 6 / 4 / 9 / 7; }
+
+.div_tabelle_oben_rechts { grid-area: 3 / 5 / 6 / 7; }
+.div_auswahl_unten_links { grid-area: 6 / 2 / 9 / 4; }
+

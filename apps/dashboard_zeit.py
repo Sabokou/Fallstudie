@@ -84,7 +84,7 @@ layout = html.Div([
         html.H3("            Vorjahr        aktuelles Jahr         Veränderung"),
         dcc.Markdown(f'''Gewinn     {Gewinn_Vorjahr}     {Gewinn_aktuell}   {Gewinn_Veränderung }'''),
         dcc.Markdown(f'''Anzahl      {Anzahl_Vorjahr}     {Anzahl_aktuell}   {Anzahl_Veränderung }'''),
-        dcc.Markdown(f'''Wahrscheinlichkeit      {Prob_Vorjahr}     {Prob_aktuell}   {Prob_Veränderung }''')
+        dcc.Markdown(f'''Wahrscheinlichkeit      {round(Prob_Vorjahr*100,2)}%     {round(Prob_aktuell*100,2)}%   {round(Prob_Veränderung*100,2) }%''')
         ]),
 
 

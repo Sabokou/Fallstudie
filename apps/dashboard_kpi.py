@@ -80,7 +80,7 @@ layout = html.Div([
         html.H3("Werte im aktuellen Jahr"),
         dcc.Markdown(f'''Gewinn     {Gewinn_YTD}'''),
         dcc.Markdown(f'''Anzahl     {Anzahl_YTD}'''),
-        dcc.Markdown(f'''Wahrscheinlichkeit     {Prob_YTD}''')
+        dcc.Markdown(f'''Wahrscheinlichkeit     {Prob_YTD*100}%''')
         ]),
 
 

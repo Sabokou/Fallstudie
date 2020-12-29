@@ -22,12 +22,17 @@ from datetime import datetime
 ytd = datetime.now().year
 
 #Programmlogik
-#Einlesen der Daten
-df = dd.read_sql_table("testdaten", 'sqlite:///Kundendaten.db', "Jahr")
+@cache.memoize()
+def fetch_dataframe(ytd):
+    #Einlesen der Daten
+    df = dd.read_sql_table("testdaten", 'sqlite:///Kundendaten.db', "Jahr")
 
-#Daten reduzieren auf gewünschtes Jahr
-df_YTD = df.loc[ytd].compute()
-df_YTD.head()
+    #Daten reduzieren auf gewünschtes Jahr
+    df_YTD = df.loc[ytd].compute()
+    
+    return df_YTD
+
+df_YTD = fetch_dataframe(ytd)
 
 #Mapping für Graphen-Gruppierungen
 def Altersklassen(A):

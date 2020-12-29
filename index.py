@@ -9,15 +9,13 @@ from apps import dashboard_zeit
 from apps import dashboard_bcg
 from apps import tool 
 
-app.layout = html.Div(className = "parent", children = [
+app.layout = html.Div(className = "main_parent", children = [
     dcc.Location(id='url', refresh=False),
-    html.Div([
-        dcc.Link('Tool|', href='/apps/tool'),
-        dcc.Link('Dashboard', href='/apps/dashboard_kpi'),
-        dcc.Link('Dashboard2', href='/apps/dashboard_zeit'),
-        dcc.Link('Dashboard3', href='/apps/dashboard_bcg')
-    ], className="row"),
-    html.Div(id='page-content', children=[])
+    dcc.Link('Tool', className = "div_menüleiste_1", href ='/apps/tool'),
+    dcc.Link('KPIs', className = "div_menüleiste_2", href ='/apps/dashboard_kpi'),
+    dcc.Link('Zeitverlauf', className = "div_menüleiste_3", href ='/apps/dashboard_zeit'),
+    dcc.Link('BCG-Matrix', className = "div_menüleiste_4", href ='/apps/dashboard_bcg'),
+    html.Div(className = "layout_box", id = 'page-content', children=[])
 ])
 
 @app.callback(Output('page-content', 'children'),

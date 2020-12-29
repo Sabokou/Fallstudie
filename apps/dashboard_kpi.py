@@ -69,7 +69,7 @@ Anzahl_YTD = round(df_YTD["Anzahl"].sum(),2)
 Prob_YTD=round(df_YTD["Anzahl"].sum()/df_YTD["Anzahl"].count(),2)
 
 #Websiten-Aufbau
-layout = html.Div([
+layout = html.Div(className = "div_tab_leiste", children=[
     html.H1(children="Aktuelle KPI´s"),
     dcc.Tabs(id="tabs_kpi", value='Gewinn', children=[
         dcc.Tab(label='Gewinn', value='Gewinn'),
@@ -78,47 +78,50 @@ layout = html.Div([
     ]),
 
     html.H2("Erfolg der Produkte"),
-    html.Div(id="Produktplot_1"),
+    html.Div(className = "div_graph_oben_links", id="Produktplot_1"),
 
     html.H2("Aktuelle KPI's"),
-    html.Table(id="Wert-Karte", children=[
-        html.Thead(children=[
-            html.Tr(children = [
-                html.Th("Kennzahl"),
-                html.Th("Wert [YTD]")
+    html.Div(className = "div_tabelle_oben_rechts", children=[
+        html.Table(id="Wert-Karte", children=[
+            html.Thead(children=[
+                html.Tr(children = [
+                    html.Th("Kennzahl"),
+                    html.Th("Wert [YTD]")
+                    ])
+            ]),
+            html.Tbody(children=[
+                html.Tr(children=[
+                    html.Th("Gewinn"),
+                    html.Td(Gewinn_YTD)
+                ]),
+                html.Tr(children=[
+                    html.Th("Anzahl"),
+                    html.Td(Anzahl_YTD)
+                ]),
+                html.Tr(children=[
+                    html.Th("Wahrscheinlichkeit"),
+                    html.Td(str(round(Prob_YTD*100,2)) + "%" )
                 ])
-        ]),
-        html.Tbody(children=[
-            html.Tr(children=[
-                html.Th("Gewinn"),
-                html.Td(Gewinn_YTD)
-            ]),
-            html.Tr(children=[
-                html.Th("Anzahl"),
-                html.Td(Anzahl_YTD)
-            ]),
-            html.Tr(children=[
-                html.Th("Wahrscheinlichkeit"),
-                html.Td(str(round(Prob_YTD*100,2)) + "%" )
             ])
         ])
     ]),
 
-
-    html.H2("Features"),
-    dcc.RadioItems(
-    id="radio_kpi",
-    options=[
-        {'label': 'Geschlecht', 'value': 'Geschlecht'},
-        {'label': 'Altersklassen', 'value': 'Altersklassen'},
-        {'label': 'Beruf', 'value': 'Job'},
-        {'label': 'Familienstand', 'value': 'Familienstand'},
-        {'label': 'Kinder', 'value': 'Kinder'},
-        {'label': 'Gehaltsklasse', 'value': 'Gehaltsklassen'}
-    ],
-    value='Geschlecht',
-    labelStyle={'display': 'inline-block'}
-    ), 
+    html.Div(className = "div_auswahl_unten_links", children = [
+        html.H2("Features"),
+        dcc.RadioItems(
+        id="radio_kpi",
+        options=[
+            {'label': 'Geschlecht', 'value': 'Geschlecht'},
+            {'label': 'Altersklassen', 'value': 'Altersklassen'},
+            {'label': 'Beruf', 'value': 'Job'},
+            {'label': 'Familienstand', 'value': 'Familienstand'},
+            {'label': 'Kinder', 'value': 'Kinder'},
+            {'label': 'Gehaltsklasse', 'value': 'Gehaltsklassen'}
+        ],
+        value='Geschlecht',
+        labelStyle={'display': 'inline-block'}
+        )
+    ]), 
     html.Div(id="Produktplot_2")
 ])
 
@@ -126,12 +129,12 @@ layout = html.Div([
               Input(component_id = 'tabs_kpi', component_property= 'value'))
 def render_content(tab):
     if tab=="Kaufbereitschaft":
-        return html.Div([
+        return html.Div(className = "div_graph_oben_links", children = [
             dcc.Graph(figure=fetch_figure_bar(fetch_dataframe_prob(df_YTD, ["Angebotenes Produkt"]), \
                 "Angebotenes Produkt", "Anzahl", title="Kaufwahrscheinlichkeit in Prozent") )
         ])
     else:    
-        return html.Div([
+        return html.Div(className = "div_graph_oben_links", children = [
             dcc.Graph(figure=fetch_figure_bar(fetch_dataframe_sum(df_YTD, tab, ["Angebotenes Produkt"]),\
             "Angebotenes Produkt", tab,  title = tab + " verkaufter Produkter [YTD]" ))
             ])
@@ -142,7 +145,7 @@ def render_content(tab):
               Input("radio_kpi", 'value'))
 def render_content(tab, radio):
     if tab=="Kaufbereitschaft":
-        return html.Div([
+        return html.Div(className = "div_graph_unten_rechts", children = [
             dcc.Graph(figure=fetch_figure_bar(fetch_dataframe_prob(df_YTD, [radio]), \
                 radio, "Anzahl", title="Kaufwahrscheinlichkeit in Prozent") )
         ])
@@ -151,7 +154,7 @@ def render_content(tab, radio):
         temp_fig = fetch_figure_bar(temp_df, radio, tab,\
              color = "Angebotenes Produkt",  title = tab + " verkaufter Produkte nach " + radio + " [YTD]" )
     
-        return html.Div([
+        return html.Div(className = "div_graph_unten_rechts", children = [
             dcc.Graph(figure=temp_fig)
         ])
 

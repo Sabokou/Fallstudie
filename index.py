@@ -9,7 +9,7 @@ from apps import dashboard_zeit
 from apps import dashboard_bcg
 from apps import tool 
 
-app.layout = html.Div([
+app.layout = html.Div(className = "parent", children = [
     dcc.Location(id='url', refresh=False),
     html.Div([
         dcc.Link('Tool|', href='/apps/tool'),

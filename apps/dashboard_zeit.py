@@ -80,13 +80,36 @@ layout = html.Div([
     html.Div(id="Zeitplot_1"),
 
     html.H2("KPI's im Zeitverlauf"),
-    html.Div(id="Zeit_Karte",children =[
-        html.H3("            Vorjahr        aktuelles Jahr         Veränderung"),
-        dcc.Markdown(f'''Gewinn     {Gewinn_Vorjahr}     {Gewinn_aktuell}   {Gewinn_Veränderung }'''),
-        dcc.Markdown(f'''Anzahl      {Anzahl_Vorjahr}     {Anzahl_aktuell}   {Anzahl_Veränderung }'''),
-        dcc.Markdown(f'''Wahrscheinlichkeit      {round(Prob_Vorjahr*100,2)}%     {round(Prob_aktuell*100,2)}%   {round(Prob_Veränderung*100,2) }%''')
+    html.Table(id="Zeit-Karte", children=[
+        html.Thead(children=[
+            html.Tr(children = [
+                html.Th("Wert"),
+                html.Th("Vorjahr"),
+                html.Th("Aktuelles Jahr [YTD]"),
+                html.Th("Veränderung")
+                ])
         ]),
-
+        html.Tbody(children=[
+            html.Tr(children=[
+                html.Th("Gewinn"),
+                html.Td(round(Gewinn_Vorjahr,2) ),
+                html.Td(round(Gewinn_aktuell,2) ),
+                html.Td(round(Gewinn_Veränderung,2) )
+            ]),
+            html.Tr(children=[
+                html.Th("Anzahl"),
+                html.Td(Anzahl_Vorjahr),
+                html.Td(Anzahl_aktuell),
+                html.Td(Anzahl_Veränderung)
+            ]),
+            html.Tr(children=[
+                html.Th("Wahrscheinlichkeit"),
+                html.Td(str(round(Prob_Vorjahr*100,2)) + "%"),
+                html.Td(str(round(Prob_aktuell*100,2)) + "%"),
+                html.Td(str(round(Prob_Veränderung*100,2)) + "%")
+            ])
+        ])
+    ]),
 
     html.H2("Features im Zeitverlauf"),
     dcc.RadioItems(

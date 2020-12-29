@@ -80,13 +80,29 @@ layout = html.Div([
     html.H2("Erfolg der Produkte"),
     html.Div(id="Produktplot_1"),
 
-    html.H2("Aktuelle KPI´s"),
-    html.Div(id="Wert_Karte",children =[
-        html.H3("Werte im aktuellen Jahr"),
-        dcc.Markdown(f'''Gewinn     {Gewinn_YTD}'''),
-        dcc.Markdown(f'''Anzahl     {Anzahl_YTD}'''),
-        dcc.Markdown(f'''Wahrscheinlichkeit     {Prob_YTD*100}%''')
+    html.H2("Aktuelle KPI's"),
+    html.Table(id="Wert-Karte", children=[
+        html.Thead(children=[
+            html.Tr(children = [
+                html.Th("Kennzahl"),
+                html.Th("Wert [YTD]")
+                ])
         ]),
+        html.Tbody(children=[
+            html.Tr(children=[
+                html.Th("Gewinn"),
+                html.Td(Gewinn_YTD)
+            ]),
+            html.Tr(children=[
+                html.Th("Anzahl"),
+                html.Td(Anzahl_YTD)
+            ]),
+            html.Tr(children=[
+                html.Th("Wahrscheinlichkeit"),
+                html.Td(str(round(Prob_YTD*100,2)) + "%" )
+            ])
+        ])
+    ]),
 
 
     html.H2("Features"),

@@ -19,7 +19,7 @@ from sqlalchemy import cast, sql, types
 """
 
 @cache.memoize()
-def fetch_dataframe()
+def fetch_dataframe():
     df = dd.read_sql_table("testdaten", 'sqlite:///Kundendaten.db', "index")
     # df["Datum"] = df['Datum'].astype(str).str[:7]
     df.set_index(df.Datum)

@@ -69,8 +69,8 @@ Anzahl_YTD = round(df_YTD["Anzahl"].sum(),2)
 Prob_YTD=round(df_YTD["Anzahl"].sum()/df_YTD["Anzahl"].count(),2)
 
 #Websiten-Aufbau
-layout = html.Div(className = "layout_box parent", children=[
-    html.Div(className = "div_graph_oben_links", children = [
+layout = html.Div(className = "box asset", children=[
+    html.Div(className = "box e", children = [
         html.H1(children="Aktuelle KPI´s"),
         dcc.Tabs(id="tabs_kpi", value='Gewinn', children=[
             dcc.Tab(label='Gewinn', value='Gewinn'),
@@ -79,15 +79,15 @@ layout = html.Div(className = "layout_box parent", children=[
         ])
     ]),
 
-    html.H2("Erfolg der Produkte"),
-    html.Div(className = "div_graph_oben_links", id="Produktplot_1"),
+    #html.H2("Erfolg der Produkte"),
+    html.Div(className = "box f", id="Produktplot_1"),
 
-    html.H2("Aktuelle KPI's"),
-    html.Div(className = "div_tabelle_oben_rechts", children=[
+    #html.H2("Aktuelle KPI's"),
+    html.Div(className = "box g", children=[
         html.Table(id="Wert-Karte", children=[
             html.Thead(children=[
                 html.Tr(children = [
-                    html.Th("Kennzahl"),
+                    html.Th(""),
                     html.Th("Wert [YTD]")
                     ])
             ]),
@@ -108,7 +108,7 @@ layout = html.Div(className = "layout_box parent", children=[
         ])
     ]),
 
-    html.Div(className = "div_auswahl_unten_links", children = [
+    html.Div(className = "four.columns", children = [
         html.H2("Features"),
         dcc.RadioItems(
         id="radio_kpi",
@@ -131,12 +131,12 @@ layout = html.Div(className = "layout_box parent", children=[
               Input(component_id = 'tabs_kpi', component_property= 'value'))
 def render_content(tab):
     if tab=="Kaufbereitschaft":
-        return html.Div(className = "div_graph_oben_links", children = [
+        return html.Div(className = "two-thirds.column", children = [
             dcc.Graph(figure=fetch_figure_bar(fetch_dataframe_prob(df_YTD, ["Angebotenes Produkt"]), \
                 "Angebotenes Produkt", "Anzahl", title="Kaufwahrscheinlichkeit in Prozent") )
         ])
     else:    
-        return html.Div(className = "div_graph_oben_links", children = [
+        return html.Div(className = "two-thirds.column", children = [
             dcc.Graph(figure=fetch_figure_bar(fetch_dataframe_sum(df_YTD, tab, ["Angebotenes Produkt"]),\
             "Angebotenes Produkt", tab,  title = tab + " verkaufter Produkter [YTD]" ))
             ])
@@ -147,7 +147,7 @@ def render_content(tab):
               Input("radio_kpi", 'value'))
 def render_content(tab, radio):
     if tab=="Kaufbereitschaft":
-        return html.Div(className = "div_graph_unten_rechts", children = [
+        return html.Div(className = "two-thirds.column", children = [
             dcc.Graph(figure=fetch_figure_bar(fetch_dataframe_prob(df_YTD, [radio]), \
                 radio, "Anzahl", title="Kaufwahrscheinlichkeit in Prozent") )
         ])
@@ -156,7 +156,7 @@ def render_content(tab, radio):
         temp_fig = fetch_figure_bar(temp_df, radio, tab,\
              color = "Angebotenes Produkt",  title = tab + " verkaufter Produkte nach " + radio + " [YTD]" )
     
-        return html.Div(className = "div_graph_unten_rechts", children = [
+        return html.Div(className = "two-thirds.column", children = [
             dcc.Graph(figure=temp_fig)
         ])
 
@@ -181,7 +181,6 @@ def fetch_figure_bar(dataframe, x, y, title, color = None, text = None):
         fig_temp = px.bar(dataframe, x=x, y=y, title=title, text=text)
         fig_temp.update_traces(texttemplate='%{text:.2s}', textposition='outside')
         fig_temp.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
-        return fig_temp
     else:
         fig_temp = px.bar(dataframe, x=x, y=y, title=title, color=color, text=text)
         fig_temp.update_traces(texttemplate='%{text:.2s}', textposition='outside')

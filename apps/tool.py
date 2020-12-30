@@ -76,7 +76,7 @@ layout = html.Div([
 
 ])
 
-model = pickle.load(open("jungbank_xgb.sav", 'rb'))
+#model = pickle.load(open("jungbank_xgb.sav", 'rb'))
 
 @app.callback(
      [Output(component_id="output1", component_property="children"),
@@ -95,33 +95,33 @@ def vorschlag(sex_value, job_value, marital_value, children_value, age_value, in
     kunde = np.array(kunde).reshape((1,-1))
     
     kunde[0][6] = 1
-    prob1 = model.predict_proba(kunde)[0][1]
+ #   prob1 = model.predict_proba(kunde)[0][1]
     
     kunde[0][6] = 2
-    prob2 = model.predict_proba(kunde)[0][1]
+#    prob2 = model.predict_proba(kunde)[0][1]
     
     kunde[0][6] = 3
-    prob3 = model.predict_proba(kunde)[0][1]
+#    prob3 = model.predict_proba(kunde)[0][1]
     
     kunde[0][6] = 4
-    prob4 = model.predict_proba(kunde)[0][1]
+#    prob4 = model.predict_proba(kunde)[0][1]
     
     kunde[0][6] = 5
-    prob5 = model.predict_proba(kunde)[0][1]
+#    prob5 = model.predict_proba(kunde)[0][1]
     
     kunde[0][6] = 6
-    prob6 = model.predict_proba(kunde)[0][1]
+#    prob6 = model.predict_proba(kunde)[0][1]
     
     kunde[0][6] = 7
-    prob7 = model.predict_proba(kunde)[0][1]
+#    prob7 = model.predict_proba(kunde)[0][1]
     
-    produkt = {"Girokonto":prob1,"Kredit":prob2, "Tagesgeldkonto":prob3, "Depotkonto":prob4, "Altersvorsorge":prob5, "Versicherung":prob6, "Bausparvertrag":prob7}
+#    produkt = {"Girokonto":prob1,"Kredit":prob2, "Tagesgeldkonto":prob3, "Depotkonto":prob4, "Altersvorsorge":prob5, "Versicherung":prob6, "Bausparvertrag":prob7}
 
-    out1 = (f"1. {sorted(produkt, key=produkt.get, reverse=True)[:3][0]} mit {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][0])*100),2)}% Erfolgschance")
-    out2 = (f"2. {sorted(produkt, key=produkt.get, reverse=True)[:3][1]} mit {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][1])*100),2)}% Erfolgschance")
-    out3 = (f"3. {sorted(produkt, key=produkt.get, reverse=True)[:3][2]} mit {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][2])*100),2)}% Erfolgschance")
+    # out1 = (f"1. {sorted(produkt, key=produkt.get, reverse=True)[:3][0]} mit {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][0])*100),2)}% Erfolgschance")
+    # out2 = (f"2. {sorted(produkt, key=produkt.get, reverse=True)[:3][1]} mit {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][1])*100),2)}% Erfolgschance")
+    # out3 = (f"3. {sorted(produkt, key=produkt.get, reverse=True)[:3][2]} mit {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][2])*100),2)}% Erfolgschance")
 
-    return out1, out2, out3
+    # return out1, out2, out3
 
 
 

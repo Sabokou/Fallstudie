@@ -69,7 +69,7 @@ Anzahl_YTD = round(df_YTD["Anzahl"].sum(),2)
 Prob_YTD=round(df_YTD["Anzahl"].sum()/df_YTD["Anzahl"].count(),2)
 
 #Websiten-Aufbau
-layout = html.Div(className = "parent", children=[
+layout = html.Div(className = "layout_box parent", children=[
     html.Div(className = "div_graph_oben_links", children = [
         html.H1(children="Aktuelle KPI´s"),
         dcc.Tabs(id="tabs_kpi", value='Gewinn', children=[

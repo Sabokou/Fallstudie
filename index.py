@@ -20,9 +20,9 @@ app.layout = html.Div(children = [
             dbc.Row([html.Div(children=[dcc.Link('KPIs', href ='/apps/dashboard_kpi')])]),
             dbc.Row([html.Div(children=[dcc.Link('Zeit', href ='/apps/dashboard_zeit')])]),
             dbc.Row([html.Div(children=[dcc.Link('BCG', href ='/apps/dashboard_bcg')])])
-        ], width = 2)
-    ]),
-        dbc.Col(html.Div(className = "asset", id = 'page-content', children=[]), width = 10 )
+        ], width = 1),
+        dbc.Col(html.Div(className = "asset", id = 'page-content', children=[]), width = 11 )
+    ])  
 ])
 
 

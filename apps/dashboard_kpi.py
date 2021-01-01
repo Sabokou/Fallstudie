@@ -29,12 +29,10 @@ def fetch_dataframe(ytd):
     df = dd.read_sql_table("testdaten", 'sqlite:///Kundendaten.db', "Jahr")
 
     #Daten reduzieren auf gewünschtes Jahr
-    try:
-        df_YTD = df.loc[ytd].compute()
-    except:
-        df_YTD = df.loc[df["Jahr"].max()].compute()
+    df_YTD = df.loc[ytd].compute()
     return df_YTD
 
+ytd = 2020
 df_YTD = fetch_dataframe(ytd)
 
 #Mapping für Graphen-Gruppierungen

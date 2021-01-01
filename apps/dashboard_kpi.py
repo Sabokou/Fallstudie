@@ -29,7 +29,11 @@ def fetch_dataframe(ytd):
     df = dd.read_sql_table("testdaten", 'sqlite:///Kundendaten.db', "Jahr")
 
     #Daten reduzieren auf gewünschtes Jahr
-    df_YTD = df.loc[ytd].compute()
+    try:
+        df_YTD = df.loc[ytd].compute()
+    except:
+        df_YTD = df.loc[ytd-1].compute()
+        print(f"Keine Daten in Jahr {ytd} vorhanden. Lade Vorjahresdaten...")
     return df_YTD
 
 ytd = 2020

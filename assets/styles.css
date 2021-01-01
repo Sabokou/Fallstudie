@@ -1,17 +1,17 @@
-.wrapper {
+/*.wrapper {
     display: grid;
     grid-gap: 20px;
     grid-template-columns: 50px auto;
     grid-template-rows: repeat(2, auto );
     background-color: rgb(38, 0, 255);/*
-    color: #444;*/
+    color: #444;
     max-width: 1680px;
     max-height: 1000px;
   }
 
   .box {
     /*background-color: #444;
-    color: #fff;*/
+    color: #fff;
     border-radius: 5px;
     padding: 20px;
     font-size: 150%;
@@ -22,7 +22,7 @@
     background-color: #ccc;
     color: #444;
   }
-*/
+
   .menüleiste {
     grid-column: 1;
     grid-row: 1;
@@ -78,4 +78,4 @@
   .u_rechts {
     grid-area: 3 / 2 / 4 / 4;
     background-color: rgb(223, 208, 2);
-  }
+  }*/

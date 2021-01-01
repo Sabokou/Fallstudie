@@ -79,6 +79,6 @@ fig.update_traces(marker=dict(size=20,line=dict(width=2)))
 
 
 layout = html.Div(children = [
-    dbc.Row([html.H1(children="BCG-Matrix nach Rentabilität und Kaufwahrscheinlichkeit")], justfiy = "center"),
-    dbc.Row([dcc.Graph(figure=fig)], justfiy = "center")
+    dbc.Row([html.H1(children=["BCG-Matrix nach Rentabilität und Kaufwahrscheinlichkeit"])], justify = "center"),
+    dbc.Row([dcc.Graph(figure=fig)], justify = "center")
 ])

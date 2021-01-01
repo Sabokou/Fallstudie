@@ -1,5 +1,6 @@
 import dash_core_components as dcc
 import dash_html_components as html
+import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 from app import app
 import plotly.graph_objects as go
@@ -77,7 +78,7 @@ fig.update_traces(marker=dict(size=20,line=dict(width=2)))
 
 
 
-layout = html.Div([
-    html.H1(children="BCG-Matrix nach Rentabilität und Kaufwahrscheinlichkeit"),
-    dcc.Graph(figure=fig)
+layout = html.Div(children = [
+    dbc.Row([html.H1(children="BCG-Matrix nach Rentabilität und Kaufwahrscheinlichkeit")], justfiy = "center"),
+    dbc.Row([dcc.Graph(figure=fig)], justfiy = "center")
 ])

@@ -74,26 +74,26 @@ Anzahl_YTD = round(df_YTD["Anzahl"].sum(),2)
 Prob_YTD=round(df_YTD["Anzahl"].sum()/df_YTD["Anzahl"].count(),2)
 
 #Websiten-Aufbau
-layout = html.Div(className = "asset", children=[
+layout = html.Div(children=[
     #region Menüleiste
     dbc.Row([
         dbc.Col(
-            html.Div(className = "o_tabs", children = [
+            html.Div(children = [
                 html.H1(children="Kennziffern im aktuellen Jahr"),
                 dcc.Tabs(id="tabs_kpi", value='Gewinn', children=[
                     dcc.Tab(label='Gewinn', value='Gewinn'),
                     dcc.Tab(label='Anzahl', value='Anzahl'),
                     dcc.Tab(label="Kaufbereitschaft", value="Kaufbereitschaft")
                 ])
-            ]), width = 11
+            ]), width = 12
         ),
     ]),
     #endregion
     #region Chart-Reihe 1
     dbc.Row([
-        dbc.Col(html.Div(className = "m_links", id="Produktplot_1"), width = 7),
+        dbc.Col(html.Div(id="Produktplot_1"), width = 7),
         dbc.Col(
-            html.Div(className = "m_rechts", children=[
+            html.Div(children=[
                 html.Table(id="Wert-Karte", children=[
                     html.Thead(children=[
                         html.Tr(children = [
@@ -123,7 +123,7 @@ layout = html.Div(className = "asset", children=[
     #region Chart-Reihe 2
     dbc.Row([
         dbc.Col(
-            html.Div(className = "u_links", children = [
+            html.Div(children = [
                 html.H3("Filter"),
                 dcc.RadioItems(
                     id="radio_kpi",

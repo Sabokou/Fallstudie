@@ -1,5 +1,6 @@
 import dash_core_components as dcc
 import dash_html_components as html
+import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 from app import app, cache
 import plotly.express as px
@@ -60,70 +61,81 @@ Prob_Vorjahr=round(df_Vorjahr["Anzahl"].sum()/df_Vorjahr["Anzahl"].count(),4)
 Prob_aktuell=round(df_aktuell["Anzahl"].sum()/df_aktuell["Anzahl"].count(),4)
 Prob_Veränderung=round(Prob_aktuell-Prob_Vorjahr,4)
 
-layout = html.Div(className = "asset", children = [
-    html.Div(className = "o_tabs", children = [
-        html.H1(children="KPI´s im Zeitverlauf"),
-        dcc.Tabs(id="tabs_zeit", value='Gewinn', children=[
-            dcc.Tab(label='Gewinn', value='Gewinn'),
-            dcc.Tab(label='Anzahl', value='Anzahl'),
-            dcc.Tab(label="Kaufbereitschaft", value="Kaufbereitschaft")
-        ])
-    ]),
+layout = html.Div(children = [
+        dbc.Row([
+            dbc.Col(
+                html.Div(children = [
+                    html.H1(children="KPI´s im Zeitverlauf"),
+                    dcc.Tabs(id="tabs_zeit", value='Gewinn', children=[
+                        dcc.Tab(label='Gewinn', value='Gewinn'),
+                        dcc.Tab(label='Anzahl', value='Anzahl'),
+                        dcc.Tab(label="Kaufbereitschaft", value="Kaufbereitschaft")
+                    ])
+                ]), width = 12
+            ),
+        ]),
 
     #html.H2("Bankprodukte im Zeitverlauf"),
-    html.Div(className = "m_links", id="Zeitplot_1"),
-
-    html.Div(className = "m_rechts", children= [
-        html.H2("KPI's im Zeitverlauf"),
-        html.Table(id="Zeit-Karte", children=[
-            html.Thead(children=[
-                html.Tr(children = [
-                    html.Th(""),
-                    html.Th("Vorjahr"),
-                    html.Th("Aktuelles Jahr [YTD]"),
-                    html.Th("Veränderung")
+    dbc.Row([
+        dbc.Col(html.Div(id="Zeitplot_1"), width = 7),
+        dbc.Col(
+            html.Div(children= [
+                html.H2("KPI's im Zeitverlauf"),
+                html.Table(id="Zeit-Karte", children=[
+                    html.Thead(children=[
+                        html.Tr(children = [
+                            html.Th(""),
+                            html.Th("Vorjahr"),
+                            html.Th("Aktuelles Jahr [YTD]"),
+                            html.Th("Veränderung")
+                            ])
+                    ]),
+                    html.Tbody(children=[
+                        html.Tr(children=[
+                            html.Th("Gewinn"),
+                            html.Td(round(Gewinn_Vorjahr,2) ),
+                            html.Td(round(Gewinn_aktuell,2) ),
+                            html.Td(str(round(Gewinn_Veränderung,2))+"%" )
+                        ]),
+                        html.Tr(children=[
+                            html.Th("Anzahl"),
+                            html.Td(Anzahl_Vorjahr),
+                            html.Td(Anzahl_aktuell),
+                            html.Td(str(round(Anzahl_Veränderung,2)), "%")
+                        ]),
+                        html.Tr(children=[
+                            html.Th("Wahrscheinlichkeit"),
+                            html.Td(str(round(Prob_Vorjahr*100,2)) + "%"),
+                            html.Td(str(round(Prob_aktuell*100,2)) + "%"),
+                            html.Td(str(round(Prob_Veränderung*100,2)) + "%")
+                        ])
                     ])
-            ]),
-            html.Tbody(children=[
-                html.Tr(children=[
-                    html.Th("Gewinn"),
-                    html.Td(round(Gewinn_Vorjahr,2) ),
-                    html.Td(round(Gewinn_aktuell,2) ),
-                    html.Td(str(round(Gewinn_Veränderung,2))+"%" )
-                ]),
-                html.Tr(children=[
-                    html.Th("Anzahl"),
-                    html.Td(Anzahl_Vorjahr),
-                    html.Td(Anzahl_aktuell),
-                    html.Td(str(round(Anzahl_Veränderung,2)), "%")
-                ]),
-                html.Tr(children=[
-                    html.Th("Wahrscheinlichkeit"),
-                    html.Td(str(round(Prob_Vorjahr*100,2)) + "%"),
-                    html.Td(str(round(Prob_aktuell*100,2)) + "%"),
-                    html.Td(str(round(Prob_Veränderung*100,2)) + "%")
                 ])
-            ])
-        ])
-    ]),
-
-    html.Div(className = "u_links", children=[
-        html.H3("Filter"),
-        dcc.RadioItems(
-            id="radio_zeit",
-            options=[
-                {'label': 'Geschlecht', 'value': 'Geschlecht'},
-                {'label': 'Altersklassen', 'value': 'Altersklassen'},
-                {'label': 'Beruf', 'value': 'Job'},
-                {'label': 'Familienstand', 'value': 'Familienstand'},
-                {'label': 'Kinder', 'value': 'Kinder'},
-                {'label': 'Gehaltsklasse', 'value': 'Gehaltsklassen'}
-            ],
-            value='Geschlecht',
-            labelStyle={'display': 'inline-block'}
+            ]), width = 5
         )
     ]),
-    html.Div(id="Zeitplot_2")
+
+    dbc.Row([
+        dbc.Col(
+            html.Div(children=[
+                html.H3("Filter"),
+                dcc.RadioItems(
+                    id="radio_zeit",
+                    options=[
+                        {'label': 'Geschlecht', 'value': 'Geschlecht'},
+                        {'label': 'Altersklassen', 'value': 'Altersklassen'},
+                        {'label': 'Beruf', 'value': 'Job'},
+                        {'label': 'Familienstand', 'value': 'Familienstand'},
+                        {'label': 'Kinder', 'value': 'Kinder'},
+                        {'label': 'Gehaltsklasse', 'value': 'Gehaltsklassen'}
+                    ],
+                    value='Geschlecht',
+                    labelStyle={'display': 'block'}
+                )
+            ]), width = 3,
+        ),
+        dbc.Col(html.Div(id="Zeitplot_2"), width = 9)
+    ], justify = "start")
 ])
 
 @app.callback(Output("Zeitplot_1", 'children'),

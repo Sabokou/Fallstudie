@@ -52,10 +52,10 @@ df_Vorjahr=df[df["Jahr"] == (df["Jahr"].max()-1)].compute()
 df_aktuell=df[df["Jahr"] == (df["Jahr"].max())].compute()
 Gewinn_Vorjahr=round(df_Vorjahr["Gewinn"].sum(),2)
 Gewinn_aktuell=round(df_aktuell["Gewinn"].sum(),2)
-Gewinn_Veränderung=round(Gewinn_aktuell-Gewinn_Vorjahr,2)
+Gewinn_Veränderung=round((Gewinn_aktuell-Gewinn_Vorjahr)/Gewinn_Vorjahr,2)
 Anzahl_Vorjahr=round(df_Vorjahr["Anzahl"].sum(),2)
 Anzahl_aktuell=round(df_aktuell["Anzahl"].sum(),2)
-Anzahl_Veränderung=round(Anzahl_aktuell-Anzahl_Vorjahr,2)
+Anzahl_Veränderung=round((Anzahl_aktuell-Anzahl_Vorjahr)/Anzahl_Vorjahr,2)
 Prob_Vorjahr=round(df_Vorjahr["Anzahl"].sum()/df_Vorjahr["Anzahl"].count(),4)
 Prob_aktuell=round(df_aktuell["Anzahl"].sum()/df_aktuell["Anzahl"].count(),4)
 Prob_Veränderung=round(Prob_aktuell-Prob_Vorjahr,4)
@@ -89,13 +89,13 @@ layout = html.Div(className = "asset", children = [
                     html.Th("Gewinn"),
                     html.Td(round(Gewinn_Vorjahr,2) ),
                     html.Td(round(Gewinn_aktuell,2) ),
-                    html.Td(round(Gewinn_Veränderung,2) )
+                    html.Td(str(round(Gewinn_Veränderung,2))+"%" )
                 ]),
                 html.Tr(children=[
                     html.Th("Anzahl"),
                     html.Td(Anzahl_Vorjahr),
                     html.Td(Anzahl_aktuell),
-                    html.Td(Anzahl_Veränderung)
+                    html.Td(str(round(Anzahl_Veränderung,2)), "%")
                 ]),
                 html.Tr(children=[
                     html.Th("Wahrscheinlichkeit"),

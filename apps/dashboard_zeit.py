@@ -9,14 +9,6 @@ from datetime import datetime
 import dask.dataframe as dd
 import dask.array as da
 from sqlalchemy import cast, sql, types
-"""
-# Hallo Alina, ich hab die alle notwendigen Funktionen vollständig implementiert
-# Es gibt 2 große TODO: 
-# 1. Performance fixen für die Berechnung der "Karten"-Werte
-# 2. Evtl. mal schauen, ob man die Performance der Graphen-Generation verbessern kann durch
-# eine Neu-Indizierung nach "Monats-Datum", weil Operationen auf Index sind schneller :)
-# VG Phillip
-"""
 
 @cache.memoize()
 def fetch_dataframe():
@@ -68,63 +60,69 @@ Prob_Vorjahr=round(df_Vorjahr["Anzahl"].sum()/df_Vorjahr["Anzahl"].count(),4)
 Prob_aktuell=round(df_aktuell["Anzahl"].sum()/df_aktuell["Anzahl"].count(),4)
 Prob_Veränderung=round(Prob_aktuell-Prob_Vorjahr,4)
 
-layout = html.Div([
-    html.H1(children="KPI´s im Zeitverlauf"),
-    dcc.Tabs(id="tabs_zeit", value='Gewinn', children=[
-        dcc.Tab(label='Gewinn', value='Gewinn'),
-        dcc.Tab(label='Anzahl', value='Anzahl'),
-        dcc.Tab(label="Kaufbereitschaft", value="Kaufbereitschaft")
+layout = html.Div(className = "asset", children = [
+    html.Div(className = "o_tabs", children = [
+        html.H1(children="KPI´s im Zeitverlauf"),
+        dcc.Tabs(id="tabs_zeit", value='Gewinn', children=[
+            dcc.Tab(label='Gewinn', value='Gewinn'),
+            dcc.Tab(label='Anzahl', value='Anzahl'),
+            dcc.Tab(label="Kaufbereitschaft", value="Kaufbereitschaft")
+        ])
     ]),
 
-    html.H2("Bankprodukte im Zeitverlauf"),
-    html.Div(id="Zeitplot_1"),
+    #html.H2("Bankprodukte im Zeitverlauf"),
+    html.Div(className = "m_links", id="Zeitplot_1"),
 
-    html.H2("KPI's im Zeitverlauf"),
-    html.Table(id="Zeit-Karte", children=[
-        html.Thead(children=[
-            html.Tr(children = [
-                html.Th("Wert"),
-                html.Th("Vorjahr"),
-                html.Th("Aktuelles Jahr [YTD]"),
-                html.Th("Veränderung")
+    html.Div(className = "m_rechts", children= [
+        html.H2("KPI's im Zeitverlauf"),
+        html.Table(id="Zeit-Karte", children=[
+            html.Thead(children=[
+                html.Tr(children = [
+                    html.Th(""),
+                    html.Th("Vorjahr"),
+                    html.Th("Aktuelles Jahr [YTD]"),
+                    html.Th("Veränderung")
+                    ])
+            ]),
+            html.Tbody(children=[
+                html.Tr(children=[
+                    html.Th("Gewinn"),
+                    html.Td(round(Gewinn_Vorjahr,2) ),
+                    html.Td(round(Gewinn_aktuell,2) ),
+                    html.Td(round(Gewinn_Veränderung,2) )
+                ]),
+                html.Tr(children=[
+                    html.Th("Anzahl"),
+                    html.Td(Anzahl_Vorjahr),
+                    html.Td(Anzahl_aktuell),
+                    html.Td(Anzahl_Veränderung)
+                ]),
+                html.Tr(children=[
+                    html.Th("Wahrscheinlichkeit"),
+                    html.Td(str(round(Prob_Vorjahr*100,2)) + "%"),
+                    html.Td(str(round(Prob_aktuell*100,2)) + "%"),
+                    html.Td(str(round(Prob_Veränderung*100,2)) + "%")
                 ])
-        ]),
-        html.Tbody(children=[
-            html.Tr(children=[
-                html.Th("Gewinn"),
-                html.Td(round(Gewinn_Vorjahr,2) ),
-                html.Td(round(Gewinn_aktuell,2) ),
-                html.Td(round(Gewinn_Veränderung,2) )
-            ]),
-            html.Tr(children=[
-                html.Th("Anzahl"),
-                html.Td(Anzahl_Vorjahr),
-                html.Td(Anzahl_aktuell),
-                html.Td(Anzahl_Veränderung)
-            ]),
-            html.Tr(children=[
-                html.Th("Wahrscheinlichkeit"),
-                html.Td(str(round(Prob_Vorjahr*100,2)) + "%"),
-                html.Td(str(round(Prob_aktuell*100,2)) + "%"),
-                html.Td(str(round(Prob_Veränderung*100,2)) + "%")
             ])
         ])
     ]),
 
-    html.H2("Features im Zeitverlauf"),
-    dcc.RadioItems(
-    id="radio_zeit",
-    options=[
-        {'label': 'Geschlecht', 'value': 'Geschlecht'},
-        {'label': 'Altersklassen', 'value': 'Altersklassen'},
-        {'label': 'Beruf', 'value': 'Job'},
-        {'label': 'Familienstand', 'value': 'Familienstand'},
-        {'label': 'Kinder', 'value': 'Kinder'},
-        {'label': 'Gehaltsklasse', 'value': 'Gehaltsklassen'}
-    ],
-    value='Geschlecht',
-    labelStyle={'display': 'inline-block'}
-    ) , 
+    html.Div(className = "u_links", children=[
+        html.H3("Filter"),
+        dcc.RadioItems(
+            id="radio_zeit",
+            options=[
+                {'label': 'Geschlecht', 'value': 'Geschlecht'},
+                {'label': 'Altersklassen', 'value': 'Altersklassen'},
+                {'label': 'Beruf', 'value': 'Job'},
+                {'label': 'Familienstand', 'value': 'Familienstand'},
+                {'label': 'Kinder', 'value': 'Kinder'},
+                {'label': 'Gehaltsklasse', 'value': 'Gehaltsklassen'}
+            ],
+            value='Geschlecht',
+            labelStyle={'display': 'inline-block'}
+        )
+    ]),
     html.Div(id="Zeitplot_2")
 ])
 
@@ -132,7 +130,7 @@ layout = html.Div([
               Input('tabs_zeit', 'value'))
 def render_content(tab):
     if tab=="Kaufbereitschaft":
-        return html.Div([
+        return html.Div(className = "m_links", children = [
             dcc.Graph(figure=fetch_figure_line(fetch_dataframe_prob(df, ["Datum","Angebotenes Produkt"]), \
                 "Datum", "Anzahl", color="Angebotenes Produkt", title="Kaufwahrscheinlichkeit in Prozent") )
         ])
@@ -141,8 +139,7 @@ def render_content(tab):
         temp_fig = fetch_figure_line(temp_dataframe,\
             "Datum", tab, color="Angebotenes Produkt",  title = "Bankprodukte ~ " + tab)
         
-        return html.Div([
-            
+        return html.Div(className = "m_links", children = [
             dcc.Graph(figure= temp_fig)
         ])
 
@@ -151,7 +148,7 @@ def render_content(tab):
                Input("radio_zeit", "value"))
 def render_content(tab, radio):
     if tab=="Kaufbereitschaft":
-        return html.Div([
+        return html.Div(className = "m_links", children = [
             dcc.Graph(figure=fetch_figure_line(fetch_dataframe_prob(df, ["Datum",radio]), \
                 "Datum", "Anzahl", color=radio, title="Kaufwahrscheinlichkeit in Prozent") )
         ])
@@ -160,7 +157,7 @@ def render_content(tab, radio):
         temp_fig = fetch_figure_line(temp_df, "Datum", tab,\
              color = radio,  title = tab + " ~ " + radio)
     
-        return html.Div([
+        return html.Div(className = "m_links", children = [
             dcc.Graph(figure=temp_fig)
         ])
 
@@ -187,7 +184,7 @@ def fetch_figure_bar(dataframe, x, y, title, color = None, text = None):
         fig_temp.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
         return fig_temp
     else:
-        fig_temp = px.bar(dataframe, x=x, y=y, title=title, color=color, text=text)
+        fig_temp = px.bar(dataframe, x = x, y = y, title=title, color=color, text=text)
         fig_temp.update_traces(texttemplate='%{text:.2s}', textposition='outside')
         fig_temp.update_layout(uniformtext_minsize=8, uniformtext_mode='hide')
         return fig_temp
@@ -198,4 +195,4 @@ def fetch_dataframe_sum(dataframe, args):
     #return dataframe.groupby(args).sum().reset_index()
 @cache.memoize()
 def fetch_dataframe_prob(dataframe, args):
-    return dataframe.groupby(args)["Anzahl"].apply(lambda x: x.sum()/x.count()).reset_index().compute()
+    return dataframe.groupby(args)["Anzahl"].apply(lambda x: round((x.sum()/x.count())*100, 2)).reset_index().compute()

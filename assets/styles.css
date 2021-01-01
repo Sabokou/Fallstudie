@@ -1,55 +1,81 @@
 .wrapper {
     display: grid;
-    grid-gap: 10px;
-    grid-template-columns: repeat(4, [col] 150px ) ;
-    grid-template-rows: repeat(2, [row] auto  );
-    background-color: #fff;
-    color: #444;
+    grid-gap: 20px;
+    grid-template-columns: 50px auto;
+    grid-template-rows: repeat(2, auto );
+    background-color: rgb(38, 0, 255);/*
+    color: #444;*/
+    max-width: 1680px;
+    max-height: 1000px;
   }
 
   .box {
-    background-color: #444;
-    color: #fff;
+    /*background-color: #444;
+    color: #fff;*/
     border-radius: 5px;
     padding: 20px;
     font-size: 150%;
 
   }
-
+/*
   .box .box {
     background-color: #ccc;
     color: #444;
   }
-
-  .a {
-    grid-column: col / span 1;
-    grid-row: row;
+*/
+  .menüleiste {
+    grid-column: 1;
+    grid-row: 1;
+    display: grid;
+    grid-gap: 5px;
+    grid-template-columns: 50px;
+    grid-template-rows: repeat(4, 100px);
+    background-color:rgb(78, 78, 78);
   }
 
-  .c {
-    grid-column: col / span 1;
-    grid-row: row 2;
+  .menü {
+    grid-column: 1;
+    grid-row: auto;
+    background-color: rgb(163, 163, 163);
   }
 
   .asset{
-    grid-column: col 2 / span 3;
-    grid-row: row / span 2;
+    grid-column: 2;
+    grid-row: 1 /3;
     display: grid;
     grid-gap: 10px;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 250px 1fr 250px;
+    grid-template-rows: auto 300px 350px;
+    max-height: 900px;
+    background-color: rgb(34, 13, 128);
+    justify-content: stretch;
   }
 
-  .e {
-    grid-column: 1 / 3;
-    grid-row: 1;
+@media only screen and (max-width: 900px){
+  .asset {grid-template-columns:  17.5% auto 17.5% ;}
+}
+
+  .o_tabs{
+    grid-area: 1 / 1 / 2 / 4;
+    background-color: rgb(223, 26, 26);
   }
 
-  .f {
-    grid-column: 1;
-    grid-row: 2;
+  .m_links {
+    grid-area: 2 / 1 / 3 / 3;
+    background-color: rgb(75, 233, 101);
   }
 
-  .g {
-    grid-column: 2;
-    grid-row: 2;
+  .m_rechts {
+    grid-area: 2 / 3 / 3 / 4;
+    background-color: rgb(57, 132, 231);
+  }
+
+  .u_links {
+    grid-area: 3 / 1 / 4 / 2;
+    background-color: rgb(255, 0, 200);
+  }
+
+  .u_rechts {
+    grid-area: 3 / 2 / 4 / 4;
+    background-color: rgb(223, 208, 2);
   }

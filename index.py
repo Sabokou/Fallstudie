@@ -1,5 +1,6 @@
 import dash_core_components as dcc   
 import dash_html_components as html 
+import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output 
 from app import app 
 from app import server 
@@ -9,13 +10,16 @@ from apps import dashboard_zeit
 from apps import dashboard_bcg
 from apps import tool 
 
-app.layout = html.Div(id="grid", children = [
+app.layout = html.Div(className="wrapper", children = [
     dcc.Location(id='url', refresh=False),
-    dcc.Link('Tool', className = "box a", href ='/apps/tool'),
-    html.Div(className = "box asset", id = 'page-content', children=[]),
-    dcc.Link('KPIs', className = "box c", href ='/apps/dashboard_kpi'),
-    dcc.Link('Zeitverlauf', className = "box c", href ='/apps/dashboard_zeit'),
-    dcc.Link('BCG-Matrix', className = "box c", href ='/apps/dashboard_bcg')
+    html.Div(className="menüleiste", children=[
+        dcc.Link('Tool', className = "menü", href ='/apps/tool'),
+        dcc.Link('KPIs', className = "menü", href ='/apps/dashboard_kpi'),
+        dcc.Link('Zeitverlauf', className = "menü", href ='/apps/dashboard_zeit'),
+        dcc.Link('BCG-Matrix', className = "menü", href ='/apps/dashboard_bcg')
+    ]),    
+    html.Div(className = "asset", id = 'page-content', children=[]),
+    
 ])
 
 @app.callback(Output('page-content', 'children'),
@@ -34,6 +38,6 @@ def display_page(pathname):
 
 
 #if __name__ == '__main__':
-app.run_server(debug=False)
+app.run_server(debug=True)
 
 print("Server terminated")

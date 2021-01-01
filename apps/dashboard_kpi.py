@@ -29,7 +29,6 @@ def fetch_dataframe(ytd):
 
     #Daten reduzieren auf gewünschtes Jahr
     df_YTD = df.loc[ytd].compute()
-    
     return df_YTD
 
 df_YTD = fetch_dataframe(ytd)
@@ -38,9 +37,9 @@ df_YTD = fetch_dataframe(ytd)
 def Altersklassen(A):
     if A < 30:
         return 'Jung (18-29)'
-    elif A <46:
+    elif A < 46:
         return 'Junge Erwachsene (30-45)'
-    elif A<66:
+    elif A < 66:
         return "Alte Erwachsene (46-65)"
     else:
         return "Greise (66+)"
@@ -50,13 +49,13 @@ df_YTD['Altersklassen'] = df_YTD['Alter'].map(Altersklassen)
 def Gehaltsklassen(A):
     if A < 15000:
         return 'Sehr niedrig (<15.000)'
-    elif A <30000:
+    elif A < 30000:
         return 'niedrig (15.000-30.000)'
-    elif A<50000:
+    elif A < 50000:
         return "Untere Mitte (30.000-50.000)"
-    elif A<80000:
+    elif A < 80000:
         return "Obere Mitte (50.000-80.000)"
-    elif A<100000:
+    elif A < 100000:
         return "Hoch (80.000-100.000)"
     else:
         return "Sehr hoch (>100.000)"
@@ -69,9 +68,9 @@ Anzahl_YTD = round(df_YTD["Anzahl"].sum(),2)
 Prob_YTD=round(df_YTD["Anzahl"].sum()/df_YTD["Anzahl"].count(),2)
 
 #Websiten-Aufbau
-layout = html.Div(className = "box asset", children=[
-    html.Div(className = "box e", children = [
-        html.H1(children="Aktuelle KPI´s"),
+layout = html.Div(className = "asset", children=[
+    html.Div(className = "o_tabs", children = [
+        html.H1(children="Kennziffern im aktuellen Jahr"),
         dcc.Tabs(id="tabs_kpi", value='Gewinn', children=[
             dcc.Tab(label='Gewinn', value='Gewinn'),
             dcc.Tab(label='Anzahl', value='Anzahl'),
@@ -80,10 +79,10 @@ layout = html.Div(className = "box asset", children=[
     ]),
 
     #html.H2("Erfolg der Produkte"),
-    html.Div(className = "box f", id="Produktplot_1"),
+    html.Div(className = "m_links", id="Produktplot_1"),
 
     #html.H2("Aktuelle KPI's"),
-    html.Div(className = "box g", children=[
+    html.Div(className = "m_rechts", children=[
         html.Table(id="Wert-Karte", children=[
             html.Thead(children=[
                 html.Tr(children = [
@@ -108,8 +107,8 @@ layout = html.Div(className = "box asset", children=[
         ])
     ]),
 
-    html.Div(className = "four.columns", children = [
-        html.H2("Features"),
+    html.Div(className = "u_links", children = [
+        html.H3("Filter"),
         dcc.RadioItems(
         id="radio_kpi",
         options=[
@@ -121,7 +120,7 @@ layout = html.Div(className = "box asset", children=[
             {'label': 'Gehaltsklasse', 'value': 'Gehaltsklassen'}
         ],
         value='Geschlecht',
-        labelStyle={'display': 'inline-block'}
+        labelStyle={'display': 'block'}
         )
     ]), 
     html.Div(id="Produktplot_2")
@@ -131,15 +130,19 @@ layout = html.Div(className = "box asset", children=[
               Input(component_id = 'tabs_kpi', component_property= 'value'))
 def render_content(tab):
     if tab=="Kaufbereitschaft":
-        return html.Div(className = "two-thirds.column", children = [
-            dcc.Graph(figure=fetch_figure_bar(fetch_dataframe_prob(df_YTD, ["Angebotenes Produkt"]), \
-                "Angebotenes Produkt", "Anzahl", title="Kaufwahrscheinlichkeit in Prozent") )
+        temp_df = fetch_dataframe_prob(df_YTD, ["Angebotenes Produkt"])
+        temp_fig = fetch_figure_bar(temp_df, "Angebotenes Produkt", "Anzahl", title="Kaufwahrscheinlichkeit in Prozent")
+        
+        return html.Div(className = "m_links", children = [
+            dcc.Graph(figure = temp_fig, config = {'responsive': True})
         ])
-    else:    
-        return html.Div(className = "two-thirds.column", children = [
-            dcc.Graph(figure=fetch_figure_bar(fetch_dataframe_sum(df_YTD, tab, ["Angebotenes Produkt"]),\
-            "Angebotenes Produkt", tab,  title = tab + " verkaufter Produkter [YTD]" ))
-            ])
+    else:
+        temp_df = fetch_dataframe_sum(df_YTD, tab, ["Angebotenes Produkt"])
+        temp_fig = fetch_figure_bar(temp_df, "Angebotenes Produkt", tab,  title = tab + " verkaufter Produkter [YTD]" )   
+        
+        return html.Div(className = "m_links", children = [
+            dcc.Graph(figure = temp_fig, config = {'responsive': True})
+        ])
 
     
 @app.callback(Output("Produktplot_2", 'children'),
@@ -147,17 +150,18 @@ def render_content(tab):
               Input("radio_kpi", 'value'))
 def render_content(tab, radio):
     if tab=="Kaufbereitschaft":
-        return html.Div(className = "two-thirds.column", children = [
-            dcc.Graph(figure=fetch_figure_bar(fetch_dataframe_prob(df_YTD, [radio]), \
-                radio, "Anzahl", title="Kaufwahrscheinlichkeit in Prozent") )
+        temp_df = fetch_dataframe_prob(df_YTD, [radio])
+        temp_fig = fetch_figure_bar(temp_df ,radio, "Anzahl", title="Kaufwahrscheinlichkeit in Prozent"), 
+        
+        return html.Div(className = "u_rechts", children = [
+            dcc.Graph(figure = temp_fig, config = {'responsive': True} )
         ])
     else:
         temp_df = fetch_dataframe_sum(df_YTD, tab, ["Angebotenes Produkt", radio])
-        temp_fig = fetch_figure_bar(temp_df, radio, tab,\
-             color = "Angebotenes Produkt",  title = tab + " verkaufter Produkte nach " + radio + " [YTD]" )
-    
-        return html.Div(className = "two-thirds.column", children = [
-            dcc.Graph(figure=temp_fig)
+        temp_fig = fetch_figure_bar(temp_df, radio, tab, color = "Angebotenes Produkt",  title = tab + " verkaufter Produkte nach " + radio + " [YTD]" )
+        
+        return html.Div(className = "u_rechts", children = [
+            dcc.Graph(figure=temp_fig, config = {'responsive': True})
         ])
 
 def fetch_figure_line(dataframe, x, y, title, color = None, text = None):
@@ -176,7 +180,7 @@ def fetch_figure_bar(dataframe, x, y, title, color = None, text = None):
     if color != None and text == None:
         return px.bar(dataframe, x=x, y=y, color=color, title=title)
     elif color == None and text == None:
-        return px.bar(dataframe, x=x, y=y, title=title)
+        return px.bar(dataframe, x=x, y=y, title=title, height= 300)
     elif color == None and text != None:
         fig_temp = px.bar(dataframe, x=x, y=y, title=title, text=text)
         fig_temp.update_traces(texttemplate='%{text:.2s}', textposition='outside')
@@ -194,4 +198,4 @@ def fetch_dataframe_sum(dataframe, groupDirection, args):
 # def fetch_dataframe_count(dataframe, groupDirection, args):
 #     return dataframe.groupby(args).count().reset_index()
 def fetch_dataframe_prob(dataframe, args):
-    return dataframe.groupby(args)["Anzahl"].apply(lambda x: x.sum()/x.count()).reset_index()
+    return dataframe.groupby(args)["Anzahl"].apply(lambda x: round((x.sum()/x.count())*100), 2).reset_index()

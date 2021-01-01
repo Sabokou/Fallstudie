@@ -1,13 +1,14 @@
 #Import Dash Componenets
 import dash_core_components as dcc
 import dash_html_components as html
+import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 
 from flask_caching import Cache
 
+#Import notwendige Komponenten der App
 from app import app
 from app import cache
-
 
 #Import Data structures
 import pandas as pd
@@ -28,7 +29,10 @@ def fetch_dataframe(ytd):
     df = dd.read_sql_table("testdaten", 'sqlite:///Kundendaten.db', "Jahr")
 
     #Daten reduzieren auf gewünschtes Jahr
-    df_YTD = df.loc[ytd].compute()
+    try:
+        df_YTD = df.loc[ytd].compute()
+    except:
+        df_YTD = df.loc[df["Jahr"].max()].compute()
     return df_YTD
 
 df_YTD = fetch_dataframe(ytd)
@@ -69,61 +73,74 @@ Prob_YTD=round(df_YTD["Anzahl"].sum()/df_YTD["Anzahl"].count(),2)
 
 #Websiten-Aufbau
 layout = html.Div(className = "asset", children=[
-    html.Div(className = "o_tabs", children = [
-        html.H1(children="Kennziffern im aktuellen Jahr"),
-        dcc.Tabs(id="tabs_kpi", value='Gewinn', children=[
-            dcc.Tab(label='Gewinn', value='Gewinn'),
-            dcc.Tab(label='Anzahl', value='Anzahl'),
-            dcc.Tab(label="Kaufbereitschaft", value="Kaufbereitschaft")
-        ])
-    ]),
-
-    #html.H2("Erfolg der Produkte"),
-    html.Div(className = "m_links", id="Produktplot_1"),
-
-    #html.H2("Aktuelle KPI's"),
-    html.Div(className = "m_rechts", children=[
-        html.Table(id="Wert-Karte", children=[
-            html.Thead(children=[
-                html.Tr(children = [
-                    html.Th(""),
-                    html.Th("Wert [YTD]")
-                    ])
-            ]),
-            html.Tbody(children=[
-                html.Tr(children=[
-                    html.Th("Gewinn"),
-                    html.Td(Gewinn_YTD)
-                ]),
-                html.Tr(children=[
-                    html.Th("Anzahl"),
-                    html.Td(Anzahl_YTD)
-                ]),
-                html.Tr(children=[
-                    html.Th("Wahrscheinlichkeit"),
-                    html.Td(str(round(Prob_YTD*100,2)) + "%" )
+    #region Menüleiste
+    dbc.Row([
+        dbc.Col(
+            html.Div(className = "o_tabs", children = [
+                html.H1(children="Kennziffern im aktuellen Jahr"),
+                dcc.Tabs(id="tabs_kpi", value='Gewinn', children=[
+                    dcc.Tab(label='Gewinn', value='Gewinn'),
+                    dcc.Tab(label='Anzahl', value='Anzahl'),
+                    dcc.Tab(label="Kaufbereitschaft", value="Kaufbereitschaft")
                 ])
-            ])
-        ])
+            ]), width = 11
+        ),
     ]),
-
-    html.Div(className = "u_links", children = [
-        html.H3("Filter"),
-        dcc.RadioItems(
-        id="radio_kpi",
-        options=[
-            {'label': 'Geschlecht', 'value': 'Geschlecht'},
-            {'label': 'Altersklassen', 'value': 'Altersklassen'},
-            {'label': 'Beruf', 'value': 'Job'},
-            {'label': 'Familienstand', 'value': 'Familienstand'},
-            {'label': 'Kinder', 'value': 'Kinder'},
-            {'label': 'Gehaltsklasse', 'value': 'Gehaltsklassen'}
-        ],
-        value='Geschlecht',
-        labelStyle={'display': 'block'}
+    #endregion
+    #region Chart-Reihe 1
+    dbc.Row([
+        dbc.Col(html.Div(className = "m_links", id="Produktplot_1"), width = 7),
+        dbc.Col(
+            html.Div(className = "m_rechts", children=[
+                html.Table(id="Wert-Karte", children=[
+                    html.Thead(children=[
+                        html.Tr(children = [
+                            html.Th(""),
+                            html.Th("Wert [YTD]")
+                            ])
+                    ]),
+                    html.Tbody(children=[
+                        html.Tr(children=[
+                            html.Th("Gewinn"),
+                            html.Td(Gewinn_YTD)
+                        ]),
+                        html.Tr(children=[
+                            html.Th("Anzahl"),
+                            html.Td(Anzahl_YTD)
+                        ]),
+                        html.Tr(children=[
+                            html.Th("Wahrscheinlichkeit"),
+                            html.Td(str(round(Prob_YTD*100,2)) + "%" )
+                        ])
+                    ])
+                ])
+            ]), width = 4
         )
-    ]), 
-    html.Div(id="Produktplot_2")
+    ]),
+    #endregion
+    #region Chart-Reihe 2
+    dbc.Row([
+        dbc.Col(
+            html.Div(className = "u_links", children = [
+                html.H3("Filter"),
+                dcc.RadioItems(
+                    id="radio_kpi",
+                    options=[
+                        {'label': 'Geschlecht', 'value': 'Geschlecht'},
+                        {'label': 'Altersklassen', 'value': 'Altersklassen'},
+                        {'label': 'Beruf', 'value': 'Job'},
+                        {'label': 'Familienstand', 'value': 'Familienstand'},
+                        {'label': 'Kinder', 'value': 'Kinder'},
+                        {'label': 'Gehaltsklasse', 'value': 'Gehaltsklassen'}
+                    ],
+                    value='Geschlecht',
+                    labelStyle={'display': 'block'}
+                )
+            ]), width = 3
+        ),
+        dbc.Col(html.Div(id="Produktplot_2"), width = 8)
+    ], justify = "start")
+    #endregion
 ])
 
 @app.callback(Output(component_id = "Produktplot_1", component_property= 'children'),

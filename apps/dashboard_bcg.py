@@ -9,7 +9,7 @@ import plotly.express as px
 
 df = dd.read_sql_table("testdaten", 'sqlite:///Kundendaten.db', "index")
 df=df.compute()
-df_BCG_1= df.groupby(["Angebotenes Produkt"])["Gewinn", "Anzahl"].sum().reset_index()
+df_BCG_1= df.groupby(["Angebotenes Produkt"])[["Gewinn", "Anzahl"]].sum().reset_index()
 df_BCG_2=df.groupby(["Angebotenes Produkt"])["Anzahl"].apply(lambda x: x.sum()/x.count())
 
 df_BCG=df_BCG_1.merge(df_BCG_2, on="Angebotenes Produkt")

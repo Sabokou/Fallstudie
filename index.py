@@ -12,15 +12,20 @@ from apps import dashboard_bcg
 from apps import tool 
 from apps import start_menu
 
+button_group = dbc.ButtonGroup(
+    [
+        dbc.Button("Verkaufstool", href="/apps/tool", color="primary", className="mr-1", block=True),
+        dbc.Button("Dashboard KPI", href="/apps/dashboard_kpi", color="primary", className="mr-1", block=True),
+        dbc.Button("Dashboard Zeit", href="/apps/dashboard_zeit", color="primary", className="mr-1", block=True),
+        dbc.Button("Dashboard BCG", href="/apps/dashboard_bcg", color="primary", className="mr-1", block=True),
+    ],
+    vertical=True
+)
+
 app.layout = html.Div(children = [
     dcc.Location(id='url', refresh=False),
     dbc.Row([
-        dbc.Col([
-            dbc.Row([html.Div(children=[dcc.Link('Tool', href ='/apps/tool')])]),
-            dbc.Row([html.Div(children=[dcc.Link('KPIs', href ='/apps/dashboard_kpi')])]),
-            dbc.Row([html.Div(children=[dcc.Link('Zeit', href ='/apps/dashboard_zeit')])]),
-            dbc.Row([html.Div(children=[dcc.Link('BCG', href ='/apps/dashboard_bcg')])])
-        ], width = 1),
+        dbc.Col([button_group], width = 1),
         dbc.Col(html.Div(className = "asset", id = 'page-content', children=[]), width = 11 )
     ])  
 ])

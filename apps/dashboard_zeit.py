@@ -9,7 +9,7 @@ import numpy as np
 from datetime import datetime
 import dask.dataframe as dd
 import dask.array as da
-from sqlalchemy import cast, sql, types
+
 
 @cache.memoize()
 def fetch_dataframe():

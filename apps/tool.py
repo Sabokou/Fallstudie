@@ -117,6 +117,7 @@ def vorschlag(sex_value, job_value, marital_value, children_value, age_value, in
     
     produkt = {"Girokonto":prob1,"Kredit":prob2, "Tagesgeldkonto":prob3, "Depotkonto":prob4, "Altersvorsorge":prob5, "Versicherung":prob6, "Bausparvertrag":prob7}
 
+
     out1 = (f"1. {sorted(produkt, key=produkt.get, reverse=True)[:3][0]} mit {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][0])*100),2)}% Erfolgschance")
     out2 = (f"2. {sorted(produkt, key=produkt.get, reverse=True)[:3][1]} mit {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][1])*100),2)}% Erfolgschance")
     out3 = (f"3. {sorted(produkt, key=produkt.get, reverse=True)[:3][2]} mit {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][2])*100),2)}% Erfolgschance")

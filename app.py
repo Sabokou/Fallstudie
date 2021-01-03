@@ -10,8 +10,10 @@ from dash.dependencies import Input, Output
 import os
 from flask_caching import Cache
 
-app = dash.Dash(__name__, suppress_callback_exceptions=True, meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1.0"}])
-#external_stylesheets=[dbc.themes.GRID],
+app = dash.Dash(__name__, suppress_callback_exceptions=True,\
+      meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1.0"}],\
+      external_stylesheets=[dbc.themes.BOOTSTRAP])
+
 server = app.server 
 
 cache = Cache(server, config={

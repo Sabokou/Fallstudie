@@ -15,7 +15,8 @@ layout = html.Div([
             {"label":"30 - 49", "value": 2},
             {"label":"50 - 65", "value": 3},
             {"label":"65+", "value": 4}
-        ]),
+        ],placeholder="Alter..."
+        ),
 
         dcc.Dropdown(id="select_income",
         options=[
@@ -26,27 +27,30 @@ layout = html.Div([
             {"label":"60000 - 79999", "value": 5},
             {"label":"80000 - 99999", "value": 6},
             {"label":"100000+", "value": 7}
-        ]),
+        ],placeholder="Gehalt..."),
 
         dcc.Dropdown(id="select_sex",
         options=[
             {"label":"Männlich", "value": 1},
             {"label":"Weiblich", "value": 2},
             {"label":"Divers", "value": 3}
-        ]),
+        ],placeholder="Geschlecht..."
+        ),
 
         dcc.Dropdown(id="select_children",
         options=[
             {"label":"Ja", "value": 0},
             {"label":"Nein", "value": 1}
-        ]),
+        ],placeholder="Kinder... Ja/Nein"
+        ),
 
         dcc.Dropdown(id="select_marital",
         options=[
             {"label":"verheiratet", "value": 1},
             {"label":"ledig", "value": 2},
             {"label":"aufgelöste Beziehung", "value": 3}
-        ]),
+        ],placeholder="Familienstand..."
+        ),
 
         dcc.Dropdown(id="select_job",
         options=[
@@ -61,7 +65,8 @@ layout = html.Div([
             {"label":"Management", "value": 8},
             {"label":"Arbeitslos", "value": 9}
 
-        ])
+        ],placeholder="Beruf..."
+        )
     ]),
     html.Div(id="tool_output", children=[
         html.Div(id="output1"),
@@ -70,10 +75,6 @@ layout = html.Div([
 
 
     ])
-
-
-
-
 ])
 
 model = pickle.load(open("jungbank_xgb.sav", 'rb'))

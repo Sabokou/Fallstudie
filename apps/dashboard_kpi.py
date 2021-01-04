@@ -124,7 +124,7 @@ layout = html.Div(children=[
     dbc.Row([
         dbc.Col(
             html.Div(children = [
-                html.H3("Filter"),
+                html.H4("Filter"),
                 dcc.RadioItems(
                     id="radio_kpi",
                     options=[

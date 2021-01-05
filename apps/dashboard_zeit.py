@@ -143,12 +143,12 @@ def render_content(tab):
     if tab=="Kaufbereitschaft":
         return html.Div(className = "m_links", children = [
             dcc.Graph(figure=fetch_figure_line(fetch_dataframe_prob(df, ["Datum","Angebotenes Produkt"]), \
-                "Datum", "Kaufwahrscheinlichkeit in %", color="Angebotenes Produkt", title="Produkte aufgeteilt nach Kaufwahrscheinlichkeit") )
+                "Datum", "Kaufwahrscheinlichkeit in %", color="Angebotenes Produkt", title="Kaufwahrscheinlichkeit aufgeteilt nach Produkte") )
         ])
     else:    
         temp_dataframe = fetch_dataframe_sum(df, ["Datum", "Angebotenes Produkt"])
         temp_fig = fetch_figure_line(temp_dataframe,\
-            "Datum", tab, color="Angebotenes Produkt",  title = "Produkte aufgeteilt nach " + tab)
+            "Datum", tab, color="Angebotenes Produkt",  title = tab+" aufgeteilt nach Produkte")
         
         return html.Div(className = "m_links", children = [
             dcc.Graph(figure= temp_fig)
@@ -161,12 +161,12 @@ def render_content(tab, radio):
     if tab=="Kaufbereitschaft":
         return html.Div(className = "m_links", children = [
             dcc.Graph(figure=fetch_figure_line(fetch_dataframe_prob(df, ["Datum",radio]), \
-                "Datum", "Kaufwahrscheinlichkeit in %", color=radio, title=radio + " aufgeteilt nach Kaufwahrscheinlichkeit") )
+                "Datum", "Kaufwahrscheinlichkeit in %", color=radio, title="Kaufwahrscheinlichkeit aufgeteilt nach "+radio) )
         ])
     else:  
         temp_df = fetch_dataframe_sum(df, ["Datum", radio])
         temp_fig = fetch_figure_line(temp_df, "Datum", tab,\
-             color = radio,  title = radio + " aufgeteilt nach " + tab)
+             color = radio,  title = tab + " aufgeteilt nach " + radio)
     
         return html.Div(className = "m_links", children = [
             dcc.Graph(figure=temp_fig)

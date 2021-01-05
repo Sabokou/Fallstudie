@@ -150,14 +150,14 @@ layout = html.Div(children=[
 def render_content(tab):
     if tab=="Kaufbereitschaft":
         temp_df = fetch_dataframe_prob(df_YTD, ["Angebotenes Produkt"])
-        temp_fig = fetch_figure_bar(temp_df, "Angebotenes Produkt", "Anzahl", title="Produkte aufgeteilt nach Kaufwahrscheinlichkeit[YTD]")
+        temp_fig = fetch_figure_bar(temp_df, "Angebotenes Produkt", "Kaufwahrscheinlichkeit in %", title="Kaufwahrscheinlichkeit[YTD] aufgeteilt nach Produkte")
         
         return html.Div(className = "m_links", children = [
             dcc.Graph(figure=temp_fig )
         ])
     else:
         temp_df = fetch_dataframe_sum(df_YTD, ["Angebotenes Produkt"])
-        temp_fig = fetch_figure_bar(temp_df, "Angebotenes Produkt", tab,  title = "Produkte aufgeteilt nach "+tab+"[YTD]" )   
+        temp_fig = fetch_figure_bar(temp_df, "Angebotenes Produkt", tab,  title = tab+ "[YTD] aufgeteilt nach Produkte" )   
         
         return html.Div(className = "m_links", children = [
             dcc.Graph(figure = temp_fig, config = {'responsive': True})
@@ -170,14 +170,14 @@ def render_content(tab):
 def render_content(tab, radio):
     if tab=="Kaufbereitschaft":
         temp_df = fetch_dataframe_prob(df_YTD, [radio])
-        temp_fig = fetch_figure_bar(temp_df ,radio, "Anzahl", title=radio + " aufgeteilt nach Kaufwahrscheinlichkeit[YTD]")
+        temp_fig = fetch_figure_bar(temp_df ,radio, "Kaufwahrscheinlichkeit in %", title= "Kaufwahrscheinlichkeit[YTD] aufgeteilt nach "+radio)
         
         return html.Div(className = "u_rechts", children = [
             dcc.Graph(figure = temp_fig, config = {'responsive': True} )
         ])
     else:
         temp_df = fetch_dataframe_sum(df_YTD, ["Angebotenes Produkt", radio])
-        temp_fig = fetch_figure_bar(temp_df, radio, tab, color = "Angebotenes Produkt",  title = radio + " aufgeteilt nach " + tab + " [YTD]" )
+        temp_fig = fetch_figure_bar(temp_df, radio, tab, color = "Angebotenes Produkt",  title = tab + "[YTD] aufgeteilt nach " + radio )
         return html.Div(className = "u_rechts", children = [
             dcc.Graph(figure=temp_fig, config = {'responsive': True})
         ])
@@ -214,4 +214,6 @@ def fetch_dataframe_sum(dataframe, args):
     return dataframe.groupby(args).sum().reset_index()
 
 def fetch_dataframe_prob(dataframe, args):
-    return dataframe.groupby(args)["Anzahl"].apply(lambda x: round((x.sum()/x.count())*100, 2)).reset_index()
+    temp_df = dataframe.groupby(args)["Anzahl"].apply(lambda x: round((x.sum()/x.count())*100, 2)).reset_index()
+    df_renamed=temp_df.rename(columns={'Anzahl': 'Kaufwahrscheinlichkeit in %'})
+    return df_renamed

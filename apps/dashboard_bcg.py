@@ -74,6 +74,6 @@ fig.update_layout(margin=dict(t=0), height=600, width=1100)
 
 
 layout = html.Div(children = [
-    dbc.Row([html.H1(children=["BCG-Matrix nach Rentabilität und Kaufwahrscheinlichkeit"])], justify = "center"),
+    dbc.Row([html.H1(children=["BCG-Matrix nach Gewinn pro Verkauf und Kaufwahrscheinlichkeit"])], justify = "center"),
     dbc.Row([dcc.Graph(figure=fig)], justify = "center")
 ])

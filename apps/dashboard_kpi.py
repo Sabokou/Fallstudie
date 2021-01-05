@@ -118,7 +118,7 @@ layout = html.Div(children=[
                 ])
             ]), width = 4
         )
-    ]),
+    ], justify="center", align="center", className="h-50"),
     #endregion
     #region Chart-Reihe 2
     dbc.Row([
@@ -141,7 +141,7 @@ layout = html.Div(children=[
             ]), width = 3
         ),
         dbc.Col(html.Div(id="Produktplot_2"), width = 8)
-    ], justify = "start")
+    ], justify="center", align="center", className="h-50")
     #endregion
 ])
 

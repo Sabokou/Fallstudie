@@ -73,14 +73,13 @@ layout = html.Div(children = [
                     ])
                 ]), width = 12
             ),
-        ]),
+        ], justify="center", align="center", className="h-50"),
 
     #html.H2("Bankprodukte im Zeitverlauf"),
     dbc.Row([
         dbc.Col(html.Div(id="Zeitplot_1"), width = 7),
         dbc.Col(
-            html.Div(children= [
-                html.H2("KPI's im Zeitverlauf"),
+            html.Div(style = {"vertical-align":"middle"}, children= [ 
                 html.Table(id="Zeit-Karte", children=[
                     html.Thead(children=[
                         html.Tr(children = [
@@ -89,7 +88,7 @@ layout = html.Div(children = [
                             html.Th("Aktuelles Jahr [YTD]"),
                             html.Th("Veränderung")
                             ])
-                    ]),
+                    ]), 
                     html.Tbody(children=[
                         html.Tr(children=[
                             html.Th("Gewinn"),
@@ -113,7 +112,7 @@ layout = html.Div(children = [
                 ])
             ]), width = 5
         )
-    ]),
+    ], justify="center", align="center", className="h-50"),
 
     dbc.Row([
         dbc.Col(
@@ -135,7 +134,7 @@ layout = html.Div(children = [
             ]), width = 3,
         ),
         dbc.Col(html.Div(id="Zeitplot_2"), width = 9)
-    ], justify = "start")
+    ], justify="center", align="center", className="h-50")
 ])
 
 @app.callback(Output("Zeitplot_1", 'children'),

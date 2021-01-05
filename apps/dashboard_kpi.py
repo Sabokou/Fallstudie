@@ -156,7 +156,7 @@ def render_content(tab):
             dcc.Graph(figure = temp_fig, config = {'responsive': True})
         ])
     else:
-        temp_df = fetch_dataframe_sum(df_YTD, tab, ["Angebotenes Produkt"])
+        temp_df = fetch_dataframe_sum(df_YTD, ["Angebotenes Produkt"])
         temp_fig = fetch_figure_bar(temp_df, "Angebotenes Produkt", tab,  title = tab + " verkaufter Produkter [YTD]" )   
         
         return html.Div(className = "m_links", children = [
@@ -176,7 +176,7 @@ def render_content(tab, radio):
             dcc.Graph(figure = temp_fig, config = {'responsive': True} )
         ])
     else:
-        temp_df = fetch_dataframe_sum(df_YTD, tab, ["Angebotenes Produkt", radio])
+        temp_df = fetch_dataframe_sum(df_YTD, ["Angebotenes Produkt", radio])
         temp_fig = fetch_figure_bar(temp_df, radio, tab, color = "Angebotenes Produkt",  title = tab + " verkaufter Produkte nach " + radio + " [YTD]" )
         
         return html.Div(className = "u_rechts", children = [
@@ -211,10 +211,8 @@ def fetch_figure_bar(dataframe, x, y, title, color = None, text = None):
         return fig_temp
 
 @cache.memoize()
-def fetch_dataframe_sum(dataframe, groupDirection, args):
-    #return dataframe.groupby(args).sum().reset_index().compute()
+def fetch_dataframe_sum(dataframe, args):
     return dataframe.groupby(args).sum().reset_index()
-# def fetch_dataframe_count(dataframe, groupDirection, args):
-#     return dataframe.groupby(args).count().reset_index()
+
 def fetch_dataframe_prob(dataframe, args):
-    return dataframe.groupby(args)["Anzahl"].apply(lambda x: round((x.sum()/x.count())*100), 2).reset_index()
+    return dataframe.groupby(args)["Anzahl"].apply(lambda x: round((x.sum()/x.count())*100, 2)).reset_index()

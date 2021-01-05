@@ -35,11 +35,11 @@ app.clientside_callback(
     function(pathname) {
         if (pathname === '/apps/tool') {
             document.title = 'Verkaufstool'
-        } else if (tab_value === '/apps/dashboard_kpi') {
+        } else if (pathname === '/apps/dashboard_kpi') {
             document.title = 'Dashboard:KPI'
-        } else if (tab_value === '/apps/dashboard_zeit') {
+        } else if (pathname === '/apps/dashboard_zeit') {
             document.title = 'Dashboard:hist. Verlauf'
-        } else if (tab_value === '/apps/dashboard_bcg') {
+        } else if (pathname === '/apps/dashboard_bcg') {
             document.title = 'Dashboard:BCG'
         } else {
             document.title = 'Startseite'

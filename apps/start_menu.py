@@ -7,7 +7,6 @@ layout = html.Div(children=[
     dbc.Row([
         dbc.Col(
             html.Div(children = [
-                #TODO: find way to get a relative path to image
                 html.Img(src = "/assets/Logo.png", style = {"max-width":"50%", "height":"auto"})
             ]), width={"size": 6, "offset": 3}
         )

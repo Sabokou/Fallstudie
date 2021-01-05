@@ -5,15 +5,9 @@ import dash_bootstrap_components as dbc
 
 layout = html.Div(children=[
     dbc.Row([
-        dbc.Col(
-            html.Div(children = [
-                html.Img(src = "/assets/Logo.png", style = {"max-width":"50%", "height":"auto"})
-            ]), width={"size": 6, "offset": 3}
-        )
-    ], justify="center",),
-    dbc.Row([
-        html.Div(children = [
-            html.H2("Dashboard für Produktverkaufsentwicklungen und Produktberatung")
-        ])
-    ], justify="center",)
+        dbc.Col(html.Div(children = [
+            html.Img(src = "/assets/Logo.png", style = {"max-width":"55%", "height":"auto"}),
+            html.H2("Dashboard für Verkaufsentwicklungen und Produktberatung")
+        ]), width=4)
+    ],justify="center", align="center", className="h-50"),
 ])

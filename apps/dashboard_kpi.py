@@ -138,7 +138,7 @@ layout = html.Div(children=[
                     value='Geschlecht',
                     labelStyle={'display': 'block'}
                 )
-            ]), width = 1
+            ]), width = 2
         ),
         dbc.Col(html.Div(id="Produktplot_2"), width = 8)
     ], justify="center", align="center", className="h-50")
@@ -178,7 +178,6 @@ def render_content(tab, radio):
     else:
         temp_df = fetch_dataframe_sum(df_YTD, ["Angebotenes Produkt", radio])
         temp_fig = fetch_figure_bar(temp_df, radio, tab, color = "Angebotenes Produkt",  title = tab + " verkaufter Produkte nach " + radio + " [YTD]" )
-        temp_fig.update_layout(margin = {t:5, b:5, l:5, r:5})
         return html.Div(className = "u_rechts", children = [
             dcc.Graph(figure=temp_fig, config = {'responsive': True})
         ])

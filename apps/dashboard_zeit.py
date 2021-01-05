@@ -132,7 +132,7 @@ layout = html.Div(children = [
                     value='Geschlecht',
                     labelStyle={'display': 'block'}
                 )
-            ]), width = 3,
+            ]), width = 1,
         ),
         dbc.Col(html.Div(id="Zeitplot_2"), width = 9)
     ], justify = "start")

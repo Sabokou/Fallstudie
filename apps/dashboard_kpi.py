@@ -120,6 +120,7 @@ layout = html.Div(children=[
         )
     ], justify="center", align="center", className="h-50"),
     #endregion
+    
     #region Chart-Reihe 2
     dbc.Row([
         dbc.Col(
@@ -160,7 +161,7 @@ def render_content(tab):
         temp_fig = fetch_figure_bar(temp_df, "Angebotenes Produkt", tab,  title = tab+ "[YTD] aufgeteilt nach Produkte" )   
         
         return html.Div(className = "m_links", children = [
-            dcc.Graph(figure = temp_fig, config = {'responsive': True})
+            dcc.Graph(figure = temp_fig)
         ])
 
     
@@ -173,13 +174,13 @@ def render_content(tab, radio):
         temp_fig = fetch_figure_bar(temp_df ,radio, "Kaufwahrscheinlichkeit in %", title= "Kaufwahrscheinlichkeit[YTD] aufgeteilt nach "+radio)
         
         return html.Div(className = "u_rechts", children = [
-            dcc.Graph(figure = temp_fig, config = {'responsive': True} )
+            dcc.Graph(figure = temp_fig)
         ])
     else:
         temp_df = fetch_dataframe_sum(df_YTD, ["Angebotenes Produkt", radio])
         temp_fig = fetch_figure_bar(temp_df, radio, tab, color = "Angebotenes Produkt",  title = tab + "[YTD] aufgeteilt nach " + radio )
         return html.Div(className = "u_rechts", children = [
-            dcc.Graph(figure=temp_fig, config = {'responsive': True})
+            dcc.Graph(figure=temp_fig)
         ])
 
 def fetch_figure_line(dataframe, x, y, title, color = None, text = None):

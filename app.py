@@ -16,6 +16,9 @@ app = dash.Dash(__name__, suppress_callback_exceptions=True,\
       title= "Dashboard",
       update_title='Berechne...')
 
+app.title = 'Plutos Consulting'
+
+
 server = app.server 
 
 cache = Cache(server, config={

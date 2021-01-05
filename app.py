@@ -14,7 +14,12 @@ font_awesome = "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
 
 app = dash.Dash(__name__, suppress_callback_exceptions=True,\
       meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1.0"}],\
-      external_stylesheets=[dbc.themes.BOOTSTRAP, font_awesome])
+
+      external_stylesheets=[dbc.themes.BOOTSTRAP, font_awesome],\
+      title= "Dashboard",
+      update_title='Berechne...')
+
+app.title = 'Plutos Consulting'
 
 server = app.server 
 

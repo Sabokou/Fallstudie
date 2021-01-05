@@ -83,7 +83,7 @@ layout = html.Div(children=[
                 dcc.Tabs(id="tabs_kpi", value='Gewinn', children=[
                     dcc.Tab(label='Gewinn', value='Gewinn'),
                     dcc.Tab(label='Anzahl', value='Anzahl'),
-                    dcc.Tab(label="Kaufbereitschaft", value="Kaufbereitschaft")
+                    dcc.Tab(label="Kaufwahrscheinlichkeit", value="Kaufbereitschaft")
                 ])
             ]), width = 12
         ),
@@ -118,13 +118,13 @@ layout = html.Div(children=[
                 ])
             ]), width = 4
         )
-    ]),
+    ], justify="center", align="center", className="h-50"),
     #endregion
     #region Chart-Reihe 2
     dbc.Row([
         dbc.Col(
             html.Div(children = [
-                html.H3("Filter"),
+                html.H5("Filter"),
                 dcc.RadioItems(
                     id="radio_kpi",
                     options=[
@@ -138,10 +138,10 @@ layout = html.Div(children=[
                     value='Geschlecht',
                     labelStyle={'display': 'block'}
                 )
-            ]), width = 3
+            ]), width = 2
         ),
-        dbc.Col(html.Div(id="Produktplot_2"), width = 8)
-    ], justify = "start")
+        dbc.Col(html.Div(id="Produktplot_2"), width = 9)
+    ], justify="center", align="center", className="h-50")
     #endregion
 ])
 
@@ -150,14 +150,14 @@ layout = html.Div(children=[
 def render_content(tab):
     if tab=="Kaufbereitschaft":
         temp_df = fetch_dataframe_prob(df_YTD, ["Angebotenes Produkt"])
-        temp_fig = fetch_figure_bar(temp_df, "Angebotenes Produkt", "Anzahl", title="Kaufwahrscheinlichkeit in Prozent")
+        temp_fig = fetch_figure_bar(temp_df, "Angebotenes Produkt", "Anzahl", title="Produkte aufgeteilt nach Kaufwahrscheinlichkeit[YTD]")
         
         return html.Div(className = "m_links", children = [
-            dcc.Graph(figure = temp_fig, config = {'responsive': True})
+            dcc.Graph(figure=temp_fig )
         ])
     else:
-        temp_df = fetch_dataframe_sum(df_YTD, tab, ["Angebotenes Produkt"])
-        temp_fig = fetch_figure_bar(temp_df, "Angebotenes Produkt", tab,  title = tab + " verkaufter Produkter [YTD]" )   
+        temp_df = fetch_dataframe_sum(df_YTD, ["Angebotenes Produkt"])
+        temp_fig = fetch_figure_bar(temp_df, "Angebotenes Produkt", tab,  title = "Produkte aufgeteilt nach "+tab+"[YTD]" )   
         
         return html.Div(className = "m_links", children = [
             dcc.Graph(figure = temp_fig, config = {'responsive': True})
@@ -170,15 +170,14 @@ def render_content(tab):
 def render_content(tab, radio):
     if tab=="Kaufbereitschaft":
         temp_df = fetch_dataframe_prob(df_YTD, [radio])
-        temp_fig = fetch_figure_bar(temp_df ,radio, "Anzahl", title="Kaufwahrscheinlichkeit in Prozent"), 
+        temp_fig = fetch_figure_bar(temp_df ,radio, "Anzahl", title=radio + " aufgeteilt nach Kaufwahrscheinlichkeit[YTD]")
         
         return html.Div(className = "u_rechts", children = [
             dcc.Graph(figure = temp_fig, config = {'responsive': True} )
         ])
     else:
-        temp_df = fetch_dataframe_sum(df_YTD, tab, ["Angebotenes Produkt", radio])
-        temp_fig = fetch_figure_bar(temp_df, radio, tab, color = "Angebotenes Produkt",  title = tab + " verkaufter Produkte nach " + radio + " [YTD]" )
-        
+        temp_df = fetch_dataframe_sum(df_YTD, ["Angebotenes Produkt", radio])
+        temp_fig = fetch_figure_bar(temp_df, radio, tab, color = "Angebotenes Produkt",  title = radio + " aufgeteilt nach " + tab + " [YTD]" )
         return html.Div(className = "u_rechts", children = [
             dcc.Graph(figure=temp_fig, config = {'responsive': True})
         ])
@@ -211,10 +210,8 @@ def fetch_figure_bar(dataframe, x, y, title, color = None, text = None):
         return fig_temp
 
 @cache.memoize()
-def fetch_dataframe_sum(dataframe, groupDirection, args):
-    #return dataframe.groupby(args).sum().reset_index().compute()
+def fetch_dataframe_sum(dataframe, args):
     return dataframe.groupby(args).sum().reset_index()
-# def fetch_dataframe_count(dataframe, groupDirection, args):
-#     return dataframe.groupby(args).count().reset_index()
+
 def fetch_dataframe_prob(dataframe, args):
-    return dataframe.groupby(args)["Anzahl"].apply(lambda x: round((x.sum()/x.count())*100), 2).reset_index()
+    return dataframe.groupby(args)["Anzahl"].apply(lambda x: round((x.sum()/x.count())*100, 2)).reset_index()

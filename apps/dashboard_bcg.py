@@ -19,7 +19,7 @@ df_BCG["Rentabilität"]=df_BCG["Gewinn"]/df_BCG["Anzahl"]
 prob_max=df_BCG["Kaufwahrscheinlichkeit"].max()
 rent_max=df_BCG["Rentabilität"].max()
 
-fig = px.scatter(df_BCG, x=df_BCG["Kaufwahrscheinlichkeit"]/prob_max, y=df_BCG["Rentabilität"]/rent_max, color="Angebotenes Produkt",
+fig = px.scatter(df_BCG, x=df_BCG["Kaufwahrscheinlichkeit"]/(prob_max+0.01), y=df_BCG["Rentabilität"]/(rent_max+0.1), color="Angebotenes Produkt",
                 labels={
                      "x": "Skalierte Kaufwahrscheinlichkeit",
                      "y": "Skalierte Rentabilität",
@@ -75,6 +75,7 @@ fig.add_shape(type="rect",
 )
         
 fig.update_traces(marker=dict(size=20,line=dict(width=2)))
+fig.update_layout(margin=dict(t=0), height=600, width=1100)
 
 
 

@@ -69,18 +69,17 @@ layout = html.Div(children = [
                     dcc.Tabs(id="tabs_zeit", value='Gewinn', children=[
                         dcc.Tab(label='Gewinn', value='Gewinn'),
                         dcc.Tab(label='Anzahl', value='Anzahl'),
-                        dcc.Tab(label="Kaufbereitschaft", value="Kaufbereitschaft")
+                        dcc.Tab(label="Kaufwahrscheinlichkeit", value="Kaufbereitschaft")
                     ])
                 ]), width = 12
             ),
-        ]),
+        ], justify="center", align="center", className="h-50"),
 
     #html.H2("Bankprodukte im Zeitverlauf"),
     dbc.Row([
         dbc.Col(html.Div(id="Zeitplot_1"), width = 7),
         dbc.Col(
-            html.Div(children= [
-                html.H2("KPI's im Zeitverlauf"),
+            html.Div(style = {"vertical-align":"middle"}, children= [ 
                 html.Table(id="Zeit-Karte", children=[
                     html.Thead(children=[
                         html.Tr(children = [
@@ -89,7 +88,7 @@ layout = html.Div(children = [
                             html.Th("Aktuelles Jahr [YTD]"),
                             html.Th("Veränderung")
                             ])
-                    ]),
+                    ]), 
                     html.Tbody(children=[
                         html.Tr(children=[
                             html.Th("Gewinn"),
@@ -113,12 +112,12 @@ layout = html.Div(children = [
                 ])
             ]), width = 5
         )
-    ]),
+    ], justify="center", align="center", className="h-50"),
 
     dbc.Row([
         dbc.Col(
             html.Div(children=[
-                html.H3("Filter"),
+                html.H5("Filter"),
                 dcc.RadioItems(
                     id="radio_zeit",
                     options=[
@@ -132,10 +131,10 @@ layout = html.Div(children = [
                     value='Geschlecht',
                     labelStyle={'display': 'block'}
                 )
-            ]), width = 3,
+            ]), width = 2,
         ),
         dbc.Col(html.Div(id="Zeitplot_2"), width = 9)
-    ], justify = "start")
+    ], justify="center", align="center", className="h-50")
 ])
 
 @app.callback(Output("Zeitplot_1", 'children'),
@@ -144,12 +143,12 @@ def render_content(tab):
     if tab=="Kaufbereitschaft":
         return html.Div(className = "m_links", children = [
             dcc.Graph(figure=fetch_figure_line(fetch_dataframe_prob(df, ["Datum","Angebotenes Produkt"]), \
-                "Datum", "Anzahl", color="Angebotenes Produkt", title="Kaufwahrscheinlichkeit in Prozent") )
+                "Datum", "Kaufwahrscheinlichkeit in %", color="Angebotenes Produkt", title="Produkte aufgeteilt nach Kaufwahrscheinlichkeit") )
         ])
     else:    
         temp_dataframe = fetch_dataframe_sum(df, ["Datum", "Angebotenes Produkt"])
         temp_fig = fetch_figure_line(temp_dataframe,\
-            "Datum", tab, color="Angebotenes Produkt",  title = "Bankprodukte ~ " + tab)
+            "Datum", tab, color="Angebotenes Produkt",  title = "Produkte aufgeteilt nach " + tab)
         
         return html.Div(className = "m_links", children = [
             dcc.Graph(figure= temp_fig)
@@ -162,12 +161,12 @@ def render_content(tab, radio):
     if tab=="Kaufbereitschaft":
         return html.Div(className = "m_links", children = [
             dcc.Graph(figure=fetch_figure_line(fetch_dataframe_prob(df, ["Datum",radio]), \
-                "Datum", "Anzahl", color=radio, title="Kaufwahrscheinlichkeit in Prozent") )
+                "Datum", "Kaufwahrscheinlichkeit in %", color=radio, title=radio + " aufgeteilt nach Kaufwahrscheinlichkeit") )
         ])
     else:  
         temp_df = fetch_dataframe_sum(df, ["Datum", radio])
         temp_fig = fetch_figure_line(temp_df, "Datum", tab,\
-             color = radio,  title = tab + " ~ " + radio)
+             color = radio,  title = radio + " aufgeteilt nach " + tab)
     
         return html.Div(className = "m_links", children = [
             dcc.Graph(figure=temp_fig)
@@ -207,4 +206,6 @@ def fetch_dataframe_sum(dataframe, args):
     #return dataframe.groupby(args).sum().reset_index()
 @cache.memoize()
 def fetch_dataframe_prob(dataframe, args):
-    return dataframe.groupby(args)["Anzahl"].apply(lambda x: round((x.sum()/x.count())*100, 2)).reset_index().compute()
+    temp_df = dataframe.groupby(args)["Anzahl"].apply(lambda x: round((x.sum()/x.count())*100, 2)).reset_index().compute()
+    df_renamed=temp_df.rename(columns={'Anzahl': 'Kaufwahrscheinlichkeit in %'})
+    return df_renamed

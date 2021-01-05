@@ -153,7 +153,7 @@ def render_content(tab):
         temp_fig = fetch_figure_bar(temp_df, "Angebotenes Produkt", "Anzahl", title="Kaufwahrscheinlichkeit in Prozent")
         
         return html.Div(className = "m_links", children = [
-            dcc.Graph(figure = temp_fig, config = {'responsive': True})
+            dcc.Graph(figure=temp_fig )
         ])
     else:
         temp_df = fetch_dataframe_sum(df_YTD, ["Angebotenes Produkt"])
@@ -170,7 +170,7 @@ def render_content(tab):
 def render_content(tab, radio):
     if tab=="Kaufbereitschaft":
         temp_df = fetch_dataframe_prob(df_YTD, [radio])
-        temp_fig = fetch_figure_bar(temp_df ,radio, "Anzahl", title="Kaufwahrscheinlichkeit in Prozent"), 
+        temp_fig = fetch_figure_bar(temp_df ,radio, "Anzahl", title="Kaufwahrscheinlichkeit in Prozent")
         
         return html.Div(className = "u_rechts", children = [
             dcc.Graph(figure = temp_fig, config = {'responsive': True} )

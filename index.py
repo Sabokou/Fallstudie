@@ -14,10 +14,10 @@ from apps import start_menu
 
 button_group = dbc.ButtonGroup(
     [
-        dbc.Button("Verkaufstool", href="/apps/tool", color="primary", className="mr-1", block=True),
-        dbc.Button("Dashboard KPI", href="/apps/dashboard_kpi", color="primary", className="mr-1", block=True),
-        dbc.Button("Dashboard Zeit", href="/apps/dashboard_zeit", color="primary", className="mr-1", block=True),
-        dbc.Button("Dashboard BCG", href="/apps/dashboard_bcg", color="primary", className="mr-1", block=True),
+        dbc.Button(html.I(className="fas fa-address-card"), href="/apps/tool", color="primary", className="mr-1", block=True),
+        dbc.Button(html.I(className="fas fa-chart-bar"), href="/apps/dashboard_kpi", color="primary", className="mr-1", block=True),
+        dbc.Button(html.I(className="fas fa-chart-line"), href="/apps/dashboard_zeit", color="primary", className="mr-1", block=True),
+        dbc.Button(html.Span([html.I(className="fas fa-plus-circle ml-2")]), href="/apps/dashboard_bcg", color="primary", className="mr-1", block=True),
     ],
     vertical=True
 )

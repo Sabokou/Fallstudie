@@ -10,9 +10,11 @@ from dash.dependencies import Input, Output
 import os
 from flask_caching import Cache
 
+font_awesome = "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+
 app = dash.Dash(__name__, suppress_callback_exceptions=True,\
       meta_tags=[{"name": "viewport", "content": "width=device-width, initial-scale=1.0"}],\
-      external_stylesheets=[dbc.themes.BOOTSTRAP])
+      external_stylesheets=[dbc.themes.BOOTSTRAP, font_awesome])
 
 server = app.server 
 

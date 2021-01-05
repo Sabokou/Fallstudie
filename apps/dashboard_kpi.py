@@ -87,7 +87,7 @@ layout = html.Div(children=[
                 ])
             ]), width = 12
         ),
-    ]),
+    ], justify = "center"),
     #endregion
     #region Chart-Reihe 1
     dbc.Row([

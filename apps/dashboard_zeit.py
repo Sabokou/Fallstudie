@@ -73,7 +73,7 @@ layout = html.Div(children = [
                     ])
                 ]), width = 12
             ),
-        ], justify="center", align="center", className="h-50"),
+        ], justify="center"),
 
     #html.H2("Bankprodukte im Zeitverlauf"),
     dbc.Row([

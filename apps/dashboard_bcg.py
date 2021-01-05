@@ -14,63 +14,57 @@ df_BCG_2=df.groupby(["Angebotenes Produkt"])["Anzahl"].apply(lambda x: x.sum()/x
 
 df_BCG=df_BCG_1.merge(df_BCG_2, on="Angebotenes Produkt")
 df_BCG=df_BCG.rename(columns={"Anzahl_x": "Anzahl", "Anzahl_y":"Kaufwahrscheinlichkeit"})
-df_BCG["Rentabilität"]=df_BCG["Gewinn"]/df_BCG["Anzahl"]
+df_BCG["Kaufwahrscheinlichkeit in %"]=df_BCG["Kaufwahrscheinlichkeit"]*100
+df_BCG["Gewinn pro Verkauf in €"]=df_BCG["Gewinn"]/df_BCG["Anzahl"]
 
-prob_max=df_BCG["Kaufwahrscheinlichkeit"].max()
-rent_max=df_BCG["Rentabilität"].max()
 
-fig = px.scatter(df_BCG, x=df_BCG["Kaufwahrscheinlichkeit"]/(prob_max+0.01), y=df_BCG["Rentabilität"]/(rent_max+0.1), color="Angebotenes Produkt",
-                labels={
-                     "x": "Skalierte Kaufwahrscheinlichkeit",
-                     "y": "Skalierte Rentabilität",
-                     "Angebotenes Produkt":"Angebotenes Produkt"
-                 },)
+fig = px.scatter(df_BCG, x=df_BCG["Kaufwahrscheinlichkeit in %"], y=df_BCG["Gewinn pro Verkauf in €"], color="Angebotenes Produkt")
 
 
 
 
 fig.add_trace(go.Scatter(
-    x=[0.25, 0.25],
-    y=[0.45, 0.45],
-    text=["Poor Dogs"],
+    x=[12.5, 12.5],
+    y=[4.5, 4.5],
+    text=["<b>Poor Dogs</b>"],
     mode="text",showlegend = False
 ))
 fig.add_trace(go.Scatter(
-    x=[0.25, 0.25],
-    y=[0.96, 0.96],
-    text=["Questionmarks"],
+    x=[12.5, 12.5],
+    y=[9.5, 9.5],
+    text=["<b>Questionmarks</b>"],
     mode="text",showlegend = False
 ))
 fig.add_trace(go.Scatter(
-    x=[0.75, 0.75],
-    y=[0.45, 0.45],
-    text=["Cash Cows"],
+    x=[37.5, 37.5],
+    y=[4.5, 4.5],
+    text=["<b>Cash Cows</b>"],
     mode="text",showlegend = False
 ))
 fig.add_trace(go.Scatter(
-    x=[0.75, 0.75],
-    y=[0.96, 0.96],
-    text=["Stars"],
+    x=[37.5, 37.5],
+    y=[9.5, 9.5],
+    text=["<b>Stars</b>"],
     mode="text",showlegend = False
 ))
 
-fig.update_xaxes(range=[-0.01, 1.01], showgrid=False)
-fig.update_yaxes(range=[-0.01, 1.01], showgrid=False)
+fig.update_xaxes(range=[0, 50], showgrid=False)
+fig.update_yaxes(range=[0, 10], showgrid=False)
 
 fig.add_shape(type="rect",
-    x0=-0.01, y0=-0.01, x1=0.5, y1=0.5,
+    x0=0, y0=0, x1=25, y1=5,
     line=dict(color="RoyalBlue"),
 )
 fig.add_shape(type="rect",
-    x0=0.5, y0=-0.01, x1=1.01, y1=0.5,
+    x0=25, y0=0, x1=50, y1=5,
     line=dict(color="RoyalBlue"),
 )
 fig.add_shape(type="rect",
-    x0=-0.01, y0=0.5, x1=0.5, y1=1.01,
+    x0=0, y0=5, x1=25, y1=10,
     line=dict(color="RoyalBlue"),
 )
 fig.add_shape(type="rect",
-    x0=0.5, y0=0.5, x1=1.01, y1=1.01,
+    x0=25, y0=5, x1=50, y1=10,
     line=dict(color="RoyalBlue"),
 )
         

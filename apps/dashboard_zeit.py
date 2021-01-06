@@ -3,7 +3,10 @@ import dash_html_components as html
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output
 from app import app, cache
+
 import plotly.express as px
+import plotly.graph_objects as go
+
 import pandas as pd
 import numpy as np
 from datetime import datetime
@@ -18,20 +21,50 @@ def fetch_dataframe():
     df.set_index(df.Datum)
     return df
 
-df = fetch_dataframe()
+@cache.memoize()
+def fetch_kpi_card(df):
 
-def Altersklassen(A):
-    if A < 30:
-        return '18-29'
-    elif A <46:
-        return '30-45'
-    elif A<66:
-        return "46-65"
-    else:
-        return "66+"
+    df_Vorjahr=df[df["Jahr"] == (df["Jahr"].max()-1)].compute()
+    df_aktuell=df[df["Jahr"] == (df["Jahr"].max())].compute()
+    Gewinn_Vorjahr=round(df_Vorjahr["Gewinn"].sum(),2)
+    Gewinn_aktuell=round(df_aktuell["Gewinn"].sum(),2)
+    #Gewinn_Veränderung=round((Gewinn_aktuell-Gewinn_Vorjahr)/Gewinn_Vorjahr,2)
+    Anzahl_Vorjahr=round(df_Vorjahr["Anzahl"].sum(),2)
+    Anzahl_aktuell=round(df_aktuell["Anzahl"].sum(),2)
+    #Anzahl_Veränderung=round((Anzahl_aktuell-Anzahl_Vorjahr)/Anzahl_Vorjahr,2)
+    Prob_Vorjahr=round(df_Vorjahr["Anzahl"].sum()/df_Vorjahr["Anzahl"].count(),2)*100
+    Prob_aktuell=round(df_aktuell["Anzahl"].sum()/df_aktuell["Anzahl"].count(),2)*100
+    #Prob_Veränderung=round(Prob_aktuell-Prob_Vorjahr,4)
 
-df['Altersklassen'] = df['Alter'].map(Altersklassen)
+    fig = go.Figure()
 
+    fig.add_trace(go.Indicator(
+        mode = "number+delta",
+        value = Gewinn_aktuell,
+        title = {"text": "Gewinn"},
+        delta = {'reference': Gewinn_Vorjahr, 'relative': True, 'position' : "bottom"},
+        number = {'suffix': "€"},
+        domain = {'x': [0, 0.5], 'y': [0.5, 1]}))
+
+    fig.add_trace(go.Indicator(
+        mode = "number+delta",
+        value = Anzahl_aktuell,
+        title = {"text": "Anzahl"},
+        delta = {'reference': Anzahl_Vorjahr, 'relative': True, 'position' : "bottom"},
+        number = {'suffix': "\u205F"},
+        domain = {'x': [0.5, 1], 'y': [0.5, 1]}))
+
+    fig.add_trace(go.Indicator(
+        mode = "number+delta",
+        value = Prob_aktuell,
+        title = {"text": "Kaufwahrscheinlichkeit"},
+        delta = {'reference': Prob_Vorjahr, 'relative': True, 'position' : "bottom"},
+        number = {'suffix': "%"},
+        domain = {'x': [0.3, 0.7], 'y': [0, 0.5]}))
+
+    return fig
+
+#region Mapping der einzelnen Spalten
 def Gehaltsklassen(A):
     if A < 15000:
         return '15.000-'
@@ -46,20 +79,25 @@ def Gehaltsklassen(A):
     else:
         return "90.000+"
 
+def Altersklassen(A):
+    if A < 30:
+        return '18-29'
+    elif A <46:
+        return '30-45'
+    elif A<66:
+        return "46-65"
+    else:
+        return "66+"
+#endregion
+
+
+df = fetch_dataframe()
+
+df['Altersklassen'] = df['Alter'].map(Altersklassen)
+
 df['Gehaltsklassen'] = df['Gehalt'].map(Gehaltsklassen)
 
-#TODO: Überlegen ob das nicht performanter geht, weil es lange initiale  Ladezeiten produziert
-df_Vorjahr=df[df["Jahr"] == (df["Jahr"].max()-1)].compute()
-df_aktuell=df[df["Jahr"] == (df["Jahr"].max())].compute()
-Gewinn_Vorjahr=round(df_Vorjahr["Gewinn"].sum(),2)
-Gewinn_aktuell=round(df_aktuell["Gewinn"].sum(),2)
-Gewinn_Veränderung=round((Gewinn_aktuell-Gewinn_Vorjahr)/Gewinn_Vorjahr,2)
-Anzahl_Vorjahr=round(df_Vorjahr["Anzahl"].sum(),2)
-Anzahl_aktuell=round(df_aktuell["Anzahl"].sum(),2)
-Anzahl_Veränderung=round((Anzahl_aktuell-Anzahl_Vorjahr)/Anzahl_Vorjahr,2)
-Prob_Vorjahr=round(df_Vorjahr["Anzahl"].sum()/df_Vorjahr["Anzahl"].count(),4)
-Prob_aktuell=round(df_aktuell["Anzahl"].sum()/df_aktuell["Anzahl"].count(),4)
-Prob_Veränderung=round(Prob_aktuell-Prob_Vorjahr,4)
+kpi_indicator = fetch_kpi_card(df)
 
 CONTENT_STYLE = {
     "margin-left": "18rem",
@@ -86,36 +124,7 @@ layout = html.Div(children = [
         dbc.Col(html.Div(id="Zeitplot_1"), width = 7),
         dbc.Col(
             html.Div(style = {"margin-top":"20px","vertical-align":"middle"}, children= [ 
-                html.Table(id="Zeit-Karte", children=[
-                    html.Thead(children=[
-                        html.Tr(children = [
-                            html.Th(""),
-                            html.Th("Vorjahr"),
-                            html.Th("Aktuelles Jahr [YTD]"),
-                            html.Th("Veränderung")
-                            ])
-                    ]), 
-                    html.Tbody(children=[
-                        html.Tr(children=[
-                            html.Th("Gewinn"),
-                            html.Td(round(Gewinn_Vorjahr,2) ),
-                            html.Td(round(Gewinn_aktuell,2) ),
-                            html.Td(str(round(Gewinn_Veränderung,2))+"%" )
-                        ]),
-                        html.Tr(children=[
-                            html.Th("Anzahl"),
-                            html.Td(Anzahl_Vorjahr),
-                            html.Td(Anzahl_aktuell),
-                            html.Td(str(round(Anzahl_Veränderung,2)), "%")
-                        ]),
-                        html.Tr(children=[
-                            html.Th("Wahrscheinlichkeit"),
-                            html.Td(str(round(Prob_Vorjahr*100,2)) + "%"),
-                            html.Td(str(round(Prob_aktuell*100,2)) + "%"),
-                            html.Td(str(round(Prob_Veränderung*100,2)) + "%")
-                        ])
-                    ])
-                ])
+                dcc.Graph(figure = kpi_indicator)
             ]), width = 5
         )
     ], justify="center", align="center", className="h-50"),
@@ -215,3 +224,5 @@ def fetch_dataframe_prob(dataframe, args):
     temp_df = dataframe.groupby(args)["Anzahl"].apply(lambda x: round((x.sum()/x.count())*100, 2)).reset_index().compute()
     df_renamed=temp_df.rename(columns={'Anzahl': 'Kaufwahrscheinlichkeit in %'})
     return df_renamed
+
+

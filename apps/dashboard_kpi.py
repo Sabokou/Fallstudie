@@ -37,9 +37,6 @@ def fetch_dataframe(ytd):
         print(f"Keine Daten in Jahr {ytd} vorhanden. Lade Vorjahresdaten...")
     return df_YTD
 
-ytd = 2020
-df_YTD = fetch_dataframe(ytd)
-
 #region KPI Indikatoren erzeugen
 @cache.memoize()
 def fetch_kpi_indicator(Gewinn_YTD, Anzahl_YTD, Prob_YTD):
@@ -50,14 +47,13 @@ def fetch_kpi_indicator(Gewinn_YTD, Anzahl_YTD, Prob_YTD):
         value = Gewinn_YTD,
         title = {"text": "Gewinn"},
         number = {'suffix': "€"},
-        domain = {'x': [0, 0.5], 'y': [0.6, 1]},
-        delta = {'reference': 400, 'relative': True, 'position' : "top"}))
+        domain = {'x': [0, 0.5], 'y': [0.6, 1]}))
 
     fig.add_trace(go.Indicator(
         mode = "number",
         value = Anzahl_YTD,
         title = {"text": "Anzahl"},
-        delta = {'reference': 400, 'relative': True},
+        number = {'suffix':" "},
         domain = {'x': [0.6, 1], 'y': [0.6, 1]}))
 
     fig.add_trace(go.Indicator(
@@ -65,13 +61,12 @@ def fetch_kpi_indicator(Gewinn_YTD, Anzahl_YTD, Prob_YTD):
         value = Prob_YTD,
         title = {"text": "Kaufwahrscheinlichkeit"},
         number = {'suffix': "%"},
-        delta = {'reference': 400, 'relative': True},
-        domain = {'x': [0.3, 0.7], 'y': [0, 0.5]}))
+        domain = {'x': [0.3, 0.7], 'y': [0, 0.4]}))
 
     return fig
 #endregion
 
-#Mapping für Graphen-Gruppierungen
+#region Mapping für Graphen-Gruppierungen
 def Altersklassen(A):
     if A < 30:
         return '18-29'
@@ -81,8 +76,6 @@ def Altersklassen(A):
         return "46-65"
     else:
         return "66+"
-
-df_YTD['Altersklassen'] = df_YTD['Alter'].map(Altersklassen)
 
 def Gehaltsklassen(A):
     if A < 15000:
@@ -97,13 +90,18 @@ def Gehaltsklassen(A):
         return "70.000-90.000"
     else:
         return "90.000+"
+#endregion
 
+#ytd = 2020
+df_YTD = fetch_dataframe(ytd)
+
+df_YTD['Altersklassen'] = df_YTD['Alter'].map(Altersklassen)
 df_YTD['Gehaltsklassen'] = df_YTD['Gehalt'].map(Gehaltsklassen)
 
 #Berechnug der Werte in den "Werte-Karten"
-Gewinn_YTD = round(df_YTD["Gewinn"].sum(),2)
-Anzahl_YTD = round(df_YTD["Anzahl"].sum(),2)
-Prob_YTD=round(df_YTD["Anzahl"].sum()/df_YTD["Anzahl"].count(),2)
+Gewinn_YTD = df_YTD["Gewinn"].sum()
+Anzahl_YTD = df_YTD["Anzahl"].sum()
+Prob_YTD=round(df_YTD["Anzahl"].sum()/df_YTD["Anzahl"].count(),2)*100
 
 fig_kpis = fetch_kpi_indicator(Gewinn_YTD, Anzahl_YTD, Prob_YTD)
 

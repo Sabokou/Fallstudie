@@ -6,8 +6,18 @@ from app import app
 import pickle
 import numpy as np
 
+import dash_bootstrap_components as dbc
+import dash_html_components as html
+
+CONTENT_STYLE = {
+"margin-left": "18rem",
+"margin-right": "2rem",
+"padding": "2rem 1rem",
+}
+
+
 layout = html.Div([
-    html.H1("Jungbank Verkaufstool", className="title"),
+    html.H1("Jungbank Verkaufstool", style =CONTENT_STYLE  , className="navbar-text"),
 
     html.Div(id="tool_select", children=[
 
@@ -117,7 +127,7 @@ layout = html.Div([
             {"label":"Management", "value": 8},
             {"label":"Arbeitslos", "value": 9}
 
-        ],placeholder="Beruf..."
+        ],placeholder="Beruf...", 
         )
         ], width = 3)
 
@@ -154,17 +164,18 @@ layout = html.Div([
 
     #     ],placeholder="Beruf..."
     #     )
-    # ]),
-    # html.Div(id="tool_output", children=[
-    #     html.Div(id="output1"),
-    #     html.Div(id="output2"),
-    #     html.Div(id="output3")
+     ]),
+     html.Div(id="tool_output", children=[
+         html.Div(id="output1"),
+         html.Div(id="output2"),
+         html.Div(id="output3")
 
 
-    ])
 ])
+], style = CONTENT_STYLE)
 
 model = pickle.load(open("jungbank_xgb.sav", 'rb'))
+
 
 @app.callback(
      [Output(component_id="output1", component_property="children"),
@@ -206,9 +217,9 @@ def vorschlag(sex_value, job_value, marital_value, children_value, age_value, in
     produkt = {"Girokonto":prob1,"Kredit":prob2, "Tagesgeldkonto":prob3, "Depotkonto":prob4, "Altersvorsorge":prob5, "Versicherung":prob6, "Bausparvertrag":prob7}
 
 
-    out1 = (f"1. {sorted(produkt, key=produkt.get, reverse=True)[:3][0]} mit {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][0])*100),2)}% Erfolgschance")
-    out2 = (f"2. {sorted(produkt, key=produkt.get, reverse=True)[:3][1]} mit {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][1])*100),2)}% Erfolgschance")
-    out3 = (f"3. {sorted(produkt, key=produkt.get, reverse=True)[:3][2]} mit {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][2])*100),2)}% Erfolgschance")
+    out1 = (f"{sorted(produkt, key=produkt.get, reverse=True)[:3][0]} ", f" {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][0])*100),2)}% ")
+    out2 = (f"{sorted(produkt, key=produkt.get, reverse=True)[:3][1]} ", f" {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][1])*100),2)}% ")
+    out3 = (f"{sorted(produkt, key=produkt.get, reverse=True)[:3][2]} ", f" {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][2])*100),2)}% ")
 
     return out1, out2, out3
 

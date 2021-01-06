@@ -64,7 +64,7 @@ Prob_Veränderung=round(Prob_aktuell-Prob_Vorjahr,4)
 layout = html.Div(children = [
         dbc.Row([
             dbc.Col(
-                html.Div(children = [
+                html.Div(style = {"margin-top":"20px"}, children = [
                     html.H1(children="KPI´s im Zeitverlauf"),
                     dcc.Tabs(id="tabs_zeit", value='Gewinn', children=[
                         dcc.Tab(label='Gewinn', value='Gewinn'),
@@ -79,7 +79,7 @@ layout = html.Div(children = [
     dbc.Row([
         dbc.Col(html.Div(id="Zeitplot_1"), width = 7),
         dbc.Col(
-            html.Div(style = {"vertical-align":"middle"}, children= [ 
+            html.Div(style = {"margin-top":"20px","vertical-align":"middle"}, children= [ 
                 html.Table(id="Zeit-Karte", children=[
                     html.Thead(children=[
                         html.Tr(children = [
@@ -116,7 +116,7 @@ layout = html.Div(children = [
 
     dbc.Row([
         dbc.Col(
-            html.Div(children=[
+            html.Div(style = {"margin-top":"20px"}, children=[
                 html.H5("Filter"),
                 dcc.RadioItems(
                     id="radio_zeit",
@@ -141,7 +141,7 @@ layout = html.Div(children = [
               Input('tabs_zeit', 'value'))
 def render_content(tab):
     if tab=="Kaufbereitschaft":
-        return html.Div(className = "m_links", children = [
+        return html.Div(style = {"margin-top":"20px"}, children = [
             dcc.Graph(figure=fetch_figure_line(fetch_dataframe_prob(df, ["Datum","Angebotenes Produkt"]), \
                 "Datum", "Kaufwahrscheinlichkeit in %", color="Angebotenes Produkt", title="Kaufwahrscheinlichkeit aufgeteilt nach Produkte") )
         ])
@@ -150,7 +150,7 @@ def render_content(tab):
         temp_fig = fetch_figure_line(temp_dataframe,\
             "Datum", tab, color="Angebotenes Produkt",  title = tab+" aufgeteilt nach Produkte")
         
-        return html.Div(className = "m_links", children = [
+        return html.Div(style = {"margin-top":"20px"}, children = [
             dcc.Graph(figure= temp_fig)
         ])
 
@@ -159,7 +159,7 @@ def render_content(tab):
                Input("radio_zeit", "value"))
 def render_content(tab, radio):
     if tab=="Kaufbereitschaft":
-        return html.Div(className = "m_links", children = [
+        return html.Div(style = {"margin-top":"20px"}, children = [
             dcc.Graph(figure=fetch_figure_line(fetch_dataframe_prob(df, ["Datum",radio]), \
                 "Datum", "Kaufwahrscheinlichkeit in %", color=radio, title="Kaufwahrscheinlichkeit aufgeteilt nach "+radio) )
         ])
@@ -168,7 +168,7 @@ def render_content(tab, radio):
         temp_fig = fetch_figure_line(temp_df, "Datum", tab,\
              color = radio,  title = tab + " aufgeteilt nach " + radio)
     
-        return html.Div(className = "m_links", children = [
+        return html.Div(style = {"margin-top":"20px"}, children = [
             dcc.Graph(figure=temp_fig)
         ])
 

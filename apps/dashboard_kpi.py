@@ -78,7 +78,7 @@ layout = html.Div(children=[
     #region Menüleiste
     dbc.Row([
         dbc.Col(
-            html.Div(children = [
+            html.Div(style={"margin-top": "20px"}, children = [
                 html.H1(children="Kennziffern im aktuellen Jahr"),
                 dcc.Tabs(id="tabs_kpi", value='Gewinn', children=[
                     dcc.Tab(label='Gewinn', value='Gewinn'),
@@ -93,7 +93,7 @@ layout = html.Div(children=[
     dbc.Row([
         dbc.Col(html.Div(id="Produktplot_1"), width = 7),
         dbc.Col(
-            html.Div(children=[
+            html.Div(style={"margin-top": "20px"}, children=[
                 html.Table(id="Wert-Karte", children=[
                     html.Thead(children=[
                         html.Tr(children = [
@@ -124,7 +124,7 @@ layout = html.Div(children=[
     #region Chart-Reihe 2
     dbc.Row([
         dbc.Col(
-            html.Div(children = [
+            html.Div(style={"margin-top": "20px"}, children = [
                 html.H5("Filter"),
                 dcc.RadioItems(
                     id="radio_kpi",
@@ -153,14 +153,14 @@ def render_content(tab):
         temp_df = fetch_dataframe_prob(df_YTD, ["Angebotenes Produkt"])
         temp_fig = fetch_figure_bar(temp_df, "Angebotenes Produkt", "Kaufwahrscheinlichkeit in %", title="Kaufwahrscheinlichkeit[YTD] aufgeteilt nach Produkte")
         
-        return html.Div(className = "m_links", children = [
+        return html.Div(style={"margin-top": "20px"}, children = [
             dcc.Graph(figure=temp_fig )
         ])
     else:
         temp_df = fetch_dataframe_sum(df_YTD, ["Angebotenes Produkt"])
         temp_fig = fetch_figure_bar(temp_df, "Angebotenes Produkt", tab,  title = tab+ "[YTD] aufgeteilt nach Produkte" )   
         
-        return html.Div(className = "m_links", children = [
+        return html.Div(style={"margin-top": "20px"}, children = [
             dcc.Graph(figure = temp_fig)
         ])
 
@@ -173,13 +173,13 @@ def render_content(tab, radio):
         temp_df = fetch_dataframe_prob(df_YTD, [radio])
         temp_fig = fetch_figure_bar(temp_df ,radio, "Kaufwahrscheinlichkeit in %", title= "Kaufwahrscheinlichkeit[YTD] aufgeteilt nach "+radio)
         
-        return html.Div(className = "u_rechts", children = [
+        return html.Div(style={"margin-top": "20px"}, children = [
             dcc.Graph(figure = temp_fig)
         ])
     else:
         temp_df = fetch_dataframe_sum(df_YTD, ["Angebotenes Produkt", radio])
         temp_fig = fetch_figure_bar(temp_df, radio, tab, color = "Angebotenes Produkt",  title = tab + "[YTD] aufgeteilt nach " + radio )
-        return html.Div(className = "u_rechts", children = [
+        return html.Div(style={"margin-top": "20px"}, children = [
             dcc.Graph(figure=temp_fig)
         ])
 

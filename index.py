@@ -4,7 +4,8 @@ import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output 
 
 from app import app 
-from app import server 
+from app import server
+from app import dash
 
 from apps import dashboard_kpi
 from apps import dashboard_zeit
@@ -12,23 +13,71 @@ from apps import dashboard_bcg
 from apps import tool 
 from apps import start_menu
 
-button_group = dbc.ButtonGroup(
+
+
+
+
+app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
+
+# the style arguments for the sidebar. We use position:fixed and a fixed width
+SIDEBAR_STYLE = {
+    "position": "fixed",
+    "top": 0,
+    "left": 0,
+    "bottom": 0,
+    "width": "16rem",
+    "padding": "2rem 1rem",
+    "background-color": "#f8f9fa",
+}
+
+# the styles for the main content position it to the right of the sidebar and
+# add some padding.
+CONTENT_STYLE = {
+    "margin-left": "18rem",
+    "margin-right": "2rem",
+    "padding": "2rem 1rem",
+}
+
+sidebar = html.Div(
     [
-        dbc.Button(html.I(className="fas fa-address-card"), href="/apps/tool", color="primary", className="mr-1", block=True),
-        dbc.Button(html.I(className="fas fa-chart-bar"), href="/apps/dashboard_kpi", color="primary", className="mr-1", block=True),
-        dbc.Button(html.I(className="fas fa-chart-line"), href="/apps/dashboard_zeit", color="primary", className="mr-1", block=True),
-        dbc.Button(html.Span([html.I(className="fas fa-plus-circle ml-2")]), href="/apps/dashboard_bcg", color="primary", className="mr-1", block=True),
+        html.H2("JungBank", className="display-4"),
+        html.Hr(),
+        html.P(
+            "Wählen Sie die gewünschte Anwendung", className="lead"
+        ),
+        
+        dbc.Nav(
+            [
+                dbc.NavLink("Home", href="/", active="exact"),
+                dbc.NavLink("Tool", href="/apps/tool", active="exact"),
+                dbc.NavLink("dashboard_kpi", href="/apps/dashboard_kpi", active="exact"),
+                dbc.NavLink("dashboard_zeit", href="/apps/dashboard_zeit", active="exact"),
+                dbc.NavLink("dashboard_bcg", href="/apps/dashboard_bcg", active="exact"),
+            ],
+            vertical=True,
+            pills=True,
+        ),
     ],
-    vertical=True
+    style=SIDEBAR_STYLE,
 )
+
+#content = html.Div(id="page-content", style=CONTENT_STYLE)
+
+#app.layout = html.Div([dcc.Location(id="url"), sidebar, content])
+
+
+
+
 
 app.layout = html.Div(children = [
     dcc.Location(id='url', refresh=False),
     dbc.Row([
-        dbc.Col([button_group], width = 1),
+        dbc.Col([sidebar], width = 1),
         dbc.Col(html.Div(className = "asset", id = 'page-content', children=[]), width = 11 )
     ])  
 ])
+
+
 
 app.clientside_callback(
     """

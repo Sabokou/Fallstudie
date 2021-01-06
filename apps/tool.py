@@ -17,10 +17,10 @@ CONTENT_STYLE = {
 
 jumbotron = dbc.Jumbotron(
     [
-        html.H1("Verkaufsempfehlungen", className="display-3", style={"font-size":"2rem", "font-weight":"bold"}),
-        html.Div(id="output1"),
-        html.Div(id="output2"),
-        html.Div(id="output3")
+        html.H1("Verkaufsempfehlungen", className="display-3", style={"font-size":"2rem", "font-weight":"bold", "margin-left":"30%"}),
+        html.Div(id="output1", style={"margin-left":"33%"}),
+        html.Div(id="output2", style={"margin-left":"33%"}),
+        html.Div(id="output3", style={"margin-left":"33%"})
     ]
 )
 

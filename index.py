@@ -34,11 +34,11 @@ CONTENT_STYLE = {
 
 sidebar = html.Div(
     [
-        html.H3("JungBank", className="display-4"),
+        html.H3("JungBank", className="display-4", style={"font-size":"48px"}),
         html.Hr(),
         html.P(
             "Wählen Sie die gewünschte Anwendung", className="lead"
-        ),
+        , style={"font-size": "1rem"}),
         
         dbc.Nav(
             [

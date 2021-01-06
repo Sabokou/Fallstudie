@@ -7,9 +7,9 @@ from app import app
 from app import server
 from app import dash
 
-#from apps import dashboard_kpi
-#from apps import dashboard_zeit
-#from apps import dashboard_bcg
+from apps import dashboard_kpi
+from apps import dashboard_zeit
+from apps import dashboard_bcg
 from apps import tool 
 from apps import start_menu
 

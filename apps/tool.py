@@ -93,7 +93,7 @@ layout = html.Div([
 
 ])
 
-model = pickle.load(open(r"C:\Users\Kilian\Notebook\VisualStudio_projekte\Fallstudie\Fallstudie\jungbank_xgb.sav", 'rb'))
+model = pickle.load(open("jungbank_xgb.sav", 'rb'))
 
 
 @app.callback(

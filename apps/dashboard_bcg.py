@@ -70,10 +70,15 @@ fig.add_shape(type="rect",
         
 fig.update_traces(marker=dict(size=20,line=dict(width=2)))
 fig.update_layout(margin=dict(t=0), height=600, width=1100)
+fig.update_layout({'paper_bgcolor': 'rgba(0, 0, 0, 0)'})
 
-
+CONTENT_STYLE = {
+    "margin-left": "18rem",
+    "margin-right": "2rem",
+    "padding": "2rem 1rem",
+}
 
 layout = html.Div(children = [
     dbc.Row([html.Div(style = {"margin-top":"15px"}, children = [html.H1(children=["BCG-Matrix nach Gewinn pro Verkauf und Kaufwahrscheinlichkeit"])])], justify = "center"),
     dbc.Row([html.Div(style = {"margin-top":"15px"}, children = [dcc.Graph(figure=fig)])], justify = "center")
-])
+], style = CONTENT_STYLE)

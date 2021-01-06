@@ -18,6 +18,7 @@ import numpy as np
 
 #Import plotting library
 import plotly.express as px
+import plotly.graph_objects as go
 
 from datetime import datetime
 ytd = datetime.now().year
@@ -38,6 +39,37 @@ def fetch_dataframe(ytd):
 
 ytd = 2020
 df_YTD = fetch_dataframe(ytd)
+
+#region KPI Indikatoren erzeugen
+@cache.memoize()
+def fetch_kpi_indicator(Gewinn_YTD, Anzahl_YTD, Prob_YTD):
+    fig = go.Figure()
+
+    fig.add_trace(go.Indicator(
+        mode = "number",
+        value = Gewinn_YTD,
+        title = {"text": "Gewinn"},
+        number = {'suffix': "€"},
+        domain = {'x': [0, 0.5], 'y': [0.6, 1]},
+        delta = {'reference': 400, 'relative': True, 'position' : "top"}))
+
+    fig.add_trace(go.Indicator(
+        mode = "number",
+        value = Anzahl_YTD,
+        title = {"text": "Anzahl"},
+        delta = {'reference': 400, 'relative': True},
+        domain = {'x': [0.6, 1], 'y': [0.6, 1]}))
+
+    fig.add_trace(go.Indicator(
+        mode = "number",
+        value = Prob_YTD,
+        title = {"text": "Kaufwahrscheinlichkeit"},
+        number = {'suffix': "%"},
+        delta = {'reference': 400, 'relative': True},
+        domain = {'x': [0.3, 0.7], 'y': [0, 0.5]}))
+
+    return fig
+#endregion
 
 #Mapping für Graphen-Gruppierungen
 def Altersklassen(A):
@@ -73,6 +105,8 @@ Gewinn_YTD = round(df_YTD["Gewinn"].sum(),2)
 Anzahl_YTD = round(df_YTD["Anzahl"].sum(),2)
 Prob_YTD=round(df_YTD["Anzahl"].sum()/df_YTD["Anzahl"].count(),2)
 
+fig_kpis = fetch_kpi_indicator(Gewinn_YTD, Anzahl_YTD, Prob_YTD)
+
 CONTENT_STYLE = {
     "margin-left": "18rem",
     "margin-right": "2rem",
@@ -95,33 +129,13 @@ layout = html.Div(children=[
         ),
     ], justify = "center"),
     #endregion
+
     #region Chart-Reihe 1
     dbc.Row([
         dbc.Col(html.Div(id="Produktplot_1"), width = 7),
         dbc.Col(
             html.Div(className = "box", children=[
-                html.Table(id="Wert-Karte", children=[
-                    html.Thead(children=[
-                        html.Tr(children = [
-                            html.Th(""),
-                            html.Th("Wert [YTD]")
-                            ])
-                    ]),
-                    html.Tbody(children=[
-                        html.Tr(children=[
-                            html.Th("Gewinn"),
-                            html.Td(Gewinn_YTD)
-                        ]),
-                        html.Tr(children=[
-                            html.Th("Anzahl"),
-                            html.Td(Anzahl_YTD)
-                        ]),
-                        html.Tr(children=[
-                            html.Th("Wahrscheinlichkeit"),
-                            html.Td(str(round(Prob_YTD*100,2)) + "%" )
-                        ])
-                    ])
-                ])
+               dcc.Graph(figure = fig_kpis)
             ]), width = 4
         )
     ], justify="center", align="center", className="h-50"),
@@ -226,3 +240,4 @@ def fetch_dataframe_prob(dataframe, args):
     temp_df = dataframe.groupby(args)["Anzahl"].apply(lambda x: round((x.sum()/x.count())*100, 2)).reset_index()
     df_renamed=temp_df.rename(columns={'Anzahl': 'Kaufwahrscheinlichkeit in %'})
     return df_renamed
+

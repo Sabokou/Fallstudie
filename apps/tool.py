@@ -43,7 +43,7 @@ layout = html.Div([
                     {"label":"65+", "value": 4}
                 ],placeholder="Alter..."
                 )
-            ], width = 4)
+            ], width = 8)
 
         ],style={"margin-top":"10px"}),
 
@@ -63,7 +63,7 @@ layout = html.Div([
                     {"label":"80000 - 99999", "value": 6},
                     {"label":"100000+", "value": 7}
                 ],placeholder="Gehalt...")
-            ], width = 4)
+            ], width = 8)
 
         ], style={"margin-top":"10px"}),
 
@@ -80,7 +80,7 @@ layout = html.Div([
                 {"label":"Divers", "value": 3}
                 ],placeholder="Geschlecht..."
             )
-        ], width = 4)
+        ], width = 8)
 
         ],style={"margin-top":"10px"}),
          dbc.Row([
@@ -95,7 +95,7 @@ layout = html.Div([
                     {"label":"Nein", "value": 1}
                 ],placeholder="Kinder... Ja/Nein"
             )
-        ], width = 4)
+        ], width = 8)
 
         ], style={"margin-top":"10px"}),
 
@@ -112,7 +112,7 @@ layout = html.Div([
                     {"label":"aufgelöste Beziehung", "value": 3}
                     ],placeholder="Familienstand..."
                 )
-        ], width = 4)
+        ], width = 8)
         ], style={"margin-top":"10px"}),
 
          dbc.Row([
@@ -136,12 +136,12 @@ layout = html.Div([
 
         ],placeholder="Beruf...", 
         )
-        ], width = 4)
+        ], width = 8)
 
         ],style={"margin-top":"10px"}),
         dbc.Row(dbc.Col(
             jumbotron
-        , width=5, style={"margin-top":"25px"})
+        , width=9, style={"margin-top":"25px"})
         )
 
     ])

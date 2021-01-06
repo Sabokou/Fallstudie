@@ -61,6 +61,12 @@ Prob_Vorjahr=round(df_Vorjahr["Anzahl"].sum()/df_Vorjahr["Anzahl"].count(),4)
 Prob_aktuell=round(df_aktuell["Anzahl"].sum()/df_aktuell["Anzahl"].count(),4)
 Prob_Veränderung=round(Prob_aktuell-Prob_Vorjahr,4)
 
+CONTENT_STYLE = {
+    "margin-left": "18rem",
+    "margin-right": "2rem",
+    "padding": "2rem 1rem",
+}
+
 layout = html.Div(children = [
         dbc.Row([
             dbc.Col(
@@ -135,7 +141,7 @@ layout = html.Div(children = [
         ),
         dbc.Col(html.Div(id="Zeitplot_2"), width = 9)
     ], justify="center", align="center", className="h-50")
-])
+], style = CONTENT_STYLE)
 
 @app.callback(Output("Zeitplot_1", 'children'),
               Input('tabs_zeit', 'value'))

@@ -13,12 +13,6 @@ from apps import dashboard_bcg
 from apps import tool 
 from apps import start_menu
 
-
-
-
-
-app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
-
 # the style arguments for the sidebar. We use position:fixed and a fixed width
 SIDEBAR_STYLE = {
     "position": "fixed",
@@ -79,25 +73,25 @@ app.layout = html.Div(children = [
 
 
 
-app.clientside_callback(
-    """
-    function(pathname) {
-        if (pathname === '/apps/tool') {
-            document.title = 'Verkaufstool'
-        } else if (pathname === '/apps/dashboard_kpi') {
-            document.title = 'Dashboard:KPI'
-        } else if (pathname === '/apps/dashboard_zeit') {
-            document.title = 'Dashboard:hist. Verlauf'
-        } else if (pathname === '/apps/dashboard_bcg') {
-            document.title = 'Dashboard:BCG'
-        } else {
-            document.title = 'Startseite'
-        }
-    }
-    """,
-    Output('blank-output', 'children'),
-    Input('url', 'pathname')
-)
+# app.clientside_callback(
+#     """
+#     function(pathname) {
+#         if (pathname === '/apps/tool') {
+#             document.title = 'Verkaufstool'
+#         } else if (pathname === '/apps/dashboard_kpi') {
+#             document.title = 'Dashboard:KPI'
+#         } else if (pathname === '/apps/dashboard_zeit') {
+#             document.title = 'Dashboard:hist. Verlauf'
+#         } else if (pathname === '/apps/dashboard_bcg') {
+#             document.title = 'Dashboard:BCG'
+#         } else {
+#             document.title = 'Startseite'
+#         }
+#     }
+#     """,
+#     Output('blank-output', 'children'),
+#     Input('url', 'pathname')
+# )
 
 @app.callback(Output('page-content', 'children'),
               [Input('url', 'pathname')])

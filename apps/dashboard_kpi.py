@@ -73,6 +73,12 @@ Gewinn_YTD = round(df_YTD["Gewinn"].sum(),2)
 Anzahl_YTD = round(df_YTD["Anzahl"].sum(),2)
 Prob_YTD=round(df_YTD["Anzahl"].sum()/df_YTD["Anzahl"].count(),2)
 
+CONTENT_STYLE = {
+    "margin-left": "18rem",
+    "margin-right": "2rem",
+    "padding": "2rem 1rem",
+}
+
 #Websiten-Aufbau
 layout = html.Div(children=[
     #region Menüleiste
@@ -144,7 +150,7 @@ layout = html.Div(children=[
         dbc.Col(html.Div(id="Produktplot_2"), width = 9)
     ], justify="center", align="center", className="h-50")
     #endregion
-])
+], style = CONTENT_STYLE)
 
 @app.callback(Output(component_id = "Produktplot_1", component_property= 'children'),
               Input(component_id = 'tabs_kpi', component_property= 'value'))

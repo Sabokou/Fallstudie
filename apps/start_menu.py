@@ -7,19 +7,23 @@ CONTENT_STYLE = {
     "margin-left": "18rem",
     "margin-right": "2rem",
     "padding": "2rem 1rem",
+
 }
 
 layout = html.Div(children=[
     dbc.Row([
         dbc.Col(
             html.Div(children = [
-                html.Img(src = "/assets/Logo.png", style = {"max-width":"50%", "height":"auto"})
-            ]), width={"size": 6, "offset": 3}
+                html.Img(src = "/assets/Logo.png", style = {"max-width":"80%", "height":"auto","vertical-align": "middle","align-items": "center"})
+            ]), width={"size": 10}
         )
     ], justify="center",),
     dbc.Row([
-        html.Div(children = [
-            html.H2("Dashboard für Produktverkaufsentwicklungen und Produktberatung")
-        ])
-    ], justify="center",)
+            html.Div(children = [
+                html.H3("Dashboard für Produktverkaufsentwicklungen und Produktberatung", style = {"vertical-align": "middle","height":"auto","align-text": "center"})
+            ])
+        ], justify="center", align="center")
 ], style =CONTENT_STYLE)
+
+
+

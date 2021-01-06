@@ -42,29 +42,29 @@ df_YTD = fetch_dataframe(ytd)
 #Mapping für Graphen-Gruppierungen
 def Altersklassen(A):
     if A < 30:
-        return 'Jung (18-29)'
+        return '18-29'
     elif A < 46:
-        return 'Junge Erwachsene (30-45)'
+        return '30-45'
     elif A < 66:
-        return "Alte Erwachsene (46-65)"
+        return "46-65"
     else:
-        return "Greise (66+)"
+        return "66+"
 
 df_YTD['Altersklassen'] = df_YTD['Alter'].map(Altersklassen)
 
 def Gehaltsklassen(A):
     if A < 15000:
-        return 'Sehr niedrig (<15.000)'
+        return '15.000-'
     elif A < 30000:
-        return 'niedrig (15.000-30.000)'
+        return '15.000-30.000'
     elif A < 50000:
-        return "Untere Mitte (30.000-50.000)"
-    elif A < 80000:
-        return "Obere Mitte (50.000-80.000)"
-    elif A < 100000:
-        return "Hoch (80.000-100.000)"
+        return "30.000-50.000"
+    elif A < 70000:
+        return "50.000-70.000"
+    elif A < 90000:
+        return "70.000-90.000"
     else:
-        return "Sehr hoch (>100.000)"
+        return "90.000+"
 
 df_YTD['Gehaltsklassen'] = df_YTD['Gehalt'].map(Gehaltsklassen)
 

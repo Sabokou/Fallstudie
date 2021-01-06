@@ -17,7 +17,7 @@ CONTENT_STYLE = {
 
 jumbotron = dbc.Jumbotron(
     [
-        html.H1("OUTPUT", className="display-3"),
+        html.H1("Verkaufsempfehlungen", className="display-3", style={"font-size":"2rem", "font-weight":"bold"}),
         html.Div(id="output1"),
         html.Div(id="output2"),
         html.Div(id="output3")
@@ -190,9 +190,9 @@ def vorschlag(sex_value, job_value, marital_value, children_value, age_value, in
     produkt = {"Girokonto":prob1,"Kredit":prob2, "Tagesgeldkonto":prob3, "Depotkonto":prob4, "Altersvorsorge":prob5, "Versicherung":prob6, "Bausparvertrag":prob7}
 
 
-    out1 = (f"{sorted(produkt, key=produkt.get, reverse=True)[:3][0]} ", f" {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][0])*100),2)}% ")
-    out2 = (f"{sorted(produkt, key=produkt.get, reverse=True)[:3][1]} ", f" {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][1])*100),2)}% ")
-    out3 = (f"{sorted(produkt, key=produkt.get, reverse=True)[:3][2]} ", f" {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][2])*100),2)}% ")
+    out1 = (f"1. {sorted(produkt, key=produkt.get, reverse=True)[:3][0]} mit ", f" {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][0])*100),2)}% Erfolgschance")
+    out2 = (f"2. {sorted(produkt, key=produkt.get, reverse=True)[:3][1]} mit ", f" {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][1])*100),2)}% Erfolgschance")
+    out3 = (f"3. {sorted(produkt, key=produkt.get, reverse=True)[:3][2]} mit ", f" {round((produkt.get(sorted(produkt, key=produkt.get, reverse=True)[:3][2])*100),2)}% Erfolgschance")
 
     return out1, out2, out3
 

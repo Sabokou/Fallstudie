@@ -84,7 +84,7 @@ layout = html.Div(children=[
     #region Menüleiste
     dbc.Row([
         dbc.Col(
-            html.Div(style={"margin-top": "20px"}, children = [
+            html.Div(style={"margin-top": "20px"}, className = "box", children = [
                 html.H1(children="Kennziffern im aktuellen Jahr"),
                 dcc.Tabs(id="tabs_kpi", value='Gewinn', children=[
                     dcc.Tab(label='Gewinn', value='Gewinn'),
@@ -99,7 +99,7 @@ layout = html.Div(children=[
     dbc.Row([
         dbc.Col(html.Div(id="Produktplot_1"), width = 7),
         dbc.Col(
-            html.Div(style={"margin-top": "20px"}, children=[
+            html.Div(className = "box", children=[
                 html.Table(id="Wert-Karte", children=[
                     html.Thead(children=[
                         html.Tr(children = [
@@ -130,7 +130,7 @@ layout = html.Div(children=[
     #region Chart-Reihe 2
     dbc.Row([
         dbc.Col(
-            html.Div(style={"margin-top": "20px"}, children = [
+            html.Div(className = "box", children = [
                 html.H5("Filter"),
                 dcc.RadioItems(
                     id="radio_kpi",

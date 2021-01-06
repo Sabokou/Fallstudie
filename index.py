@@ -26,7 +26,7 @@ app.layout = html.Div(children = [
     dcc.Location(id='url', refresh=False),
     dbc.Row([
         dbc.Col([button_group], width = 1),
-        dbc.Col(html.div(className = "asset", id = 'page-content', children=[]), width = 11 )
+        dbc.Col(html.Div(className = "asset", id = 'page-content', children=[]), width = 11 )
     ])  
 ])
 

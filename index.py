@@ -34,7 +34,7 @@ CONTENT_STYLE = {
 
 sidebar = html.Div(
     [
-        html.H2("JungBank", className="display-4"),
+        html.H3("JungBank", className="display-4"),
         html.Hr(),
         html.P(
             "Wählen Sie die gewünschte Anwendung", className="lead"
@@ -42,11 +42,11 @@ sidebar = html.Div(
         
         dbc.Nav(
             [
-                dbc.NavLink("Home", href="/", active="exact"),
-                dbc.NavLink("Tool", href="/apps/tool", active="exact"),
-                dbc.NavLink("dashboard_kpi", href="/apps/dashboard_kpi", active="exact"),
-                dbc.NavLink("dashboard_zeit", href="/apps/dashboard_zeit", active="exact"),
-                dbc.NavLink("dashboard_bcg", href="/apps/dashboard_bcg", active="exact"),
+                dbc.NavLink(html.Span([html.I(className="fas fa-home"), "  Home"]), href="/", active="exact"),
+                dbc.NavLink(html.Span([html.I(className="far fa-address-card"), "  Tool"]), href="/apps/tool", active="exact"),
+                dbc.NavLink(html.Span([html.I(className="fas fa-chart-bar"), "  Dashboard KPI"]), href="/apps/dashboard_kpi", active="exact"),
+                dbc.NavLink(html.Span([html.I(className="fas fa-chart-line"), "  Dashboard Zeit"]), href="/apps/dashboard_zeit", active="exact"),
+                dbc.NavLink(html.Span([html.I(className="fas fa-chart-area"), "  BCG-Matrix"]), href="/apps/dashboard_bcg", active="exact"),
             ],
             vertical=True,
             pills=True,

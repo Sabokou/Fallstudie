@@ -32,7 +32,7 @@ layout = html.Div([
         dbc.Row([
             dbc.Col([
             html.H6("Alter")
-            ], width = 1),
+            ], width = 2),
 
             dbc.Col([
                 dcc.Dropdown(id="select_age",
@@ -43,14 +43,14 @@ layout = html.Div([
                     {"label":"65+", "value": 4}
                 ],placeholder="Alter..."
                 )
-            ], width = 8)
+            ], width = 7)
 
         ],style={"margin-top":"10px"}),
 
         dbc.Row([
             dbc.Col([
             html.H6("Gehalt")
-            ], width = 1),
+            ], width = 2),
 
             dbc.Col([
                 dcc.Dropdown(id="select_income",
@@ -63,14 +63,14 @@ layout = html.Div([
                     {"label":"80000 - 99999", "value": 6},
                     {"label":"100000+", "value": 7}
                 ],placeholder="Gehalt...")
-            ], width = 8)
+            ], width = 7)
 
         ], style={"margin-top":"10px"}),
 
         dbc.Row([
             dbc.Col([
             html.H6("Geschlecht")
-            ], width = 1),
+            ], width = 2),
 
             dbc.Col([
                 dcc.Dropdown(id="select_sex",
@@ -80,13 +80,13 @@ layout = html.Div([
                 {"label":"Divers", "value": 3}
                 ],placeholder="Geschlecht..."
             )
-        ], width = 8)
+        ], width = 7)
 
         ],style={"margin-top":"10px"}),
          dbc.Row([
             dbc.Col([
             html.H6("Kinder")
-            ], width = 1),
+            ], width = 2),
 
             dbc.Col([
                 dcc.Dropdown(id="select_children",
@@ -95,14 +95,14 @@ layout = html.Div([
                     {"label":"Nein", "value": 1}
                 ],placeholder="Kinder... Ja/Nein"
             )
-        ], width = 8)
+        ], width = 7)
 
         ], style={"margin-top":"10px"}),
 
          dbc.Row([
             dbc.Col([
             html.H6("Familienstand")
-            ], width = 1),
+            ], width = 2),
 
             dbc.Col([
                 dcc.Dropdown(id="select_marital",
@@ -112,13 +112,13 @@ layout = html.Div([
                     {"label":"aufgelöste Beziehung", "value": 3}
                     ],placeholder="Familienstand..."
                 )
-        ], width = 8)
+        ], width = 7)
         ], style={"margin-top":"10px"}),
 
          dbc.Row([
             dbc.Col([
             html.H6("Beruf")
-            ], width = 1),
+            ], width = 2),
 
             dbc.Col([
                 dcc.Dropdown(id="select_job",
@@ -136,7 +136,7 @@ layout = html.Div([
 
         ],placeholder="Beruf...", 
         )
-        ], width = 8)
+        ], width = 7)
 
         ],style={"margin-top":"10px"}),
         dbc.Row(dbc.Col(

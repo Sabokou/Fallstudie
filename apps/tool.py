@@ -49,20 +49,20 @@ layout = html.Div([
 
         dbc.Row([
             dbc.Col([
-            html.H6("Gehalt")
+            html.H6("Jahresgehalt")
             ], width = 2),
 
             dbc.Col([
                 dcc.Dropdown(id="select_income",
                 options=[
-                    {"label":"<0", "value": 1},
-                    {"label":"0 - 19999", "value": 2},
-                    {"label":"20000 - 39999", "value": 3},
-                    {"label":"40000 - 59999", "value": 4},
-                    {"label":"60000 - 79999", "value": 5},
-                    {"label":"80000 - 99999", "value": 6},
-                    {"label":"100000+", "value": 7}
-                ],placeholder="Gehalt...")
+                    {"label":"<0 €", "value": 1},
+                    {"label":"0 - 19999 €", "value": 2},
+                    {"label":"20000 - 39999 €", "value": 3},
+                    {"label":"40000 - 59999 €", "value": 4},
+                    {"label":"60000 - 79999 €", "value": 5},
+                    {"label":"80000 - 99999 €", "value": 6},
+                    {"label":"100000+ €", "value": 7}
+                ],placeholder="Jahresgehalt...")
             ], width = 7)
 
         ], style={"margin-top":"10px"}),
@@ -148,6 +148,7 @@ layout = html.Div([
 ], style = CONTENT_STYLE)
 
 model = pickle.load(open("jungbank_xgb.sav", 'rb'))
+
 
 
 @app.callback(

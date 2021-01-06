@@ -70,6 +70,7 @@ fig.add_shape(type="rect",
         
 fig.update_traces(marker=dict(size=20,line=dict(width=2)))
 fig.update_layout(margin=dict(t=0), height=600, width=1100)
+fig.update_layout({'paper_bgcolor': 'rgba(0, 0, 0, 0)'})
 
 CONTENT_STYLE = {
     "margin-left": "18rem",

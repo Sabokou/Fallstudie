@@ -1,4 +1,5 @@
 import dash_core_components as dcc
+import dash_bootstrap_components as dbc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 from app import app
@@ -9,50 +10,101 @@ layout = html.Div([
     html.H1("Jungbank Verkaufstool", className="title"),
 
     html.Div(id="tool_select", children=[
-        dcc.Dropdown(id="select_age",
-        options=[
-            {"label":"18 - 29", "value": 1},
-            {"label":"30 - 49", "value": 2},
-            {"label":"50 - 65", "value": 3},
-            {"label":"65+", "value": 4}
-        ],placeholder="Alter..."
-        ),
 
-        dcc.Dropdown(id="select_income",
-        options=[
-            {"label":"<0", "value": 1},
-            {"label":"0 - 19999", "value": 2},
-            {"label":"20000 - 39999", "value": 3},
-            {"label":"40000 - 59999", "value": 4},
-            {"label":"60000 - 79999", "value": 5},
-            {"label":"80000 - 99999", "value": 6},
-            {"label":"100000+", "value": 7}
-        ],placeholder="Gehalt..."),
+        dbc.Row([
+            dbc.Col([
+            html.H6("Alter")
+            ], width = 3),
 
-        dcc.Dropdown(id="select_sex",
-        options=[
-            {"label":"Männlich", "value": 1},
-            {"label":"Weiblich", "value": 2},
-            {"label":"Divers", "value": 3}
-        ],placeholder="Geschlecht..."
-        ),
+            dbc.Col([
+                dcc.Dropdown(id="select_age",
+                options=[
+                    {"label":"18 - 29", "value": 1},
+                    {"label":"30 - 49", "value": 2},
+                    {"label":"50 - 65", "value": 3},
+                    {"label":"65+", "value": 4}
+                ],placeholder="Alter..."
+                )
+            ], width = 3)
 
-        dcc.Dropdown(id="select_children",
-        options=[
-            {"label":"Ja", "value": 0},
-            {"label":"Nein", "value": 1}
-        ],placeholder="Kinder... Ja/Nein"
-        ),
+        ]),
 
-        dcc.Dropdown(id="select_marital",
-        options=[
-            {"label":"verheiratet", "value": 1},
-            {"label":"ledig", "value": 2},
-            {"label":"aufgelöste Beziehung", "value": 3}
-        ],placeholder="Familienstand..."
-        ),
+        dbc.Row([
+            dbc.Col([
+            html.H6("Gehalt")
+            ], width = 3),
 
-        dcc.Dropdown(id="select_job",
+            dbc.Col([
+                dcc.Dropdown(id="select_income",
+                options=[
+                    {"label":"<0", "value": 1},
+                    {"label":"0 - 19999", "value": 2},
+                    {"label":"20000 - 39999", "value": 3},
+                    {"label":"40000 - 59999", "value": 4},
+                    {"label":"60000 - 79999", "value": 5},
+                    {"label":"80000 - 99999", "value": 6},
+                    {"label":"100000+", "value": 7}
+                ],placeholder="Gehalt...")
+            ], width = 3)
+
+        ]),
+
+        dbc.Row([
+            dbc.Col([
+            html.H6("Geschlecht")
+            ], width = 3),
+
+            dbc.Col([
+                dcc.Dropdown(id="select_sex",
+                 options=[
+                {"label":"Männlich", "value": 1},
+                {"label":"Weiblich", "value": 2},
+                {"label":"Divers", "value": 3}
+                ],placeholder="Geschlecht..."
+            )
+        ], width = 3)
+
+        ]),
+         dbc.Row([
+            dbc.Col([
+            html.H6("Kinder")
+            ], width = 3),
+
+            dbc.Col([
+                dcc.Dropdown(id="select_children",
+                options=[
+                    {"label":"Ja", "value": 0},
+                    {"label":"Nein", "value": 1}
+                ],placeholder="Kinder... Ja/Nein"
+            )
+        ], width = 3)
+
+        ]),
+
+         dbc.Row([
+            dbc.Col([
+            html.H6("Familienstand")
+            ], width = 3),
+
+            dbc.Col([
+                dcc.Dropdown(id="select_marital",
+                    options=[
+                    {"label":"verheiratet", "value": 1},
+                    {"label":"ledig", "value": 2},
+                    {"label":"aufgelöste Beziehung", "value": 3}
+                    ],placeholder="Familienstand..."
+                )
+        ], width = 3)
+
+        ]),
+
+         dbc.Row([
+            dbc.Col([
+            html.H6("Beruf")
+            ], width = 3),
+
+            dbc.Col([
+                dcc.Dropdown(id="select_job",
         options=[
             {"label":"Studium", "value": 0},
             {"label":"Öffentlicher Dienst", "value": 1},
@@ -67,11 +119,46 @@ layout = html.Div([
 
         ],placeholder="Beruf..."
         )
-    ]),
-    html.Div(id="tool_output", children=[
-        html.Div(id="output1"),
-        html.Div(id="output2"),
-        html.Div(id="output3")
+        ], width = 3)
+
+        ]),
+
+         
+    #     dcc.Dropdown(id="select_children",
+    #     options=[
+    #         {"label":"Ja", "value": 0},
+    #         {"label":"Nein", "value": 1}
+    #     ],placeholder="Kinder... Ja/Nein"
+    #     ),
+
+    #     dcc.Dropdown(id="select_marital",
+    #     options=[
+    #         {"label":"verheiratet", "value": 1},
+    #         {"label":"ledig", "value": 2},
+    #         {"label":"aufgelöste Beziehung", "value": 3}
+    #     ],placeholder="Familienstand..."
+    #     ),
+
+    #     dcc.Dropdown(id="select_job",
+    #     options=[
+    #         {"label":"Studium", "value": 0},
+    #         {"label":"Öffentlicher Dienst", "value": 1},
+    #         {"label":"Rente", "value": 2},
+    #         {"label":"Informatik", "value": 3},
+    #         {"label":"Handel", "value": 4},
+    #         {"label":"Handwerk", "value": 5},
+    #         {"label":"Administrativ", "value": 6},
+    #         {"label":"Ingenieurswesen", "value": 7},
+    #         {"label":"Management", "value": 8},
+    #         {"label":"Arbeitslos", "value": 9}
+
+    #     ],placeholder="Beruf..."
+    #     )
+    # ]),
+    # html.Div(id="tool_output", children=[
+    #     html.Div(id="output1"),
+    #     html.Div(id="output2"),
+    #     html.Div(id="output3")
 
 
     ])

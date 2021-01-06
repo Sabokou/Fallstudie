@@ -11,6 +11,7 @@ CONTENT_STYLE = {
 
 layout = html.Div(children=[
     dbc.Row([
+<<<<<<< HEAD
         dbc.Col(
             html.Div(children = [
                 html.Img(src = "/assets/Logo.png", style = {"max-width":"50%", "height":"auto"})
@@ -23,3 +24,11 @@ layout = html.Div(children=[
         ])
     ], justify="center",)
 ], style =CONTENT_STYLE)
+=======
+        dbc.Col(html.Div(children = [
+            html.Img(src = "/assets/Logo.png", style = {"max-width":"55%", "height":"auto"}),
+            html.H2("Dashboard für Verkaufsentwicklungen und Produktberatung")
+        ]), width=4)
+    ],justify="center", align="center", className="h-50"),
+])
+>>>>>>> 6b02e95febd24421f67d869e8410c2ad134830f8

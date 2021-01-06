@@ -22,29 +22,29 @@ df = fetch_dataframe()
 
 def Altersklassen(A):
     if A < 30:
-        return 'Jung (18-29)'
+        return '18-29'
     elif A <46:
-        return 'Junge Erwachsene (30-45)'
+        return '30-45'
     elif A<66:
-        return "Alte Erwachsene (46-65)"
+        return "46-65"
     else:
-        return "Greise (66+)"
+        return "66+"
 
 df['Altersklassen'] = df['Alter'].map(Altersklassen)
 
 def Gehaltsklassen(A):
     if A < 15000:
-        return 'Sehr niedrig (<15.000)'
-    elif A <30000:
-        return 'niedrig (15.000-30.000)'
-    elif A<50000:
-        return "Untere Mitte (30.000-50.000)"
-    elif A<80000:
-        return "Obere Mitte (50.000-80.000)"
-    elif A<100000:
-        return "Hoch (80.000-100.000)"
+        return '15.000-'
+    elif A < 30000:
+        return '15.000-30.000'
+    elif A < 50000:
+        return "30.000-50.000"
+    elif A < 70000:
+        return "50.000-70.000"
+    elif A < 90000:
+        return "70.000-90.000"
     else:
-        return "Sehr hoch (>100.000)"
+        return "90.000+"
 
 df['Gehaltsklassen'] = df['Gehalt'].map(Gehaltsklassen)
 
@@ -73,7 +73,7 @@ layout = html.Div(children = [
                     ])
                 ]), width = 12
             ),
-        ], justify="center", align="center", className="h-50"),
+        ], justify="center"),
 
     #html.H2("Bankprodukte im Zeitverlauf"),
     dbc.Row([
@@ -143,12 +143,12 @@ def render_content(tab):
     if tab=="Kaufbereitschaft":
         return html.Div(className = "m_links", children = [
             dcc.Graph(figure=fetch_figure_line(fetch_dataframe_prob(df, ["Datum","Angebotenes Produkt"]), \
-                "Datum", "Kaufwahrscheinlichkeit in %", color="Angebotenes Produkt", title="Produkte aufgeteilt nach Kaufwahrscheinlichkeit") )
+                "Datum", "Kaufwahrscheinlichkeit in %", color="Angebotenes Produkt", title="Kaufwahrscheinlichkeit aufgeteilt nach Produkte") )
         ])
     else:    
         temp_dataframe = fetch_dataframe_sum(df, ["Datum", "Angebotenes Produkt"])
         temp_fig = fetch_figure_line(temp_dataframe,\
-            "Datum", tab, color="Angebotenes Produkt",  title = "Produkte aufgeteilt nach " + tab)
+            "Datum", tab, color="Angebotenes Produkt",  title = tab+" aufgeteilt nach Produkte")
         
         return html.Div(className = "m_links", children = [
             dcc.Graph(figure= temp_fig)
@@ -161,12 +161,12 @@ def render_content(tab, radio):
     if tab=="Kaufbereitschaft":
         return html.Div(className = "m_links", children = [
             dcc.Graph(figure=fetch_figure_line(fetch_dataframe_prob(df, ["Datum",radio]), \
-                "Datum", "Kaufwahrscheinlichkeit in %", color=radio, title=radio + " aufgeteilt nach Kaufwahrscheinlichkeit") )
+                "Datum", "Kaufwahrscheinlichkeit in %", color=radio, title="Kaufwahrscheinlichkeit aufgeteilt nach "+radio) )
         ])
     else:  
         temp_df = fetch_dataframe_sum(df, ["Datum", radio])
         temp_fig = fetch_figure_line(temp_df, "Datum", tab,\
-             color = radio,  title = radio + " aufgeteilt nach " + tab)
+             color = radio,  title = tab + " aufgeteilt nach " + radio)
     
         return html.Div(className = "m_links", children = [
             dcc.Graph(figure=temp_fig)

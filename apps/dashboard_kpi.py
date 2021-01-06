@@ -42,29 +42,29 @@ df_YTD = fetch_dataframe(ytd)
 #Mapping für Graphen-Gruppierungen
 def Altersklassen(A):
     if A < 30:
-        return 'Jung (18-29)'
+        return '18-29'
     elif A < 46:
-        return 'Junge Erwachsene (30-45)'
+        return '30-45'
     elif A < 66:
-        return "Alte Erwachsene (46-65)"
+        return "46-65"
     else:
-        return "Greise (66+)"
+        return "66+"
 
 df_YTD['Altersklassen'] = df_YTD['Alter'].map(Altersklassen)
 
 def Gehaltsklassen(A):
     if A < 15000:
-        return 'Sehr niedrig (<15.000)'
+        return '15.000-'
     elif A < 30000:
-        return 'niedrig (15.000-30.000)'
+        return '15.000-30.000'
     elif A < 50000:
-        return "Untere Mitte (30.000-50.000)"
-    elif A < 80000:
-        return "Obere Mitte (50.000-80.000)"
-    elif A < 100000:
-        return "Hoch (80.000-100.000)"
+        return "30.000-50.000"
+    elif A < 70000:
+        return "50.000-70.000"
+    elif A < 90000:
+        return "70.000-90.000"
     else:
-        return "Sehr hoch (>100.000)"
+        return "90.000+"
 
 df_YTD['Gehaltsklassen'] = df_YTD['Gehalt'].map(Gehaltsklassen)
 
@@ -78,7 +78,7 @@ layout = html.Div(children=[
     #region Menüleiste
     dbc.Row([
         dbc.Col(
-            html.Div(children = [
+            html.Div(style={"margin-top": "20px"}, children = [
                 html.H1(children="Kennziffern im aktuellen Jahr"),
                 dcc.Tabs(id="tabs_kpi", value='Gewinn', children=[
                     dcc.Tab(label='Gewinn', value='Gewinn'),
@@ -87,13 +87,13 @@ layout = html.Div(children=[
                 ])
             ]), width = 12
         ),
-    ]),
+    ], justify = "center"),
     #endregion
     #region Chart-Reihe 1
     dbc.Row([
         dbc.Col(html.Div(id="Produktplot_1"), width = 7),
         dbc.Col(
-            html.Div(children=[
+            html.Div(style={"margin-top": "20px"}, children=[
                 html.Table(id="Wert-Karte", children=[
                     html.Thead(children=[
                         html.Tr(children = [
@@ -120,10 +120,11 @@ layout = html.Div(children=[
         )
     ], justify="center", align="center", className="h-50"),
     #endregion
+    
     #region Chart-Reihe 2
     dbc.Row([
         dbc.Col(
-            html.Div(children = [
+            html.Div(style={"margin-top": "20px"}, children = [
                 html.H5("Filter"),
                 dcc.RadioItems(
                     id="radio_kpi",
@@ -150,17 +151,17 @@ layout = html.Div(children=[
 def render_content(tab):
     if tab=="Kaufbereitschaft":
         temp_df = fetch_dataframe_prob(df_YTD, ["Angebotenes Produkt"])
-        temp_fig = fetch_figure_bar(temp_df, "Angebotenes Produkt", "Anzahl", title="Produkte aufgeteilt nach Kaufwahrscheinlichkeit[YTD]")
+        temp_fig = fetch_figure_bar(temp_df, "Angebotenes Produkt", "Kaufwahrscheinlichkeit in %", title="Kaufwahrscheinlichkeit[YTD] aufgeteilt nach Produkte")
         
-        return html.Div(className = "m_links", children = [
+        return html.Div(style={"margin-top": "20px"}, children = [
             dcc.Graph(figure=temp_fig )
         ])
     else:
         temp_df = fetch_dataframe_sum(df_YTD, ["Angebotenes Produkt"])
-        temp_fig = fetch_figure_bar(temp_df, "Angebotenes Produkt", tab,  title = "Produkte aufgeteilt nach "+tab+"[YTD]" )   
+        temp_fig = fetch_figure_bar(temp_df, "Angebotenes Produkt", tab,  title = tab+ "[YTD] aufgeteilt nach Produkte" )   
         
-        return html.Div(className = "m_links", children = [
-            dcc.Graph(figure = temp_fig, config = {'responsive': True})
+        return html.Div(style={"margin-top": "20px"}, children = [
+            dcc.Graph(figure = temp_fig)
         ])
 
     
@@ -170,16 +171,16 @@ def render_content(tab):
 def render_content(tab, radio):
     if tab=="Kaufbereitschaft":
         temp_df = fetch_dataframe_prob(df_YTD, [radio])
-        temp_fig = fetch_figure_bar(temp_df ,radio, "Anzahl", title=radio + " aufgeteilt nach Kaufwahrscheinlichkeit[YTD]")
+        temp_fig = fetch_figure_bar(temp_df ,radio, "Kaufwahrscheinlichkeit in %", title= "Kaufwahrscheinlichkeit[YTD] aufgeteilt nach "+radio)
         
-        return html.Div(className = "u_rechts", children = [
-            dcc.Graph(figure = temp_fig, config = {'responsive': True} )
+        return html.Div(style={"margin-top": "20px"}, children = [
+            dcc.Graph(figure = temp_fig)
         ])
     else:
         temp_df = fetch_dataframe_sum(df_YTD, ["Angebotenes Produkt", radio])
-        temp_fig = fetch_figure_bar(temp_df, radio, tab, color = "Angebotenes Produkt",  title = radio + " aufgeteilt nach " + tab + " [YTD]" )
-        return html.Div(className = "u_rechts", children = [
-            dcc.Graph(figure=temp_fig, config = {'responsive': True})
+        temp_fig = fetch_figure_bar(temp_df, radio, tab, color = "Angebotenes Produkt",  title = tab + "[YTD] aufgeteilt nach " + radio )
+        return html.Div(style={"margin-top": "20px"}, children = [
+            dcc.Graph(figure=temp_fig)
         ])
 
 def fetch_figure_line(dataframe, x, y, title, color = None, text = None):
@@ -214,4 +215,6 @@ def fetch_dataframe_sum(dataframe, args):
     return dataframe.groupby(args).sum().reset_index()
 
 def fetch_dataframe_prob(dataframe, args):
-    return dataframe.groupby(args)["Anzahl"].apply(lambda x: round((x.sum()/x.count())*100, 2)).reset_index()
+    temp_df = dataframe.groupby(args)["Anzahl"].apply(lambda x: round((x.sum()/x.count())*100, 2)).reset_index()
+    df_renamed=temp_df.rename(columns={'Anzahl': 'Kaufwahrscheinlichkeit in %'})
+    return df_renamed

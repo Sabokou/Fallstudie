@@ -136,7 +136,7 @@ layout = html.Div(children=[
         dbc.Col(
             html.Div(style = {"background-color": "white", "margin-top": "20px"}, children=[
                dcc.Graph(figure = fig_kpis)
-            ]), width = 4
+            ]), width = 5
         )
     ], justify="center", align="center", className="h-50"),
     #endregion
@@ -161,7 +161,7 @@ layout = html.Div(children=[
                 )
             ]), width = 2
         ),
-        dbc.Col(html.Div(id="Produktplot_2"), width = 9)
+        dbc.Col(html.Div(id="Produktplot_2"), width = 10)
     ], justify="center", align="center", className="h-50")
     #endregion
 ], style = CONTENT_STYLE)

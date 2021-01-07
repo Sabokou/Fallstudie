@@ -144,7 +144,7 @@ layout = html.Div(children=[
     #region Chart-Reihe 2
     dbc.Row([
         dbc.Col(
-            html.Div(className = "box h-50", style = {"height": "430px"}, children = [
+            html.Div(className = "box", style = {"height": "430px"}, children = [
                 html.H5("Filter"),
                 dcc.RadioItems(
                     id="radio_kpi",

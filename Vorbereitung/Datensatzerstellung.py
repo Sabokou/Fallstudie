@@ -84,17 +84,16 @@ income_job_base = {"Verwaltung":25000, "Handwerk":20000, "Management":38000, "Ö
 income_age_factors = {"j":1, "je":2, "ae":2.5, "a":2}
 #endregion
 
-#TODO:Anpassung Berechnung mit Multiplizieren
 #region Definition Produktwahrscheinlichkeiten
 product_list = ["Girokonto", "Kredit", "Tagesgeldkonto", "Depotkonto", "Altersvorsorge", "Versicherung", "Bausparvertrag"]
 
-product_winnings = {"Girokonto" : 0.4, "Kredit": 0.35, "Tagesgeldkonto": 2.31, "Depotkonto": 2.33, \
-                    "Altersvorsorge": 9.37, "Versicherung": 8.51, "Bausparvertrag":1.39}
+product_winnings = {"Girokonto" : 76.34, "Kredit": 126.22, "Tagesgeldkonto": 177.5, "Depotkonto": 486.86, \
+                    "Altersvorsorge": 1230.67, "Versicherung": 1633, "Bausparvertrag":195.25}
 
-product_prozente = [15, 71, 76, 82, 84, 87, 100]
+product_prozente = [5, 37, 41, 53, 66, 89, 101]
 
 product_chance_age = {"j":  [70, 10, 5,  60, 10,  5,  5], \
-                      "je": [60, 50, 5,  50, 45, 65, 85], \
+                      "je": [60, 50, 5,  50, 45, 65, 70], \
                       "ae": [30, 50, 30, 10, 70, 60, 40], \
                       "a":  [10, 35, 20, 5,   5, 80,  5]}
 
@@ -103,7 +102,7 @@ product_chance_gender = {"m": [0.90,   1.2,   1,     1.2,   0.90,   0.70,  1], \
                          "d": [0.8,   1,   1.2,   0.5,    1.1,    1.15,   1]}
                         
 product_chance_marital = {"ledig":                  [1,     1,  1,   1.1,     0,       0,      0.7], \
-                          "verheiratet":            [1.2,    1.3, 0.8,  0.67,     1.1,      1.25,       1.5], \
+                          "verheiratet":            [1.2,    1.3, 0.8,  0.67,     1.1,      1.25,       1.3], \
                           "aufgelöste Beziehung":   [0.8,    1,  1.05,    1.0,     1.0,       1.0,      0.8]}
 
 product_chance_income = {"very low":    [1,     1.3,     0.8,    0.6,    0.7,     0.95,     0.7], \
@@ -121,21 +120,22 @@ product_chance_child = {"ja":   [1.25,    1.1, 0.9, 0.7,     0.9,  1.15,  1.25],
 ges = list()
 
 #region Generation der Einträge
-for jahr in range(2016,2021):
+for jahr in range(2016,2022):
     for monat in range(1,13):
-        for i in range(int(60000 + (jahr%2014) * uniform(0.7,1.2) * 10000)): #add back one 0
+        for i in range(int(1000 + (jahr%2016) * uniform(0.7,1.2) * 150)): #add back one 0
             
             #Simulation Wirtschaftscrash während Corona
             if jahr == 2020 and monat == 3:
-                if i == int(60000 + (jahr%2014) * 0.7 * 10000):
+                if i == int(1000 + (jahr%2014) * 0.7 * 150):
                     break 
             elif jahr == 2020 and monat == 4:
-                if i == int(60000 + (jahr%2014) * 0.8 * 10000):
+                if i == int(1000 + (jahr%2014) * 0.75 * 150):
                     break
             elif jahr == 2020 and monat == 5:
-                if i == int(60000 + (jahr%2014) * 0.85 * 10000):
+                if i == int(1000 + (jahr%2014) * 0.8 * 150):
                     break
-        
+            elif jahr == 2021 and monat > 1:
+                break
             eintrag = []
             distro = randint(1,100)
 
@@ -249,9 +249,9 @@ for jahr in range(2016,2021):
                     product_chance_marital.get(marital_ident)[produkt_index] 
 
             if chance >= 90:
-                chance = uniform(0.8 ,1.1) * 88
+                chance = uniform(0.7, 1.1) * 88
             elif chance <= 10:
-                chance = uniform(0.8, 1.1) * 12
+                chance = uniform(0.9, 1.3) * 12
             
             distro = randint(0,100)
             if distro <= chance:

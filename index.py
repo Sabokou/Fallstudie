@@ -34,7 +34,7 @@ CONTENT_STYLE = {
 
 sidebar = html.Div(
     [
-        html.H3("JungBank", className="display-4", style={"font-size":"48px"}),
+        html.H3("Jungbank", className="display-4", style={"font-size":"48px"}),
         html.Hr(),
         html.P(
             "Wählen Sie die gewünschte Anwendung", className="lead"

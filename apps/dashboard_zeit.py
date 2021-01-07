@@ -38,21 +38,23 @@ def fetch_kpi_card(df):
 
     fig = go.Figure()
 
+    fig.update_layout(height = 450)
+
     fig.add_trace(go.Indicator(
         mode = "number+delta",
         value = Gewinn_aktuell,
         title = {"text": "Gewinn"},
         delta = {'reference': Gewinn_Vorjahr, 'relative': True, 'position' : "bottom"},
         number = {'suffix': "€"},
-        domain = {'x': [0, 0.5], 'y': [0.5, 1]}))
+        domain = {'x': [0, 0.5], 'y': [0.7, 1]}))
 
     fig.add_trace(go.Indicator(
         mode = "number+delta",
         value = Anzahl_aktuell,
         title = {"text": "Anzahl"},
         delta = {'reference': Anzahl_Vorjahr, 'relative': True, 'position' : "bottom"},
-        number = {'suffix': "\u205F"},
-        domain = {'x': [0.5, 1], 'y': [0.5, 1]}))
+        number = {'suffix': " "},
+        domain = {'x': [0.5, 1], 'y': [0.7, 1]}))
 
     fig.add_trace(go.Indicator(
         mode = "number+delta",
@@ -60,7 +62,7 @@ def fetch_kpi_card(df):
         title = {"text": "Kaufwahrscheinlichkeit"},
         delta = {'reference': Prob_Vorjahr, 'relative': True, 'position' : "bottom"},
         number = {'suffix': "%"},
-        domain = {'x': [0.3, 0.7], 'y': [0, 0.5]}))
+        domain = {'x': [0.3, 0.7], 'y': [0, 0.3]}))
 
     return fig
 
@@ -131,7 +133,7 @@ layout = html.Div(children = [
 
     dbc.Row([
         dbc.Col(
-            html.Div(style = {"margin-top":"20px"}, children=[
+            html.Div(className = "box", style = {"height": "450px", "margin-top":"20px"}, children=[
                 html.H5("Filter"),
                 dcc.RadioItems(
                     id="radio_zeit",
@@ -164,7 +166,8 @@ def render_content(tab):
         temp_dataframe = fetch_dataframe_sum(df, ["Datum", "Angebotenes Produkt"])
         temp_fig = fetch_figure_line(temp_dataframe,\
             "Datum", tab, color="Angebotenes Produkt",  title = tab+" aufgeteilt nach Produkte")
-        
+        temp_fig.update_layout(height = 450)
+
         return html.Div(style = {"margin-top":"20px"}, children = [
             dcc.Graph(figure= temp_fig)
         ])
@@ -182,7 +185,8 @@ def render_content(tab, radio):
         temp_df = fetch_dataframe_sum(df, ["Datum", radio])
         temp_fig = fetch_figure_line(temp_df, "Datum", tab,\
              color = radio,  title = tab + " aufgeteilt nach " + radio)
-    
+        temp_fig.update_layout(height = 450)
+
         return html.Div(style = {"margin-top":"20px"}, children = [
             dcc.Graph(figure=temp_fig)
         ])

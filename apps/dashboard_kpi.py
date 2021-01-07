@@ -118,7 +118,7 @@ layout = html.Div(children=[
     #region Menüleiste
     dbc.Row([
         dbc.Col(
-            html.Div(style={"margin-top": "20px", }, className = "box", children = [
+            html.Div(style={"margin-top": "20px", },  children = [
                 html.H1(children="Kennziffern im aktuellen Jahr"),
                 dcc.Tabs(id="tabs_kpi", value='Gewinn', children=[
                     dcc.Tab(label='Gewinn', value='Gewinn'),

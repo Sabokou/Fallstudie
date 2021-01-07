@@ -25,46 +25,46 @@ fig = px.scatter(df_BCG, x=df_BCG["Kaufwahrscheinlichkeit in %"], y=df_BCG["Gewi
 
 fig.add_trace(go.Scatter(
     x=[12.5, 12.5],
-    y=[4.5, 4.5],
+    y=[900, 900],
     text=["<b>Poor Dogs</b>"],
     mode="text",showlegend = False
 ))
 fig.add_trace(go.Scatter(
     x=[12.5, 12.5],
-    y=[9.5, 9.5],
+    y=[1900, 1900],
     text=["<b>Questionmarks</b>"],
     mode="text",showlegend = False
 ))
 fig.add_trace(go.Scatter(
     x=[37.5, 37.5],
-    y=[4.5, 4.5],
+    y=[900, 900],
     text=["<b>Cash Cows</b>"],
     mode="text",showlegend = False
 ))
 fig.add_trace(go.Scatter(
     x=[37.5, 37.5],
-    y=[9.5, 9.5],
+    y=[1900, 1900],
     text=["<b>Stars</b>"],
     mode="text",showlegend = False
 ))
 
 fig.update_xaxes(range=[0, 50], showgrid=False)
-fig.update_yaxes(range=[0, 10], showgrid=False)
+fig.update_yaxes(range=[0, 2000], showgrid=False)
 
 fig.add_shape(type="rect",
-    x0=0, y0=0, x1=25, y1=5,
+    x0=0, y0=0, x1=25, y1=1000,
     line=dict(color="RoyalBlue"),
 )
 fig.add_shape(type="rect",
-    x0=25, y0=0, x1=50, y1=5,
+    x0=25, y0=0, x1=50, y1=1000,
     line=dict(color="RoyalBlue"),
 )
 fig.add_shape(type="rect",
-    x0=0, y0=5, x1=25, y1=10,
+    x0=0, y0=1000, x1=25, y1=2000,
     line=dict(color="RoyalBlue"),
 )
 fig.add_shape(type="rect",
-    x0=25, y0=5, x1=50, y1=10,
+    x0=25, y0=1000, x1=50, y1=2000,
     line=dict(color="RoyalBlue"),
 )
 

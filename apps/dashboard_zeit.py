@@ -150,7 +150,7 @@ layout = html.Div(children = [
                 )
             ]), width = 2,
         ),
-        dbc.Col(html.Div(id="Zeitplot_2"), width = 9)
+        dbc.Col(html.Div(id="Zeitplot_2"), width = 10)
     ], justify="center", align="center", className="h-50")
 ], style = CONTENT_STYLE)
 

@@ -14,10 +14,15 @@ layout = html.Div(children=[
     dbc.Row([
         dbc.Col(
             html.Div(children = [
-                html.Img(src = "/assets/Startbild.png", style = {"max-width":"1000%", "height":"1500%","vertical-align": "middle","align-items": "center"})
-            ])
+                html.Img(src = "/assets/Logo.png", style = {"max-width":"80%", "height":"auto","vertical-align": "middle","align-items": "center"})
+            ]), width={"size": 10}
         )
-    ], justify="center")
+    ], justify="center",),
+    # dbc.Row([
+    #         html.Div(children = [
+    #             html.H3("Dashboard für Produktverkaufsentwicklungen und Produktberatung", style = {"vertical-align": "middle","height":"auto","align-text": "center"})
+    #         ])
+    #     ], justify="center", align="center")
 ], style =CONTENT_STYLE)
 
 

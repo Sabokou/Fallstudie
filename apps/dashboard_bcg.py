@@ -67,7 +67,7 @@ fig.add_shape(type="rect",
     x0=25, y0=5, x1=50, y1=10,
     line=dict(color="RoyalBlue"),
 )
-        
+
 fig.update_traces(marker=dict(size=20,line=dict(width=2)))
 fig.update_layout(margin=dict(t=0), height=600, width=1100)
 fig.update_layout({'paper_bgcolor': 'rgba(0, 0, 0, 0)'})

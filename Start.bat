@@ -1,1 +1,2 @@
 python bankprogramm.py
+pause

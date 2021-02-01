@@ -19,6 +19,9 @@ import numpy as np
 #Import plotting library
 import plotly.express as px
 import plotly.graph_objects as go
+import plotly.io as pio
+
+pio.templates.default = "plotly"
 
 from datetime import datetime
 ytd = datetime.now().year

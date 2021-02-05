@@ -1,0 +1,2 @@
+python bankprogramm.py
+pause

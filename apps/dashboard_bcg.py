@@ -7,8 +7,13 @@ import plotly.graph_objects as go
 import dask.dataframe as dd
 import plotly.express as px
 
+
+#Import der Testdaten aus der Kundendatenbank als Dask-Dataframe
 df = dd.read_sql_table("testdaten", 'sqlite:///Kundendaten.db', "index")
 df=df.compute()
+
+#Vorbereitung des Dataframes, um die Kennzahlen "Kaufwahrscheinlichkeit in %" und "Gewinn pro Verkauf in €" zu generieren,
+#die die Achsen der BCG-MAtrix darstellen
 df_BCG_1= df.groupby(["Angebotenes Produkt"])[["Gewinn", "Anzahl"]].sum().reset_index()
 df_BCG_2=df.groupby(["Angebotenes Produkt"])["Anzahl"].apply(lambda x: x.sum()/x.count())
 
@@ -17,12 +22,10 @@ df_BCG=df_BCG.rename(columns={"Anzahl_x": "Anzahl", "Anzahl_y":"Kaufwahrscheinli
 df_BCG["Kaufwahrscheinlichkeit in %"]=df_BCG["Kaufwahrscheinlichkeit"]*100
 df_BCG["Gewinn pro Verkauf in €"]=df_BCG["Gewinn"]/df_BCG["Anzahl"]
 
-
+# Scatter-Plot erstellen nach den Variablen "Kaufwahrscheinlichkeit in %" und "Gewinn pro Verkauf in €" pro Produkt
 fig = px.scatter(df_BCG, x=df_BCG["Kaufwahrscheinlichkeit in %"], y=df_BCG["Gewinn pro Verkauf in €"], color="Angebotenes Produkt")
 
-
-
-
+# Figure-Element mit den einzelnen Sektionen der BCG-MAtrix über den Scatter-Plot legen, um die Klassifizierung zu visualisieren
 fig.add_trace(go.Scatter(
     x=[12.5, 12.5],
     y=[900, 900],
@@ -67,7 +70,7 @@ fig.add_shape(type="rect",
     x0=25, y0=1000, x1=50, y1=2000,
     line=dict(color="RoyalBlue"),
 )
-
+ 
 fig.update_traces(marker=dict(size=20,line=dict(width=2)))
 fig.update_layout(margin=dict(t=0), height=600, width=1100)
 fig.update_layout({'paper_bgcolor': 'rgba(0, 0, 0, 0)'})

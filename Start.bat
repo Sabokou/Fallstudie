@@ -1,2 +1,2 @@
-python Bankprogramm.python
+python bankprogramm.py
 pause

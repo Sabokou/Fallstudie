@@ -55,14 +55,6 @@ sidebar = html.Div(
     style=SIDEBAR_STYLE,
 )
 
-#content = html.Div(id="page-content", style=CONTENT_STYLE)
-
-#app.layout = html.Div([dcc.Location(id="url"), sidebar, content])
-
-
-
-
-
 app.layout = html.Div(children = [
     dcc.Location(id='url', refresh=False),
     dbc.Row([

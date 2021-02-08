@@ -18,11 +18,6 @@ layout = html.Div(children=[
             ]), width={"size": 10}
         )
     ], justify="center",),
-    # dbc.Row([
-    #         html.Div(children = [
-    #             html.H3("Dashboard für Produktverkaufsentwicklungen und Produktberatung", style = {"vertical-align": "middle","height":"auto","align-text": "center"})
-    #         ])
-    #     ], justify="center", align="center")
 ], style =CONTENT_STYLE)
 
 

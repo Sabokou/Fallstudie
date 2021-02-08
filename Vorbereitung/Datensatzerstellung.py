@@ -284,9 +284,12 @@ for jahr in range(2016,2022):
     
         print(f"Monat {monat} | Jahr {jahr} | done")
 
+#convert list to dateframe
 df = pd.DataFrame(ges, columns=["Alter", "Geschlecht", "Job", "Familienstand", "Kinder", "Gehalt",\
                                  "Angebotenes Produkt", "Gekauft", "Gewinn",\
                                  "Jahr", "Monat", "Tag", "Datum", "Anzahl"]) 
 print("Converted to Dataframe")
+
+#export to sqlite database
 df.to_sql(name="testdaten", con=e, if_exists="replace")
 print("Transfer complete")

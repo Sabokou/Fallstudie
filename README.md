@@ -1,2 +1,10 @@
 # FallstudieDHBW
-Business Intelligence Projekt über Clustering von Kunden und Zuweisung von Produkten und wirtschaftliche Analysen über diese Produkte.
+Business Intelligence Projekt Zuweisung von Produkten basierend auf biometrischen Attributen und wirtschaftliche Analysen in Form von Dashboards über jene Produkte.
+
+# Mitarbeiter
+- 
+- 
+- 
+- 
+- 
+

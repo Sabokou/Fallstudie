@@ -6,3 +6,4 @@ SQLAlchemy
 dask[complete]
 scipy
 scikit-learn
+xgboost
